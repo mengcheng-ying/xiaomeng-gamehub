@@ -11,7 +11,7 @@
 <meta name="robots" content="index, follow">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="canonical" href="https://fmbly.com/">
-<link rel="preload" as="image" href="assets/images/hero/hero_longzhigu.webp" fetchpriority="high">
+<link rel="preload" as="image" href="assets/images/jizhan_cover.jpg" type="image/jpeg" fetchpriority="high">
 <meta property="og:title" content="小梦怀旧手游 - 经典端游正版怀旧手游下载导航 · 攻略中心">
 <meta property="og:description" content="小梦怀旧手游收录龙之谷启程、墨香情、武林外传、星辰变、千年盛世等经典端游正版怀旧手游，提供游戏下载导航与热门攻略。">
 <meta property="og:type" content="website">
@@ -259,6 +259,17 @@
   .notice-date .ym{margin:0;display:inline}
   .notice-date .day::after{content:" · ";color:#9aa3bd;margin:0 2px}
 }
+
+  /* ===== 爬虫可见的站内链接区（由 build-articles.js 自动生成） ===== */
+  .seo-crawl-links{max-width:1200px;margin:0 auto;padding:26px 20px 34px;display:flex;gap:14px;flex-wrap:wrap;justify-content:center;border-top:1px solid rgba(255,255,255,.08)}
+  .seo-crawl-links a{font-size:.85rem;color:var(--sub,#9aa3bd);padding:8px 18px;border:1px solid rgba(255,255,255,.12);border-radius:99px;transition:all .2s}
+  .seo-crawl-links a:hover{color:#fff;border-color:var(--accent2,#6366f1)}
+  .seo-noscript{max-width:900px;margin:0 auto;padding:24px 20px;color:#dfe4f0;font-size:.9rem}
+  .seo-noscript h2{font-size:1.05rem;margin:22px 0 10px;color:#fff}
+  .seo-noscript ul{display:flex;flex-wrap:wrap;gap:4px 20px;list-style:none;padding:0;margin:0}
+  .seo-noscript li{font-size:.85rem;line-height:1.95}
+  .seo-noscript a{color:#9aa3bd}
+  .seo-noscript a:hover{color:#fff}
 </style>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "小梦怀旧手游", "alternateName": "小梦怀旧手游下载导航", "url": "https://fmbly.com/", "description": "经典端游正版怀旧手游下载导航与攻略聚合站", "inLanguage": "zh-CN"}</script>
 </head>
@@ -476,7 +487,7 @@ var GAP=300; // 相邻卡片位移
 function buildSlides(){
   carEl.innerHTML=SLIDES.map(function(s,i){
     return '<div class="card" data-i="'+i+'" onclick="window.open(\''+esc(s.url)+'\',\'_blank\')">'+
-      '<div class="card-img"><img src="'+s.img+'" alt="'+esc(s.g)+'" draggable="false">'+
+      '<div class="card-img"><img src="'+s.img+'" alt="'+esc(s.g)+'" draggable="false" '+(i===0?'fetchpriority="high" decoding="async"':'loading="lazy" decoding="async"')+'>'+
         '<span class="badge">'+esc(s.tag)+'</span></div>'+
       '<div class="card-bd"><h3>'+esc(s.g)+'</h3><div class="sl">'+esc(s.slogan)+'</div>'+
       '<div class="btns"><a class="btn btn-primary" href="'+s.url+'" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">🎮 进入游戏</a>'+
@@ -753,5 +764,121 @@ document.addEventListener('click',function(e){
   }
 });
 </script>
+
+<!-- SEO-LINKS:START -->
+<noscript>
+<div class="seo-noscript">
+  <h2>全部游戏（41 款）</h2>
+  <ul>
+    <li><a href="/games#g-46">机战：钢铁巨舰</a></li>
+    <li><a href="/games#g-1">龙之谷启程</a></li>
+    <li><a href="/games#g-45">热血江湖2.0</a></li>
+    <li><a href="/games#g-21">武林外传：十年之约</a></li>
+    <li><a href="/games#g-2">墨香情</a></li>
+    <li><a href="/games#g-6">荣耀出征卡点服</a></li>
+    <li><a href="/games#g-3">星辰变：归来</a></li>
+    <li><a href="/games#g-7">千年盛世：千年传奇版</a></li>
+    <li><a href="/games#g-8">龙城秘境：凤凰沉默</a></li>
+    <li><a href="/games#g-4">飞飞：重逢</a></li>
+    <li><a href="/games#g-9">剑与翼—经典复刻</a></li>
+    <li><a href="/games#g-10">龙城秘境：觉醒合击</a></li>
+    <li><a href="/games#g-5">神泣：纷争</a></li>
+    <li><a href="/games#g-11">小小屠龙：原始火龙</a></li>
+    <li><a href="/games#g-12">荣耀出征</a></li>
+    <li><a href="/games#g-13">龙城秘境：重返冰雪</a></li>
+    <li><a href="/games#g-14">决战破晓</a></li>
+    <li><a href="/games#g-15">小小屠龙：幻变三职业</a></li>
+    <li><a href="/games#g-16">小小屠龙：灵符自由版</a></li>
+    <li><a href="/games#g-17">小小屠龙：3D合击版</a></li>
+    <li><a href="/games#g-18">风暴远征：英雄年代联动版</a></li>
+    <li><a href="/games#g-19">永恒岛：高清重制版</a></li>
+    <li><a href="/games#g-20">魔力宝贝回忆十宠版</a></li>
+    <li><a href="/games#g-22">热江：武林版</a></li>
+    <li><a href="/games#g-23">飞飞：重逢</a></li>
+    <li><a href="/games#g-24">小小屠龙：卡点重置版</a></li>
+    <li><a href="/games#g-25">奇迹世界：起源</a></li>
+    <li><a href="/games#g-31">天天龙族怀旧服</a></li>
+    <li><a href="/games#g-32">寻梦丝路</a></li>
+    <li><a href="/games#g-33">小小屠龙：冰雪骑战</a></li>
+    <li><a href="/games#g-34">烈火屠龙：美杜莎卡点服</a></li>
+    <li><a href="/games#g-35">永恒岛：怀旧版</a></li>
+    <li><a href="/games#g-36">修仙家族模拟器2</a></li>
+    <li><a href="/games#g-37">义战龙城：3D纯净服</a></li>
+    <li><a href="/games#g-38">热江：全新玩法</a></li>
+    <li><a href="/games#g-39">巴风特之怒：RO怀旧</a></li>
+    <li><a href="/games#g-40">千年盛世：原始千年</a></li>
+    <li><a href="/games#g-41">永恒岛：彩虹回忆</a></li>
+    <li><a href="/games#g-42">金装裁决</a></li>
+    <li><a href="/games#g-43">屠龙决战沙城：传奇三光通版</a></li>
+    <li><a href="/games#g-44">热血传说：复古传奇</a></li>
+  </ul>
+  <h2>全部攻略（58 篇）</h2>
+  <ul>
+    <li><a href="/article/48">武林外传：十年江湖路，七侠镇再相逢</a></li>
+    <li><a href="/article/49">武林外传十年之约：新服首日冲级，稳上30级攻略</a></li>
+    <li><a href="/article/50">武林外传十年之约：装备获取全路径，从零到毕业不迷茫</a></li>
+    <li><a href="/article/51">武林外传十年之约：零氪搬砖玩法与稳定变现指南</a></li>
+    <li><a href="/article/52">武林外传十年之约：全职业选择指南，找到最适合你的门派</a></li>
+    <li><a href="/article/53">武林外传十年之约：BT武器全收集，零氪必拿的特色福利</a></li>
+    <li><a href="/article/54">武林外传十年之约：月卡与永久卡，性价比怎么选最划算</a></li>
+    <li><a href="/article/55">武林外传十年之约：每日限时活动全解，收益拉满别错过</a></li>
+    <li><a href="/article/56">武林外传十年之约：新手开荒避坑，这8个弯路别踩</a></li>
+    <li><a href="/article/57">武林外传：有人的地方，才是真正的江湖</a></li>
+    <li><a href="/article/61">机战百科 | Vol.4 远程武器详解</a></li>
+    <li><a href="/article/60">机战百科 | Vol.3 近战格斗机甲推荐</a></li>
+    <li><a href="/article/59">机战百科 | Vol.2 机甲改装入门指南</a></li>
+    <li><a href="/article/58">机战百科 | Vol.1 新手开荒全攻略</a></li>
+    <li><a href="/article/62">舰队系统详解 | 如何组建你的星际舰队</a></li>
+    <li><a href="/article/63">资源采集指南 | 星际矿场高效开采</a></li>
+    <li><a href="/article/47">墨香情：当年藏在网吧里的水墨江湖，终于又能握在手心</a></li>
+    <li><a href="/article/46">墨香情八月新版本「星徽耀世 跨服争锋」爆料：四大全新系统抢先看</a></li>
+    <li><a href="/article/45">龙之谷启程：零氪玩家每日必做任务清单与资源规划</a></li>
+    <li><a href="/article/1">龙之谷启程：新手职业选择与开荒避坑指南</a></li>
+    <li><a href="/article/2">墨香情：六大武器流派全解析与新手推荐</a></li>
+    <li><a href="/article/3">星辰变归来：境界突破全攻略与战力提升避坑</a></li>
+    <li><a href="/article/4">飞飞重逢：新手飞行系统与四大职业入门指南</a></li>
+    <li><a href="/article/5">神泣纷争：光暗阵营选择与六大职业深度解析</a></li>
+    <li><a href="/article/6">荣耀出征：奇迹MU经典三职业加点与装备指南</a></li>
+    <li><a href="/article/7">千年盛世传奇版：武功修炼优先级与元气系统详解</a></li>
+    <li><a href="/article/8">龙城秘境凤凰沉默：沉默传奇三职业玩法与装备路线</a></li>
+    <li><a href="/article/9">剑与翼经典复刻：奇迹MU新手开荒全流程攻略</a></li>
+    <li><a href="/article/10">龙城秘境觉醒合击：元神搭配与合击连招详解</a></li>
+    <li><a href="/article/11">小小屠龙原始火龙：单职业打金全攻略</a></li>
+    <li><a href="/article/12">荣耀出征：点卡制奇迹公平玩法与搬砖指南</a></li>
+    <li><a href="/article/13">龙城秘境重返冰雪：冰雪传奇打宝与装备强化攻略</a></li>
+    <li><a href="/article/14">决战破晓：科幻MMO新手入门与元神养成攻略</a></li>
+    <li><a href="/article/15">小小屠龙幻变三职业：自由切换玩法与元素技能搭配</a></li>
+    <li><a href="/article/16">小小屠龙灵符自由版：灵符打金与自由交易全攻略</a></li>
+    <li><a href="/article/17">小小屠龙3D合击版：英雄元神搭配与合击技能连招</a></li>
+    <li><a href="/article/18">风暴远征英雄年代：军团战与跨服竞技策略指南</a></li>
+    <li><a href="/article/19">永恒岛高清重制版：六大职业定位与新手成长路线</a></li>
+    <li><a href="/article/20">魔力宝贝回忆十宠版：十宠系统与职业搭配全攻略</a></li>
+    <li><a href="/article/21">武林外传十年之约：十大职业选择与七侠镇玩法指南</a></li>
+    <li><a href="/article/22">热江武林版：正邪对立选择与武功修炼攻略</a></li>
+    <li><a href="/article/23">飞飞重逢：飞行器养成与空中战斗进阶技巧</a></li>
+    <li><a href="/article/24">小小屠龙卡点重置版：卡点计费模式与公平竞技详解</a></li>
+    <li><a href="/article/25">奇迹世界起源：阵营对抗与副本团战策略指南</a></li>
+    <li><a href="/article/31">天天龙族怀旧服：三大王国国战与龙族变身攻略</a></li>
+    <li><a href="/article/32">寻梦丝路：丝绸之路贸易经营与商队护镖攻略</a></li>
+    <li><a href="/article/33">小小屠龙冰雪骑战：坐骑养成与骑战技能全攻略</a></li>
+    <li><a href="/article/34">烈火屠龙美杜莎：BOSS挑战与石化技能应对策略</a></li>
+    <li><a href="/article/35">永恒岛怀旧版：经典职业怀旧指南与成长路线</a></li>
+    <li><a href="/article/36">修仙家族模拟器2：家族经营与修仙境界突破指南</a></li>
+    <li><a href="/article/37">义战龙城3D纯净服：公平传奇玩法与3D操作指南</a></li>
+    <li><a href="/article/38">热江全新玩法：动态副本与跨服竞技系统详解</a></li>
+    <li><a href="/article/39">巴风特之怒RO怀旧：六大经典职业加点与转职攻略</a></li>
+    <li><a href="/article/40">千年盛世原始千年：原始版本武功修炼与门派争端</a></li>
+    <li><a href="/article/41">永恒岛彩虹回忆：经典职业与宠物养成玩法指南</a></li>
+    <li><a href="/article/42">金装裁决：金装收集与裁决神器养成攻略</a></li>
+    <li><a href="/article/43">屠龙决战沙城：三端互通与沙城争霸全攻略</a></li>
+    <li><a href="/article/44">热血传说复古传奇：1.76经典版本玩法与装备路线</a></li>
+  </ul>
+</div>
+</noscript>
+<div class="seo-crawl-links">
+  <a href="/games">全部游戏（41）</a>
+  <a href="/guides">全部攻略（58）</a>
+</div>
+<!-- SEO-LINKS:END -->
 
 </body></html>

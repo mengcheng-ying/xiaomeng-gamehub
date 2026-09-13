@@ -37,7 +37,7 @@ jobs:
         run: |
           git config user.name "gamehub-bot"
           git config user.email "actions@github.com"
-          git add data/articles.js sitemap.xml article/ scripts/
+          git add data/articles.js sitemap.xml article/ scripts/ index.html guides.html games.html 404.html
           git commit -m "发文：${ARTICLE_TITLE}"
           git push
 
@@ -48,6 +48,7 @@ jobs:
         run: |
           gh issue comment "$ISSUE_NUM" --body "文章已发布上线 ✅
           《${ARTICLE_TITLE}》
-          链接：https://fmbly.com/#guide/${ARTICLE_ID}
+          静态页（可被搜索引擎收录）：https://fmbly.com/article/${ARTICLE_ID}
+          站内浏览：https://fmbly.com/#guide/${ARTICLE_ID}
           约 2 分钟后可在网站看到。"
           gh issue close "$ISSUE_NUM"
