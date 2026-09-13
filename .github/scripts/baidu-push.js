@@ -29,7 +29,7 @@ if (FORCE_ALL) {
   urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
   const articles = fs.readFileSync('data/articles.js', 'utf8');
   [...articles.matchAll(/id\s*:\s*(\d+)/g)].forEach(m => {
-    urls.push('https://' + SITE + '/#guide/' + m[1]);
+    urls.push('https://' + SITE + '/article/' + m[1]);
   });
 } else {
   // ===== 增量模式：用 git diff 找出本次提交变动的页面 =====
@@ -37,11 +37,12 @@ if (FORCE_ALL) {
     const changed = execSync('git diff --name-only HEAD~1 HEAD', { encoding: 'utf8' })
       .split('\n').map(s => s.trim()).filter(Boolean);
 
-    // 1) data/articles.js 有新增文章 → 推送对应 #/guide/ID 链接
+    // 1) data/articles.js 有新增文章 → 推送对应静态攻略页（注意：必须是 /article/ID 这种真实可抓取 URL）
+    //    ⚠️ 不能用 /#guide/ID —— # 后面的内容不会发送给服务器，百度会把它当成首页，等于白发。
     if (changed.includes('data/articles.js')) {
       const diff = execSync('git diff HEAD~1 HEAD -- data/articles.js', { encoding: 'utf8' });
       const addedIds = [...diff.matchAll(/^\+\s+id:\s*(\d+)/gm)].map(m => parseInt(m[1], 10));
-      [...new Set(addedIds)].forEach(id => urls.push('https://' + SITE + '/#guide/' + id));
+      [...new Set(addedIds)].forEach(id => urls.push('https://' + SITE + '/article/' + id));
     }
 
     // 2) 首页 / 公告 / 收录入口 / 站点地图 有变动 → 推送首页，保证公告类更新也能被收录
@@ -61,9 +62,22 @@ if (FORCE_ALL) {
   }
 }
 
-const unique = [...new Set(urls)];
+// 去重，并剔除带 # 的碎片链接（百度推送 API 不接受，送了等于送首页）
+const raw = [...new Set(urls)];
+const unique = raw.filter(u => {
+  if (u.includes('#')) {
+    console.log('⚠️ 已跳过带 # 的无效链接（百度不可收录碎片地址）：' + u);
+    return false;
+  }
+  return true;
+});
 console.log('本次推送 ' + unique.length + ' 条链接到百度...');
 console.log(unique.join('\n'));
+
+if (unique.length === 0) {
+  console.log('⏭ 无有效链接可推送，退出。');
+  process.exit(0);
+}
 
 // ===== 调用百度推送 API =====
 fetch('http://data.zz.baidu.com/urls?site=' + PUSH_SITE + '&token=' + TOKEN, {
