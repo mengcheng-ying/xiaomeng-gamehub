@@ -11,7 +11,7 @@
  */
 const fs = require('fs');
 
-const SITE = 'fmbly.com';
+const SITE = 'https://fmbly.com';
 const TOKEN = process.env.BAIDU_TOKEN;
 
 if (!TOKEN) {
