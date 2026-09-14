@@ -1,23 +1,25 @@
 /**
- * 小梦怀旧手游 攻略预渲染构建脚本
+ * 小梦怀旧手游 静态页预渲染构建脚本
  * -------------------------------------------------
- * 目的：解决 SPA + hash 路由导致攻略页无法被搜索引擎收录的问题。
- * 为 data/articles.js 中的每一篇攻略生成独立的、服务端渲染完成的
- * 静态 HTML 页面（article/{id}.html），正文直接烘焙进 HTML，
+ * 目的：解决 SPA + hash 路由导致页面无法被搜索引擎收录的问题。
+ * 为 data/articles.js 的每篇攻略、data/games.js 的每款游戏
+ * 生成独立的、服务端渲染完成的静态 HTML，正文直接烘焙进 HTML，
  * 爬虫无需执行 JS 即可读取完整内容。
  *
  * 本脚本产出：
- *   1) article/{id}.html   —— 每篇攻略一个静态页（含结构化数据、og 标签）
- *   2) guides.html         —— 全站攻略索引（按游戏分组，站内链接中枢）
- *   3) games.html          —— 全部游戏索引
- *   4) 404.html            —— 真正的 404 页面
- *   5) sitemap.xml         —— 只含可索引的真实 URL（去掉 # 锚点）
- *   6) index.html          —— 更新 <!-- SEO-LINKS:START --> 区块，
- *                             把全部游戏和攻略以真实 <a> 输出，
- *                             让不执行 JS 的爬虫也能拿到完整站内链接
+ *   1) article/{id}.html  —— 每篇攻略一个静态页（干净简洁版式 + 文末返回首页按钮）
+ *   2) game/{id}.html     —— 每款游戏一个独立页（官方信息 / 下载入口 / 相关攻略）
+ *   3) guides.html        —— 全站攻略索引（按游戏分组）
+ *   4) games.html         —— 全部游戏索引（可进入游戏独立页）
+ *   5) 404.html           —— 真正的 404 页面
+ *   6) sitemap.xml        —— 只含可索引的真实 URL（去掉 # 锚点）
+ *   7) index.html         —— 更新 <!-- SEO-LINKS:START --> 区块
+ *
+ * ⚠️ 铁律：本脚本【绝不修改】任何推广跳转链接。
+ *    游戏下载地址一律直接取自 data/games.js 的 url / androidUrl / iosUrl，
+ *    原样输出，不做任何拼接、转码或改写。
  *
  * 用法：node scripts/build-articles.js
- * 部署时在发布工单 workflow 中同样调用，保证新增/修改文章后自动同步。
  */
 const fs = require('fs');
 const path = require('path');
@@ -25,42 +27,69 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const SITE = 'https://fmbly.com';
 const OUT_DIR = path.join(ROOT, 'article');
+const GAME_DIR = path.join(ROOT, 'game');
 const TODAY = new Date().toISOString().slice(0, 10);
 
 // ===== 1. 解析数据文件（自维护数据，使用 Function 取值） =====
-function loadJsArray(rel, keyword) {
-  const src = fs.readFileSync(path.join(ROOT, rel), 'utf8');
+function extractBalanced(src, keyword, openCh, closeCh) {
   const start = src.indexOf(keyword);
-  if (start === -1) throw new Error(rel + ' 中找不到 ' + keyword);
-  const open = src.indexOf('[', start);
-  // 找到匹配的闭合 ]
+  if (start === -1) throw new Error('找不到 ' + keyword);
+  const open = src.indexOf(openCh, start);
+  if (open === -1) throw new Error(keyword + ' 后找不到 ' + openCh);
   let depth = 0, end = -1;
   for (let i = open; i < src.length; i++) {
-    if (src[i] === '[') depth++;
-    else if (src[i] === ']') { depth--; if (depth === 0) { end = i; break; } }
+    if (src[i] === openCh) depth++;
+    else if (src[i] === closeCh) { depth--; if (depth === 0) { end = i; break; } }
   }
-  const arrText = src.slice(open, end + 1);
+  if (end === -1) throw new Error(keyword + ' 括号未闭合');
+  return src.slice(open, end + 1);
+}
+
+function loadJsArray(rel, keyword) {
+  const src = fs.readFileSync(path.join(ROOT, rel), 'utf8');
   // eslint-disable-next-line no-new-func
-  return new Function('return (' + arrText + ');')();
+  return new Function('return (' + extractBalanced(src, keyword, '[', ']') + ');')();
+}
+
+// 可选的数据文件：不存在时返回 {}，不影响主流程
+function loadJsObjectSafe(rel, keyword) {
+  const full = path.join(ROOT, rel);
+  if (!fs.existsSync(full)) return {};
+  try {
+    const src = fs.readFileSync(full, 'utf8');
+    // eslint-disable-next-line no-new-func
+    return new Function('return (' + extractBalanced(src, keyword, '{', '}') + ');')();
+  } catch (e) {
+    console.log('⚠️  ' + rel + ' 解析失败，已忽略：' + e.message);
+    return {};
+  }
 }
 
 const articles = loadJsArray('data/articles.js', 'ARTICLES_DATA');
 const games = loadJsArray('data/games.js', 'GAMES_DATA');
+// 攻略加厚内容（可选增量文件）：{ 文章id: '<h2>…</h2><p>…</p>' }
+const guideExtra = loadJsObjectSafe('data/guide-extra.js', 'GUIDE_EXTRA');
+// 攻略进阶问答（可选增量文件，追加在 guide-extra 之后）：{ 文章id: '<h2>…</h2><p>…</p>' }
+const guideFaq = loadJsObjectSafe('data/guide-faq.js', 'GUIDE_FAQ');
+// 游戏页补充资料（可选）：{ 游戏id: { facts:[{k,v}], intro:'…', highlights:['…'] } }
+const gameExtra = loadJsObjectSafe('data/game-extra.js', 'GAME_EXTRA');
+
 const gameById = {};
 games.forEach(g => { gameById[g.id] = g; });
 
 // ===== 2. 工具 =====
 function esc(str) {
-  return String(str || '')
+  return String(str == null ? '' : str)
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
-// 正文内相对资源路径从站点根 -> 当前 article/ 子目录
-function fixRel(src) {
+// 正文内相对资源路径从站点根 -> 当前子目录
+function fixRel(src, prefix) {
+  const p = prefix || '../';
   return String(src || '')
-    .replace(/src=["']assets\/([^"']+)["']/g, 'src="../assets/$1"')
-    .replace(/href=["']assets\/([^"']+)["']/g, 'href="../assets/$1"');
+    .replace(/src=["']assets\//g, 'src="' + p + 'assets/')
+    .replace(/href=["']assets\//g, 'href="' + p + 'assets/');
 }
 
 // 读取图片真实尺寸，用于给 <img> 补 width/height（消除累积布局偏移 CLS）
@@ -93,51 +122,143 @@ function imageSize(rootRel) {
   return null;
 }
 
-// 生成 <img> 的尺寸属性串（拿不到尺寸时返回空串）
 function sizeAttrs(rootRel) {
   const d = imageSize(rootRel);
   return d ? ` width="${d.w}" height="${d.h}"` : '';
 }
 
-// ===== 3. 站内公共头部/底部与索引页样式 =====
-const INDEX_CSS = `
-  .seo-topbar{position:sticky;top:0;z-index:100;background:#fff;border-bottom:1px solid var(--border,#e3e8f2);display:flex;align-items:center;justify-content:space-between;padding:14px 20px}
-  .seo-topbar .seo-brand{font-weight:700;color:var(--primary,#2456c8);letter-spacing:1px}
-  .seo-nav{display:flex;gap:18px}
-  .seo-nav a{color:var(--text-secondary,#4a5674);font-size:14px}
-  .seo-nav a:hover{color:var(--primary,#2456c8)}
-  .seo-main{max-width:960px;margin:0 auto;padding:36px 20px 60px}
-  .seo-crumb{font-size:13px;color:var(--text-muted,#8a93ad);margin-bottom:22px}
-  .seo-crumb a{color:var(--text-muted,#8a93ad)}
-  .seo-crumb a:hover{color:var(--primary,#2456c8)}
-  .seo-crumb span{margin:0 8px}
-  .seo-h1{font-size:28px;font-weight:700;line-height:1.35;color:var(--text-primary,#1a2340);margin-bottom:10px}
-  .seo-lead{font-size:15px;color:var(--text-secondary,#4a5674);margin-bottom:32px;line-height:1.8}
-  .seo-gtitle{font-size:20px;margin:40px 0 14px;padding-bottom:10px;border-bottom:1px solid var(--border,#e3e8f2);color:var(--text-primary,#1a2340);display:flex;align-items:center;gap:10px;scroll-margin-top:90px}
-  .seo-gtitle .cnt{font-size:12px;font-weight:400;color:var(--text-muted,#8a93ad)}
-  .seo-list{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:8px}
-  .seo-item{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border:1px solid var(--border,#e3e8f2);border-radius:8px;background:#fff;color:var(--text-primary,#1a2340)}
-  .seo-item:hover{box-shadow:0 4px 16px rgba(13,35,82,.08)}
-  .seo-item-cat{flex:none;font-size:11px;color:#fff;background:var(--primary,#2456c8);border-radius:4px;padding:2px 8px;margin-top:2px}
-  .seo-item-name{font-size:15px;font-weight:600;line-height:1.6;display:block}
-  .seo-item-sum{font-size:13px;color:var(--text-muted,#8a93ad);margin-top:4px;line-height:1.6;display:block}
-  .seo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
-  .seo-gcard{border:1px solid var(--border,#e3e8f2);border-radius:10px;background:#fff;overflow:hidden;display:block;color:var(--text-primary,#1a2340);scroll-margin-top:90px}
-  .seo-gcard:hover{box-shadow:0 6px 20px rgba(13,35,82,.1)}
-  .seo-gcard img{width:100%;height:auto;display:block;aspect-ratio:16/9;object-fit:cover;background:#eef1f7}
-  .seo-gcard-bd{padding:12px 14px}
-  .seo-gcard-nm{font-size:15px;font-weight:600;margin-bottom:6px}
-  .seo-gcard-ds{font-size:12px;color:var(--text-muted,#8a93ad);line-height:1.6;margin-bottom:10px;min-height:38px}
-  .seo-gcard-links{display:flex;gap:8px;flex-wrap:wrap}
-  .seo-btn{display:inline-block;font-size:12px;padding:5px 12px;border-radius:6px;background:var(--primary,#2456c8);color:#fff!important}
-  .seo-btn.ghost{background:#eef1f7;color:var(--text-secondary,#4a5674)!important}
-  .seo-footer{text-align:center;padding:32px 20px;border-top:1px solid var(--border,#e3e8f2);background:#fff;font-size:13px;color:var(--text-muted,#8a93ad)}
-  .seo-footer a{color:var(--text-muted,#8a93ad);margin:0 10px}
-  .seo-footer a:hover{color:var(--primary,#2456c8)}
-  @media (max-width:640px){.seo-h1{font-size:22px}.seo-gtitle{font-size:18px}.seo-main{padding:24px 16px 48px}.seo-nav{gap:12px}}
+// ===== 3. 全站统一版式（干净简洁） =====
+const BASE_CSS = `
+  :root{--ink:#16203a;--ink2:#495571;--muted:#8b94a8;--line:#e7ecf5;--brand:#2456c8;--brand-soft:#eef3fe;--accent:#ff9d2e;--bg:#f6f8fc;--card:#fff}
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:16px/1.9 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",Arial,sans-serif}
+  a{text-decoration:none;color:var(--brand)}
+  img{max-width:100%}
+  .topbar{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.94);backdrop-filter:saturate(180%) blur(8px);
+    border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:13px 20px}
+  .brand{font-weight:700;color:var(--brand);letter-spacing:.5px;font-size:16px}
+  .nav{display:flex;gap:20px}
+  .nav a{color:var(--ink2);font-size:14px}
+  .nav a:hover{color:var(--brand)}
+  .wrap{max-width:780px;margin:0 auto;padding:34px 20px 64px}
+  .wrap.wide{max-width:1040px}
+  .crumb{font-size:13px;color:var(--muted);margin-bottom:20px}
+  .crumb a{color:var(--muted)}
+  .crumb a:hover{color:var(--brand)}
+  .crumb i{font-style:normal;margin:0 7px;opacity:.55}
+  .tag{display:inline-block;font-size:12px;font-weight:600;color:#fff;background:var(--accent);border-radius:99px;padding:3px 12px;margin-bottom:14px}
+  h1.ttl{font-size:29px;line-height:1.4;font-weight:700;margin:0 0 14px;letter-spacing:-.2px}
+  .meta{font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px 18px;padding-bottom:20px;margin-bottom:26px;border-bottom:1px solid var(--line)}
+  .cover{width:100%;height:auto;display:block;border-radius:12px;margin:0 0 28px;background:#e9eef7;box-shadow:0 6px 22px rgba(20,40,80,.07)}
+
+  /* ===== 正文排版 ===== */
+  .body{font-size:16.5px;line-height:1.95;color:#26314c;word-break:break-word}
+  .body p{margin:0 0 18px}
+  .body h2{font-size:21px;line-height:1.5;font-weight:700;color:var(--ink);margin:40px 0 16px;padding-left:13px;border-left:4px solid var(--brand)}
+  .body h2:first-child{margin-top:0}
+  .body h3{font-size:17.5px;line-height:1.6;font-weight:600;color:var(--ink);margin:28px 0 12px}
+  .body h4{font-size:16px;font-weight:600;color:var(--ink2);margin:22px 0 10px}
+  .body ul,.body ol{margin:0 0 18px;padding-left:22px}
+  .body li{margin-bottom:8px}
+  .body strong{color:var(--ink);font-weight:700}
+  .body em{font-style:normal;color:var(--brand);font-weight:600}
+  .body blockquote{margin:0 0 20px;padding:14px 18px;background:var(--brand-soft);border-left:3px solid var(--brand);border-radius:0 8px 8px 0;color:#3b4970;font-size:15.5px}
+  .body blockquote p:last-child{margin-bottom:0}
+  .body table{width:100%;border-collapse:collapse;margin:0 0 22px;font-size:15px;display:block;overflow-x:auto}
+  .body th,.body td{border:1px solid var(--line);padding:10px 13px;text-align:left;white-space:nowrap}
+  .body th{background:#f2f5fb;font-weight:600;color:var(--ink)}
+  .body tr:nth-child(even) td{background:#fafbfe}
+  .body img{display:block;width:100%;height:auto;border-radius:10px;margin:26px 0;background:#e9eef7}
+  .body figure{margin:26px 0}
+  .body figure img{margin:0}
+  .body figcaption{font-size:13px;color:var(--muted);text-align:center;margin-top:10px}
+  .body hr{border:none;border-top:1px solid var(--line);margin:34px 0}
+
+  /* ===== 文末返回首页按钮 ===== */
+  .cta{margin:44px 0 0;padding:26px 22px;text-align:center;background:linear-gradient(135deg,#f2f6ff,#eaf1ff);
+    border:1px solid #dbe6fb;border-radius:14px}
+  .cta p{margin:0 0 16px;font-size:15px;color:var(--ink2)}
+  .cta-btn{display:inline-block;font-size:15px;font-weight:600;color:#fff!important;background:var(--brand);
+    padding:12px 30px;border-radius:99px;box-shadow:0 6px 18px rgba(36,86,200,.25);transition:transform .15s,box-shadow .15s}
+  .cta-btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(36,86,200,.3)}
+
+  /* ===== 相关阅读 ===== */
+  .sec-h{font-size:19px;font-weight:700;margin:46px 0 16px;color:var(--ink)}
+  .rel{display:grid;grid-template-columns:1fr;gap:10px}
+  .rel a{display:flex;align-items:center;gap:11px;padding:13px 16px;border:1px solid var(--line);border-radius:10px;
+    background:var(--card);color:var(--ink);transition:box-shadow .18s,border-color .18s}
+  .rel a:hover{border-color:#cfdcf7;box-shadow:0 4px 16px rgba(20,40,80,.07)}
+  .rel .cat{flex:none;font-size:11px;font-weight:600;color:#fff;background:var(--brand);border-radius:5px;padding:2px 9px}
+  .rel .nm{font-size:15px;font-weight:600;line-height:1.6}
+
+  /* ===== 游戏页 ===== */
+  .ghero{display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap;margin-bottom:28px}
+  .ghero .pic{flex:none;width:210px;border-radius:12px;overflow:hidden;background:#e9eef7;box-shadow:0 6px 22px rgba(20,40,80,.08)}
+  .ghero .pic img{display:block;width:100%;height:auto}
+  .ghero .info{flex:1;min-width:230px}
+  .ghero h1{font-size:27px;margin:0 0 10px}
+  .ghero .sub{font-size:14px;color:var(--ink2);margin-bottom:14px}
+  .score{font-size:14px;color:#e8a13a;font-weight:700;margin-bottom:16px}
+  .dl{display:flex;gap:12px;flex-wrap:wrap}
+  .dl a{display:inline-block;font-size:15px;font-weight:600;color:#fff!important;padding:11px 26px;border-radius:99px;transition:transform .15s}
+  .dl a:hover{transform:translateY(-2px)}
+  .dl .and{background:#2456c8;box-shadow:0 6px 16px rgba(36,86,200,.25)}
+  .dl .ios{background:#2c3550;box-shadow:0 6px 16px rgba(44,53,80,.22)}
+  .facts{width:100%;border-collapse:collapse;margin:4px 0 30px;font-size:15px}
+  .facts th,.facts td{border:1px solid var(--line);padding:11px 14px;text-align:left}
+  .facts th{background:#f2f5fb;width:118px;font-weight:600;color:var(--ink)}
+  .facts td{color:var(--ink2)}
+  .prose{font-size:16px;line-height:1.95;color:#26314c;margin-bottom:30px}
+  .prose p{margin:0 0 16px}
+  .hl{margin:0 0 30px;padding:0;list-style:none}
+  .hl li{position:relative;padding-left:24px;margin-bottom:10px;font-size:15.5px;color:#33405f}
+  .hl li:before{content:"◆";position:absolute;left:0;top:0;color:var(--brand);font-size:12px}
+  .gcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:14px}
+  .gcard{border:1px solid var(--line);border-radius:11px;overflow:hidden;background:var(--card);display:block;color:var(--ink)}
+  .gcard:hover{box-shadow:0 6px 20px rgba(20,40,80,.09)}
+  .gcard img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;background:#e9eef7}
+  .gcard .bd{padding:11px 13px}
+  .gcard .nm{font-size:14.5px;font-weight:600;margin-bottom:5px}
+  .gcard .ds{font-size:12px;color:var(--muted);line-height:1.6}
+
+  /* ===== 索引页 ===== */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px}
+  .card{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card);display:block;color:var(--ink)}
+  .card:hover{box-shadow:0 8px 24px rgba(20,40,80,.09)}
+  .card img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;background:#e9eef7}
+  .card .bd{padding:13px 15px}
+  .card .nm{font-size:15.5px;font-weight:600;margin-bottom:6px}
+  .card .ds{font-size:12.5px;color:var(--muted);line-height:1.65;margin-bottom:11px;min-height:40px}
+  .card .row{display:flex;gap:8px;flex-wrap:wrap}
+  .btn{display:inline-block;font-size:12.5px;font-weight:600;padding:6px 14px;border-radius:7px;background:var(--brand);color:#fff!important}
+  .btn.ghost{background:var(--brand-soft);color:var(--brand)!important}
+  .lead{font-size:15px;color:var(--ink2);margin:0 0 32px}
+  .grp-h{font-size:19px;font-weight:700;margin:38px 0 14px;padding-bottom:10px;border-bottom:1px solid var(--line);
+    display:flex;align-items:baseline;gap:10px;scroll-margin-top:86px}
+  .grp-h .cnt{font-size:12px;font-weight:400;color:var(--muted)}
+  .lst{display:grid;grid-template-columns:1fr;gap:10px}
+  .lst a{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
+  .lst a:hover{box-shadow:0 4px 16px rgba(20,40,80,.07)}
+  .lst .cat{flex:none;font-size:11px;font-weight:600;color:#fff;background:var(--brand);border-radius:5px;padding:2px 9px;margin-top:2px}
+  .lst .nm{font-size:15px;font-weight:600;line-height:1.6;display:block}
+  .lst .sm{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.6;display:block}
+  .foot{text-align:center;padding:34px 20px;border-top:1px solid var(--line);background:#fff;font-size:13px;color:var(--muted)}
+  .foot a{color:var(--muted);margin:0 10px}
+  .foot a:hover{color:var(--brand)}
+  @media (max-width:640px){
+    .wrap{padding:24px 16px 52px}
+    h1.ttl{font-size:23px}
+    .ghero h1{font-size:22px}
+    .ghero .pic{width:100%}
+    .body{font-size:16px}
+    .body h2{font-size:19px}
+    .nav{gap:14px}
+  }
 `;
 
-// 首页「爬虫链接区」的样式。首页是深色配色，这里跟随其变量。
+// 首页「爬虫链接区」样式（首页是深色配色，跟随其变量）
 const INDEX_EXTRA_CSS = `
   /* ===== 爬虫可见的站内链接区（由 build-articles.js 自动生成） ===== */
   .seo-crawl-links{max-width:1200px;margin:0 auto;padding:26px 20px 34px;display:flex;gap:14px;flex-wrap:wrap;justify-content:center;border-top:1px solid rgba(255,255,255,.08)}
@@ -151,29 +272,69 @@ const INDEX_EXTRA_CSS = `
   .seo-noscript a:hover{color:#fff}
 `;
 
-function renderHeader() {
-  return `
-<header class="seo-topbar">
-  <a class="seo-brand" href="/">小梦怀旧手游</a>
-  <nav class="seo-nav">
+function head(title, desc, canonical, opts) {
+  const o = opts || {};
+  const prefix = o.prefix == null ? '../' : o.prefix;
+  const img = o.image ? SITE + '/' + String(o.image).replace(/^\.\.\//, '') : SITE + '/assets/images/logo_xiaomeng.png';
+  const lds = (o.ld || []).map(x => `<script type="application/ld+json">${JSON.stringify(x)}</script>`).join('\n');
+  return `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${esc(title)}</title>
+<meta name="description" content="${esc(desc)}">
+<meta name="robots" content="${o.robots || 'index, follow'}">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="canonical" href="${esc(canonical)}">
+<meta property="og:type" content="${o.ogType || 'website'}">
+<meta property="og:title" content="${esc(title)}">
+<meta property="og:description" content="${esc(desc)}">
+<meta property="og:url" content="${esc(canonical)}">
+<meta property="og:site_name" content="小梦怀旧手游">
+<meta property="og:image" content="${esc(img)}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${esc(title)}">
+<meta name="twitter:description" content="${esc(desc)}">
+<meta name="twitter:image" content="${esc(img)}">
+${o.published ? `<meta property="article:published_time" content="${esc(o.published)}">` : ''}
+<link rel="icon" type="image/svg+xml" href="${prefix}favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="${prefix}favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="${prefix}favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="${prefix}favicon-192.png">
+<link rel="manifest" href="${prefix}site.webmanifest">
+${lds}
+<style>${BASE_CSS}</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="/">🎮 小梦怀旧手游</a>
+  <nav class="nav">
     <a href="/games">游戏大厅</a>
     <a href="/guides">攻略中心</a>
     <a href="/">首页</a>
   </nav>
-</header>`;
+</header>
+`;
 }
 
-function renderFooter() {
+function foot() {
   return `
-<footer class="seo-footer">
+<footer class="foot">
   <a href="/">首页</a>
   <a href="/games">全部游戏</a>
   <a href="/guides">全部攻略</a>
-</footer>`;
+  <p style="margin:14px 0 0">本站仅提供游戏导航与攻略信息 · 游戏版权归各开发商所有</p>
+  <p style="margin:6px 0 0">© 2026 小梦怀旧手游 · fmbly.com</p>
+</footer>
+</body>
+</html>
+`;
 }
 
 // ===== 4. 目录准备 =====
 fs.mkdirSync(OUT_DIR, { recursive: true });
+fs.mkdirSync(GAME_DIR, { recursive: true });
 
 const sitemapUrls = [];
 let writtenCount = 0;
@@ -186,34 +347,29 @@ function writeFile(rel, content) {
 articles.forEach((a) => {
   const game = a.gameId ? gameById[a.gameId] : null;
   const url = SITE + '/article/' + a.id;
-  const canonical = url;
 
-  // 封面与正文内资源路径修正
   const cover = a.cover ? a.cover.replace(/^assets\//, '../assets/') : '';
-  const contentHtml = fixRel(a.content);
+  const extra = (guideExtra[a.id] || '') + (guideFaq[a.id] || '');
+  const contentHtml = fixRel(a.content || '', '../') + extra;
 
-  // 相关阅读：同游戏其他文章优先（最多 6 条，站内链接越密收录越快）
   const related = articles
     .filter(x => x.gameId === a.gameId && x.id !== a.id)
     .concat(articles.filter(x => x.gameId !== a.gameId).sort((m, n) => (n.views || 0) - (m.views || 0)))
     .slice(0, 6);
 
   const relatedHtml = related.length
-    ? `<h2 class="seo-related-title">更多攻略</h2>
-       <div class="seo-related-list">
-       ${related.map(r => `
-         <a class="seo-related-item" href="/article/${r.id}">
-           <span class="seo-related-cat">${esc(r.category || '攻略')}</span>
-           <span class="seo-related-name">${esc(r.title)}</span>
-         </a>`).join('')}
-       </div>`
+    ? `<h2 class="sec-h">继续阅读</h2>
+<div class="rel">
+${related.map(r => `  <a href="/article/${r.id}"><span class="cat">${esc(r.category || '攻略')}</span><span class="nm">${esc(r.title)}</span></a>`).join('\n')}
+</div>`
     : '';
 
-  const breadcrumb = game
-    ? `<nav class="seo-breadcrumb"><a href="/">首页</a><span>/</span><a href="/guides">攻略</a><span>/</span><a href="/guides#game-${game.id}">${esc(game.name)}</a><span>/</span><span>正文</span></nav>`
-    : `<nav class="seo-breadcrumb"><a href="/">首页</a><span>/</span><a href="/guides">攻略</a></nav>`;
+  const crumbs = [
+    `<a href="/">首页</a>`,
+    `<a href="/guides">攻略中心</a>`,
+    game ? `<a href="/game/${game.id}">${esc(game.name)}</a>` : ''
+  ].filter(Boolean).join('<i>/</i>');
 
-  // 结构化数据
   const ldArticle = {
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -230,7 +386,7 @@ articles.forEach((a) => {
       name: '小梦怀旧手游',
       logo: { '@type': 'ImageObject', url: SITE + '/assets/images/logo_xiaomeng.png' }
     },
-    mainEntityOfPage: { '@type': 'WebPage', '@id': canonical }
+    mainEntityOfPage: { '@type': 'WebPage', '@id': url }
   };
   const ldBreadcrumb = {
     '@context': 'https://schema.org',
@@ -238,98 +394,38 @@ articles.forEach((a) => {
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: '首页', item: SITE + '/' },
       { '@type': 'ListItem', position: 2, name: '攻略中心', item: SITE + '/guides' },
-      ...(game ? [{ '@type': 'ListItem', position: 3, name: game.name, item: SITE + '/guides#game-' + game.id }] : [])
+      ...(game ? [{ '@type': 'ListItem', position: 3, name: game.name, item: SITE + '/game/' + game.id }] : [])
     ]
   };
 
-  const html = `<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${esc(a.title)} - 小梦怀旧手游 游戏攻略</title>
-<meta name="description" content="${esc(a.summary || '')}">
-<meta name="robots" content="index, follow">
-<meta name="referrer" content="strict-origin-when-cross-origin">
-<link rel="canonical" href="${esc(canonical)}">
-<meta property="og:type" content="article">
-<meta property="og:title" content="${esc(a.title)}">
-<meta property="og:description" content="${esc(a.summary || '')}">
-<meta property="og:url" content="${esc(canonical)}">
-<meta property="og:site_name" content="小梦怀旧手游">
-${a.cover ? `<meta property="og:image" content="${SITE}/${esc(a.cover)}">
-<meta property="og:image:alt" content="${esc(a.title)}">` : ''}
-<meta name="twitter:card" content="${a.cover ? 'summary_large_image' : 'summary'}">
-<meta name="twitter:title" content="${esc(a.title)}">
-<meta name="twitter:description" content="${esc(a.summary || '')}">
-${a.cover ? `<meta name="twitter:image" content="${SITE}/${esc(a.cover)}">` : ''}
-${a.date ? `<meta property="article:published_time" content="${esc(a.date)}">` : ''}
-<link rel="icon" type="image/svg+xml" href="../favicon.svg">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png">
-<link rel="icon" type="image/png" sizes="192x192" href="../favicon-192.png">
-<link rel="apple-touch-icon" sizes="180x180" href="../favicon-192.png">
-<link rel="manifest" href="../site.webmanifest">
-<link rel="stylesheet" href="../css/style.css">
-<script type="application/ld+json">${JSON.stringify(ldArticle)}</script>
-<script type="application/ld+json">${JSON.stringify(ldBreadcrumb)}</script>
-<style>
-  .seo-topbar{position:sticky;top:0;z-index:100;background:#fff;border-bottom:1px solid var(--border,#e3e8f2);display:flex;align-items:center;justify-content:space-between;padding:14px 20px}
-  .seo-topbar .seo-brand{font-weight:700;color:var(--primary,#2456c8);letter-spacing:1px}
-  .seo-nav{display:flex;gap:18px}
-  .seo-nav a{color:var(--text-secondary,#4a5674);font-size:14px}
-  .seo-nav a:hover{color:var(--primary,#2456c8)}
-  .seo-main{max-width:820px;margin:0 auto;padding:36px 20px 60px}
-  .seo-breadcrumb{font-size:13px;color:var(--text-muted,#8a93ad);margin-bottom:22px}
-  .seo-breadcrumb a{color:var(--text-muted,#8a93ad)}
-  .seo-breadcrumb a:hover{color:var(--primary,#2456c8)}
-  .seo-breadcrumb span{margin:0 8px}
-  .seo-cat{display:inline-block;font-size:12px;color:#fff;background:var(--accent,#ff9d2e);border-radius:4px;padding:2px 10px;margin-bottom:14px}
-  .seo-title{font-size:28px;font-weight:700;line-height:1.35;color:var(--text-primary,#1a2340);margin-bottom:14px}
-  .seo-meta{font-size:13px;color:var(--text-muted,#8a93ad);display:flex;flex-wrap:wrap;gap:14px;margin-bottom:26px;border-bottom:1px solid var(--border,#e3e8f2);padding-bottom:20px}
-  .seo-cover{width:100%;height:auto;border-radius:10px;margin-bottom:26px;background:#eef1f7}
-  .seo-related-title{font-size:20px;margin:48px 0 16px;color:var(--text-primary,#1a2340)}
-  .seo-related-list{display:grid;grid-template-columns:1fr;gap:10px}
-  .seo-related-item{display:flex;align-items:center;gap:10px;padding:14px 16px;border:1px solid var(--border,#e3e8f2);border-radius:8px;background:#fff;transition:box-shadow .2s;color:var(--text-primary,#1a2340)}
-  .seo-related-item:hover{box-shadow:0 4px 16px rgba(13,35,82,.08)}
-  .seo-related-cat{flex:none;font-size:11px;color:#fff;background:var(--primary,#2456c8);border-radius:4px;padding:2px 8px}
-  .seo-related-name{font-size:15px;font-weight:600}
-  .seo-footer{text-align:center;padding:32px 20px;border-top:1px solid var(--border,#e3e8f2);background:#fff;font-size:13px;color:var(--text-muted,#8a93ad)}
-  .seo-footer a{color:var(--text-muted,#8a93ad);margin:0 10px}
-  .seo-footer a:hover{color:var(--primary,#2456c8)}
-  .back-home{margin-bottom:20px}
-  .back-home a{font-size:14px;color:var(--text-secondary,#4a5674)}
-  .back-home a:hover{color:var(--primary,#2456c8)}
-  @media (max-width:640px){
-    .seo-title{font-size:22px}
-    .seo-main{padding:24px 16px 48px}
-    .seo-nav{gap:12px}
-  }
-</style>
-</head>
-<body>
-${renderHeader()}
-<main class="seo-main">
-  ${breadcrumb}
-  <div class="back-home"><a href="/guides">← 返回攻略中心</a></div>
-  <article itemscope itemtype="https://schema.org/Article">
-    ${a.category ? `<span class="seo-cat">${esc(a.category)}</span>` : ''}
-    <h1 class="seo-title" itemprop="headline">${esc(a.title)}</h1>
-    <div class="seo-meta">
-      <span>👤 ${esc(a.author || '小梦攻略组')}</span>
-      <span>📅 <time itemprop="datePublished" datetime="${esc(a.date || '')}">${esc(a.date || '')}</time></span>
-      <span>👁 ${(a.views || 0).toLocaleString()} 阅读</span>
+  const html = head(a.title + ' - 小梦怀旧手游 游戏攻略', a.summary || '', url, {
+    ogType: 'article',
+    image: a.cover,
+    published: a.date,
+    ld: [ldArticle, ldBreadcrumb]
+  }) + `<main class="wrap">
+  <nav class="crumb">${crumbs}<i>/</i><span>正文</span></nav>
+  <article>
+    ${a.category ? `<span class="tag">${esc(a.category)}</span>` : ''}
+    <h1 class="ttl">${esc(a.title)}</h1>
+    <div class="meta">
+      <span>${esc(a.author || '小梦攻略组')}</span>
+      <span>${esc(a.date || '')}</span>
+      ${game ? `<span><a href="/game/${game.id}">${esc(game.name)}</a></span>` : ''}
     </div>
-    ${cover ? `<img class="seo-cover" src="${esc(cover)}" alt="${esc(a.title)}"${sizeAttrs(a.cover)} decoding="async" fetchpriority="high">` : ''}
-    <div class="article-detail-content" itemprop="articleBody">
+    ${cover ? `<img class="cover" src="${esc(cover)}" alt="${esc(a.title)}"${sizeAttrs(a.cover)} decoding="async" fetchpriority="high">` : ''}
+    <div class="body">
 ${contentHtml}
     </div>
   </article>
-  ${relatedHtml}
+
+  <div class="cta">
+    <p>这篇攻略对你有帮助吗？回到首页，还有更多怀旧手游和攻略等你发现。</p>
+    <a class="cta-btn" href="/">← 返回小梦怀旧手游首页</a>
+  </div>
+${relatedHtml}
 </main>
-${renderFooter()}
-</body>
-</html>
-`;
+` + foot();
 
   writeFile('article/' + a.id + '.html', html);
   sitemapUrls.push({
@@ -340,155 +436,226 @@ ${renderFooter()}
 });
 console.log('✅ 生成 ' + articles.length + ' 篇攻略静态页');
 
-// ===== 6. 生成攻略索引页 guides.html =====
-const byGame = new Map();
+// ===== 6. 生成每款游戏独立页 =====
+const articlesByGame = new Map();
 articles.forEach(a => {
-  const key = a.gameId || 0;
-  if (!byGame.has(key)) byGame.set(key, []);
-  byGame.get(key).push(a);
+  const k = a.gameId || 0;
+  if (!articlesByGame.has(k)) articlesByGame.set(k, []);
+  articlesByGame.get(k).push(a);
 });
+
+games.forEach((g) => {
+  const url = SITE + '/game/' + g.id;
+  const ext = gameExtra[g.id] || {};
+  const mine = (articlesByGame.get(g.id) || []).slice().sort((m, n) => String(n.date).localeCompare(String(m.date)));
+
+  // 下载入口：严格沿用首页弹窗的同款回退规则
+  //   androidUrl 为空 -> 回退 url ；iosUrl 为空 -> 回退 url
+  // ⚠️ href 必须是 data/games.js 里的原值，不得改写。
+  const androidHref = (g.androidUrl && g.androidUrl !== '') ? g.androidUrl : g.url;
+  const iosHref = (g.iosUrl && g.iosUrl !== '') ? g.iosUrl : g.url;
+
+  // 结构化参数表
+  const baseFacts = [
+    ['开发商', g.developer || '—'],
+    ['发行年份', g.year ? String(g.year) : '—'],
+    ['游戏平台', g.platform || '手游'],
+    ['游戏分类', g.category || '角色扮演'],
+    ['安装大小', g.sizeText || (g.size ? (g.size / 1024).toFixed(1) + 'GB' : '—')],
+    ['玩家评分', g.rating ? '★ ' + g.rating + '.0' : '—']
+  ];
+  const facts = baseFacts.concat(Array.isArray(ext.facts) ? ext.facts : []);
+
+  const factsHtml = facts
+    .filter(f => f && f[1] != null && String(f[1]).trim() !== '' && String(f[1]) !== '—')
+    .map(f => `    <tr><th>${esc(f[0])}</th><td>${esc(f[1])}</td></tr>`).join('\n');
+
+  const hlHtml = Array.isArray(ext.highlights) && ext.highlights.length
+    ? `<h2 class="sec-h">游戏特色</h2>\n<ul class="hl">\n${ext.highlights.map(h => `  <li>${esc(h)}</li>`).join('\n')}\n</ul>`
+    : '';
+
+  const introParas = [];
+  if (ext.intro) introParas.push(...String(ext.intro).split(/\n+/).filter(Boolean));
+  else if (g.desc) introParas.push(g.desc);
+  if (ext.extraIntro) introParas.push(...String(ext.extraIntro).split(/\n+/).filter(Boolean));
+
+  const introHtml = `<h2 class="sec-h">游戏介绍</h2>
+<div class="prose">
+${introParas.map(p => (p.trim().startsWith('<') ? p : '<p>' + esc(p) + '</p>')).join('\n')}
+</div>`;
+
+  const mineHtml = mine.length
+    ? `<h2 class="sec-h">${esc(g.name)} 攻略（${mine.length} 篇）</h2>
+<div class="lst">
+${mine.map(a => `  <a href="/article/${a.id}"><span class="cat">${esc(a.category || '攻略')}</span><span><span class="nm">${esc(a.title)}</span><span class="sm">${esc((a.summary || '').slice(0, 70))}</span></span></a>`).join('\n')}
+</div>`
+    : '';
+
+  // 相关游戏：同分类优先，其次按热度
+  const others = games.filter(x => x.id !== g.id)
+    .sort((m, n) => {
+      const ms = (m.category === g.category ? 1 : 0), ns = (n.category === g.category ? 1 : 0);
+      if (ms !== ns) return ns - ms;
+      return (n.heat || 0) - (m.heat || 0);
+    }).slice(0, 8);
+
+  const othersHtml = `<h2 class="sec-h">同类怀旧手游推荐</h2>
+<div class="gcards">
+${others.map(o => `  <a class="gcard" href="/game/${o.id}">
+    <img src="../${esc(o.cover)}" alt="${esc(o.name)}" loading="lazy"${sizeAttrs(o.cover)}>
+    <div class="bd"><div class="nm">${esc(o.name)}</div><div class="ds">${esc((o.desc || '').slice(0, 34))}</div></div>
+  </a>`).join('\n')}
+</div>`;
+
+  const desc = (g.desc || '').replace(/\s+/g, ' ').slice(0, 150);
+  const ldGame = {
+    '@context': 'https://schema.org',
+    '@type': 'VideoGame',
+    name: g.name,
+    description: g.desc || '',
+    image: g.cover ? SITE + '/' + g.cover : undefined,
+    applicationCategory: 'Game',
+    operatingSystem: 'Android, iOS',
+    genre: g.category || '角色扮演',
+    author: { '@type': 'Organization', name: g.developer || '未知' },
+    datePublished: g.year ? String(g.year) : undefined,
+    inLanguage: 'zh-CN'
+  };
+  const ldBreadcrumb = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: '首页', item: SITE + '/' },
+      { '@type': 'ListItem', position: 2, name: '游戏大厅', item: SITE + '/games' },
+      { '@type': 'ListItem', position: 3, name: g.name, item: url }
+    ]
+  };
+
+  const html = head(g.name + ' - 官方下载入口与攻略 - 小梦怀旧手游', desc, url, {
+    ogType: 'article',
+    image: g.cover,
+    ld: [ldGame, ldBreadcrumb]
+  }) + `<main class="wrap">
+  <nav class="crumb"><a href="/">首页</a><i>/</i><a href="/games">游戏大厅</a><i>/</i><span>${esc(g.name)}</span></nav>
+  <div class="ghero">
+    <div class="pic"><img src="../${esc(g.cover)}" alt="${esc(g.name)}"${sizeAttrs(g.cover)} decoding="async" fetchpriority="high"></div>
+    <div class="info">
+      ${g.category ? `<span class="tag">${esc(g.category)}</span>` : ''}
+      <h1>${esc(g.name)}</h1>
+      <div class="sub">${esc(g.developer || '')}${g.platform ? ' · ' + esc(g.platform) : ''}${g.year ? ' · ' + g.year + ' 年' : ''}</div>
+      <div class="score">${g.rating ? '★ ' + g.rating + '.0 / 5.0' : ''}</div>
+      <div class="dl">
+        <a class="and" href="${esc(androidHref)}" target="_blank" rel="sponsored noopener noreferrer">安卓下载</a>
+        <a class="ios" href="${esc(iosHref)}" target="_blank" rel="sponsored noopener noreferrer">苹果下载</a>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="sec-h">官方信息</h2>
+  <table class="facts">
+${factsHtml}
+  </table>
+
+${introHtml}
+
+${hlHtml}
+
+${mineHtml}
+
+${othersHtml}
+
+  <div class="cta">
+    <p>想找更多经典 IP 正版复刻的怀旧手游？回到首页一次看全。</p>
+    <a class="cta-btn" href="/">← 返回小梦怀旧手游首页</a>
+  </div>
+</main>
+` + foot();
+
+  writeFile('game/' + g.id + '.html', html);
+  sitemapUrls.push({ loc: url, lastmod: TODAY, priority: '0.8' });
+});
+console.log('✅ 生成 ' + games.length + ' 款游戏独立页');
+
+// ===== 7. 生成攻略索引页 guides.html =====
+const byGame = articlesByGame;
 const gameGroups = [...byGame.entries()].sort((x, y) => y[1].length - x[1].length);
 
-const guidesIndexHtml = `<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>全部游戏攻略索引 - 小梦怀旧手游</title>
-<meta name="description" content="小梦怀旧手游全部 ${articles.length} 篇游戏攻略索引，按游戏分类整理：职业加点、开荒路线、打金搬砖、装备获取、版本玩法，一站式查阅。">
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="${SITE}/guides">
-<meta property="og:type" content="website">
-<meta property="og:title" content="全部游戏攻略索引 - 小梦怀旧手游">
-<meta property="og:description" content="小梦怀旧手游全部 ${articles.length} 篇游戏攻略索引，按游戏分类整理。">
-<meta property="og:url" content="${SITE}/guides">
-<meta property="og:site_name" content="小梦怀旧手游">
-<meta property="og:image" content="${SITE}/assets/images/logo_xiaomeng.png">
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
-<link rel="stylesheet" href="css/style.css">
-<style>${INDEX_CSS}</style>
-</head>
-<body>
-${renderHeader()}
-<main class="seo-main">
-  <nav class="seo-crumb"><a href="/">首页</a><span>/</span><span>攻略中心</span></nav>
-  <h1 class="seo-h1">全部游戏攻略索引</h1>
-  <p class="seo-lead">共收录 <strong>${articles.length}</strong> 篇原创攻略，覆盖 <strong>${gameGroups.length}</strong> 款怀旧手游。按游戏分组，点击标题直接阅读。</p>
+const guidesIndexHtml = head(
+  '全部游戏攻略索引 - 小梦怀旧手游',
+  `小梦怀旧手游全部 ${articles.length} 篇游戏攻略索引，按游戏分类整理：职业加点、开荒路线、打金搬砖、装备获取、版本玩法，一站式查阅。`,
+  SITE + '/guides',
+  { prefix: '', ld: [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: '全部游戏攻略索引', url: SITE + '/guides' }] }
+) + `<main class="wrap wide">
+  <nav class="crumb"><a href="/">首页</a><i>/</i><span>攻略中心</span></nav>
+  <h1 class="ttl">全部游戏攻略索引</h1>
+  <p class="lead">共收录 <strong>${articles.length}</strong> 篇原创攻略，覆盖 <strong>${gameGroups.length}</strong> 款怀旧手游。按游戏分组，点击标题直接阅读。</p>
 ${gameGroups.map(([gid, list]) => {
-  const g = gameById[gid];
-  const gname = g ? g.name : '其他攻略';
-  return `  <h2 class="seo-gtitle" id="game-${gid}">${esc(gname)}<span class="cnt">${list.length} 篇</span></h2>
-  <div class="seo-list">
-${list.map(a => `    <a class="seo-item" href="/article/${a.id}">
-      <span class="seo-item-cat">${esc(a.category || '攻略')}</span>
-      <span><span class="seo-item-name">${esc(a.title)}</span><span class="seo-item-sum">${esc((a.summary || '').slice(0, 80))}</span></span>
-    </a>`).join('\n')}
+    const g = gameById[gid];
+    const gname = g ? g.name : '其他攻略';
+    const gLink = g ? `<a href="/game/${g.id}" style="font-size:13px;font-weight:400">查看游戏 →</a>` : '';
+    return `  <h2 class="grp-h" id="game-${gid}">${esc(gname)}<span class="cnt">${list.length} 篇</span>${gLink}</h2>
+  <div class="lst">
+${list.map(a => `    <a href="/article/${a.id}"><span class="cat">${esc(a.category || '攻略')}</span><span><span class="nm">${esc(a.title)}</span><span class="sm">${esc((a.summary || '').slice(0, 80))}</span></span></a>`).join('\n')}
   </div>`;
-}).join('\n')}
+  }).join('\n')}
 </main>
-${renderFooter()}
-</body>
-</html>
-`;
+` + foot();
 writeFile('guides.html', guidesIndexHtml);
 console.log('✅ 生成 guides.html（' + articles.length + ' 篇 / ' + gameGroups.length + ' 组）');
 
-// ===== 7. 生成游戏索引页 games.html =====
-const gamesHtml = `<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>全部怀旧手游大全 - 小梦怀旧手游</title>
-<meta name="description" content="小梦怀旧手游收录 ${games.length} 款经典端游正版复刻怀旧手游：传奇、奇迹MU、仙境传说、龙之谷、武林外传、永恒岛等，点击直达官方下载入口。">
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="${SITE}/games">
-<meta property="og:type" content="website">
-<meta property="og:title" content="全部怀旧手游大全 - 小梦怀旧手游">
-<meta property="og:description" content="小梦怀旧手游收录 ${games.length} 款经典端游正版复刻怀旧手游，点击直达官方下载入口。">
-<meta property="og:url" content="${SITE}/games">
-<meta property="og:site_name" content="小梦怀旧手游">
-<meta property="og:image" content="${SITE}/assets/images/logo_xiaomeng.png">
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
-<link rel="stylesheet" href="css/style.css">
-<style>${INDEX_CSS}</style>
-</head>
-<body>
-${renderHeader()}
-<main class="seo-main">
-  <nav class="seo-crumb"><a href="/">首页</a><span>/</span><span>游戏大厅</span></nav>
-  <h1 class="seo-h1">全部怀旧手游大全</h1>
-  <p class="seo-lead">共收录 <strong>${games.length}</strong> 款经典端游正版复刻手游。点击「官网下载」进入官方下载入口，点击「查看攻略」阅读该游戏的新手开荒与进阶攻略。</p>
-  <div class="seo-grid">
+// ===== 8. 生成游戏索引页 games.html =====
+const gamesHtml = head(
+  '全部怀旧手游大全 - 小梦怀旧手游',
+  `小梦怀旧手游收录 ${games.length} 款经典端游正版复刻怀旧手游：传奇、奇迹MU、仙境传说、龙之谷、武林外传、永恒岛等，点击进入游戏详情页查看官方下载入口与攻略。`,
+  SITE + '/games',
+  { prefix: '', ld: [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: '全部怀旧手游大全', url: SITE + '/games' }] }
+) + `<main class="wrap wide">
+  <nav class="crumb"><a href="/">首页</a><i>/</i><span>游戏大厅</span></nav>
+  <h1 class="ttl">全部怀旧手游大全</h1>
+  <p class="lead">共收录 <strong>${games.length}</strong> 款经典端游正版复刻手游。点击卡片进入游戏详情页，查看官方信息、下载入口与全部攻略。</p>
+  <div class="grid">
 ${[...games].sort((a, b) => (b.heat || 0) - (a.heat || 0)).map(g => {
   const cnt = (byGame.get(g.id) || []).length;
-  return `    <div class="seo-gcard" id="g-${g.id}">
+  return `    <a class="card" href="/game/${g.id}" id="g-${g.id}">
       <img src="${esc(g.cover)}" alt="${esc(g.name)}" loading="lazy"${sizeAttrs(g.cover)}>
-      <div class="seo-gcard-bd">
-        <div class="seo-gcard-nm">${esc(g.name)}</div>
-        <div class="seo-gcard-ds">${esc((g.desc || '').slice(0, 44))}</div>
-        <div class="seo-gcard-links">
-          <a class="seo-btn" href="${esc(g.url)}" target="_blank" rel="sponsored noopener noreferrer">官网下载</a>
-          ${cnt ? `<a class="seo-btn ghost" href="/guides#game-${g.id}">查看攻略 ${cnt}</a>` : ''}
+      <div class="bd">
+        <div class="nm">${esc(g.name)}</div>
+        <div class="ds">${esc((g.desc || '').slice(0, 42))}</div>
+        <div class="row">
+          <span class="btn">游戏详情</span>
+          ${cnt ? `<span class="btn ghost">攻略 ${cnt}</span>` : ''}
         </div>
       </div>
-    </div>`;
+    </a>`;
 }).join('\n')}
   </div>
 </main>
-${renderFooter()}
-</body>
-</html>
-`;
+` + foot();
 writeFile('games.html', gamesHtml);
 console.log('✅ 生成 games.html（' + games.length + ' 款）');
 
-// ===== 8. 生成 404.html =====
+// ===== 9. 生成 404.html =====
 const recent = [...articles].sort((a, b) => String(b.date).localeCompare(String(a.date))).slice(0, 8);
-const notFoundHtml = `<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>页面不存在 - 小梦怀旧手游</title>
-<meta name="robots" content="noindex, follow">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="stylesheet" href="/css/style.css">
-<style>${INDEX_CSS}</style>
-</head>
-<body>
-${renderHeader()}
-<main class="seo-main">
-  <h1 class="seo-h1">页面不存在</h1>
-  <p class="seo-lead">你要找的页面可能已经下线，或者地址写错了。下面这些入口应该能帮到你。</p>
-  <p style="margin-bottom:32px">
-    <a class="seo-btn" href="/">返回首页</a>
-    <a class="seo-btn ghost" href="/games">全部游戏</a>
-    <a class="seo-btn ghost" href="/guides">全部攻略</a>
+const notFoundHtml = head('页面不存在 - 小梦怀旧手游', '你要找的页面可能已经下线，或者地址写错了。', SITE + '/404', {
+  prefix: '/', robots: 'noindex, follow'
+}) + `<main class="wrap">
+  <h1 class="ttl">页面不存在</h1>
+  <p class="lead">你要找的页面可能已经下线，或者地址写错了。下面这些入口应该能帮到你。</p>
+  <p style="margin-bottom:34px">
+    <a class="btn" href="/" style="padding:11px 24px;font-size:14px">返回首页</a>
+    <a class="btn ghost" href="/games" style="padding:11px 24px;font-size:14px">全部游戏</a>
+    <a class="btn ghost" href="/guides" style="padding:11px 24px;font-size:14px">全部攻略</a>
   </p>
-  <h2 class="seo-gtitle">最新攻略</h2>
-  <div class="seo-list">
-${recent.map(a => `    <a class="seo-item" href="/article/${a.id}">
-      <span class="seo-item-cat">${esc(a.category || '攻略')}</span>
-      <span class="seo-item-name">${esc(a.title)}</span>
-    </a>`).join('\n')}
+  <h2 class="sec-h">最新攻略</h2>
+  <div class="lst">
+${recent.map(a => `    <a href="/article/${a.id}"><span class="cat">${esc(a.category || '攻略')}</span><span class="nm">${esc(a.title)}</span></a>`).join('\n')}
   </div>
 </main>
-${renderFooter()}
-</body>
-</html>
-`;
+` + foot();
 writeFile('404.html', notFoundHtml);
 console.log('✅ 生成 404.html');
 
-// ===== 9a. 确保 index.html 的性能埋点与 SEO 标记齐全（幂等） =====
-// 首页有三处必须成立的设置，缺一处就会明显丢分：
-//   1) preload 指向轮播真实首图（原本指错了文件，白下载 370KB）
-//   2) 轮播只让首图高优先级加载，其余懒加载（原本 8 张全部立即加载 = 首屏 3.1MB）
-//   3) SEO 链接区块的标记存在（供下一步填入全部游戏/攻略链接）
-// 这个函数每次构建都会检查，已应用则原样通过，不会重复改动。
+// ===== 10. 首页埋点与 SEO 链接区块 =====
 const INDEX_MARK_START = '<!-- SEO-LINKS:START -->';
 const INDEX_MARK_END = '<!-- SEO-LINKS:END -->';
 const WRONG_PRELOAD = '<link rel="preload" as="image" href="assets/images/hero/hero_longzhigu.webp" fetchpriority="high">';
@@ -540,9 +707,6 @@ function ensureIndexHooks() {
 console.log('\n🔧 检查首页埋点');
 ensureIndexHooks();
 
-// ===== 9b. 更新 index.html 的 SEO 链接区块 =====
-// 首页主体内容由 JS 渲染，不执行 JS 的爬虫（百度、字节）看到的是空容器。
-// 这里把全部游戏与攻略以真实 <a> 输出，让爬虫拿到完整的站内链接入口。
 const SEO_START = '<!-- SEO-LINKS:START -->';
 const SEO_END = '<!-- SEO-LINKS:END -->';
 const indexRel = 'index.html';
@@ -551,33 +715,40 @@ const indexSrc = fs.readFileSync(path.join(ROOT, indexRel), 'utf8');
 const sortedGames = [...games].sort((a, b) => (b.heat || 0) - (a.heat || 0));
 const sortedArticles = [...articles].sort((a, b) => String(b.date).localeCompare(String(a.date)));
 const seoBlock = `${SEO_START}
-<noscript>
-<div class="seo-noscript">
-  <h2>全部游戏（${games.length} 款）</h2>
-  <ul>
-${sortedGames.map(g => `    <li><a href="/games#g-${g.id}">${esc(g.name)}</a></li>`).join('\n')}
-  </ul>
-  <h2>全部攻略（${articles.length} 篇）</h2>
-  <ul>
-${sortedArticles.map(a => `    <li><a href="/article/${a.id}">${esc(a.title)}</a></li>`).join('\n')}
-  </ul>
-</div>
-</noscript>
-<div class="seo-crawl-links">
-  <a href="/games">全部游戏（${games.length}）</a>
-  <a href="/guides">全部攻略（${articles.length}）</a>
-</div>
-${SEO_END}`;
+  <noscript>
+  <div class="seo-noscript">
+    <h2>全部游戏（${games.length} 款）</h2>
+    <ul>
+${sortedGames.map(g => `      <li><a href="/game/${g.id}">${esc(g.name)}</a></li>`).join('\n')}
+    </ul>
+    <h2>全部攻略（${articles.length} 篇）</h2>
+    <ul>
+${sortedArticles.map(a => `      <li><a href="/article/${a.id}">${esc(a.title)}</a></li>`).join('\n')}
+    </ul>
+  </div>
+  </noscript>
+  <!-- 爬虫可见的真实链接入口（不依赖 JS） -->
+  <section class="seo-crawl-links" aria-label="全站导航">
+    <a href="/games">全部游戏（${games.length}）</a>
+    <a href="/guides">全部攻略（${articles.length}）</a>
+  </section>
+  <section class="seo-crawl-links" aria-label="游戏直达">
+${sortedGames.map(g => `    <a href="/game/${g.id}">${esc(g.name)}</a>`).join('\n')}
+  </section>
+  <section class="seo-crawl-links" aria-label="攻略直达">
+${sortedArticles.map(a => `    <a href="/article/${a.id}">${esc(a.title)}</a>`).join('\n')}
+  </section>
+  ${SEO_END}`;
 
 if (indexSrc.includes(SEO_START) && indexSrc.includes(SEO_END)) {
   const re = new RegExp(SEO_START + '[\\s\\S]*?' + SEO_END);
   fs.writeFileSync(path.join(ROOT, indexRel), indexSrc.replace(re, seoBlock));
-  console.log('✅ index.html SEO 链接区块已更新（游戏 ' + games.length + ' / 攻略 ' + articles.length + '）');
+  console.log('✅ index.html SEO 链接区块已更新（游戏 ' + games.length + ' / 攻略 ' + articles.length + '，游戏链接指向 /game/N）');
 } else {
   console.log('⚠️  跳过：index.html 里找不到 ' + SEO_START + ' 标记，请先手动加入标记');
 }
 
-// ===== 10. 重建 sitemap.xml =====
+// ===== 11. 重建 sitemap.xml =====
 const sitemapItems = [
   { loc: SITE + '/', lastmod: TODAY, priority: '1.0', changefreq: 'daily' },
   { loc: SITE + '/games', lastmod: TODAY, priority: '0.9', changefreq: 'weekly' },
