@@ -179,6 +179,18 @@ function pushOne(url) {
     state.history = (state.history || []).concat([{ at: new Date().toISOString(), urls: newlyPushed }]).slice(-60);
   }
   state.lastRun = new Date().toISOString();
+  // 把本次运行结果也写进状态文件。
+  // 为什么需要：GitHub 的 Actions 日志接口对本令牌返回 403，读不到 stdout，
+  // 所以「这次是推成功了、还是撞配额上限、还是令牌失效」在外部看不出来 —— 写进状态文件就能看。
+  state.lastResult = {
+    at: state.lastRun,
+    attempted: batch.length,                                   // 本次尝试推几条
+    success: ok,                                               // 其中成功几条
+    outcome: quotaHit ? 'over_quota'                          // 撞到当日配额上限
+      : ok > 0 ? 'pushed'                                      // 正常推成功
+        : 'no_success',                                        // 一条没成功（看 errors）
+    errors: failReasons
+  };
   fs.writeFileSync(STATE, JSON.stringify(state, null, 2), 'utf8');
 
   const doneNow = targets.filter((u) => state.pushed[u]).length;

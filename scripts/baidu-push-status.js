@@ -98,6 +98,22 @@ function fetchRemote() {
     const t = new Date(new Date(state.lastRun).getTime() + 8 * 3600e3).toISOString().replace('T', ' ').slice(0, 16);
     console.log('  上次运行：' + t + '（北京时间）');
   }
+  // 上次运行结果由 baidu-push-priority.js 写入状态文件。
+  // 这是因为 GitHub 的 Actions 日志接口对本令牌为 403，读不到 stdout，
+  // 只能靠状态文件把「推成功 / 撞配额 / 令牌失效」区分开。
+  const lr = state && state.lastResult;
+  if (lr) {
+    const OUT = {
+      pushed: '✅ 正常推成功',
+      over_quota: '⏹ 撞当日配额上限（不是失败，明天会自动接着推）',
+      no_success: '⚠️ 一条都没成功 —— 看下面的错误分类'
+    };
+    console.log('  上次结果：' + (OUT[lr.outcome] || lr.outcome)
+      + '（尝试 ' + lr.attempted + ' 条，成功 ' + lr.success + ' 条）');
+    if (lr.errors && Object.keys(lr.errors).length) console.log('  错误分类：' + JSON.stringify(lr.errors));
+  } else if (state && state.lastRun) {
+    console.log('  上次结果：（状态文件还是旧版，升级后的那次运行才会记录）');
+  }
   const hist = (state && state.history) || [];
   if (hist.length) {
     const last = hist[hist.length - 1];
