@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>龙之谷启程 主站背景 修复前后对比</title>
+<style>
+  body{margin:0;font-family:'Microsoft YaHei',sans-serif;background:#0d1117;color:#e6edf3;padding:24px}
+  h1{font-size:20px;margin:0 0 6px}
+  p.note{color:#8b949e;font-size:13px;margin:0 0 18px}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:1400px;margin:0 auto}
+  .card{background:#161b22;border:1px solid #30363d;border-radius:10px;overflow:hidden}
+  .card h3{margin:0;padding:10px 14px;font-size:15px;background:#21262d}
+  .tag-ok{color:#3fb950}.tag-new{color:#d29922}
+  img{display:block;width:100%;height:auto}
+  .zoom{display:flex;gap:14px;padding:14px;max-width:1000px;margin:22px auto 0}
+  .zoom .z{flex:1;text-align:center}
+  .zoom .z b{display:block;font-size:13px;margin-bottom:6px}
+  .zoom img{outline:1px solid #30363d}
+</style></head>
+<body>
+  <h1>龙之谷启程 —— 主站首屏背景：修复前 vs 增强后</h1>
+  <p class="note">左=原图（soft/色块+A I生成水印）　右=增强版（去水印 + 锐化提细节，webp quality 93）</p>
+  <div class="cols">
+    <div class="card"><h3>原图 hero_longzhigu.webp</h3>
+      <img src="assets/images/hero/hero_longzhigu.webp" alt="原图"></div>
+    <div class="card"><h3 class="tag-new">增强版 hero_longzhigu_hd.webp</h3>
+      <img src="assets/images/hero/hero_longzhigu_hd.webp" alt="增强版"></div>
+  </div>
+  <div class="zoom">
+    <div class="z"><b>原图 · 右下角（含“AI生成”水印）</b>
+      <img src="assets/images/hero/hero_longzhigu.webp" style="object-position:100% 100%;object-fit:cover;height:220px" alt="原图水印"></div>
+    <div class="z"><b>增强版 · 右下角（水印已去除）</b>
+      <img src="assets/images/hero/hero_longzhigu_hd.webp" style="object-position:100% 100%;object-fit:cover;height:220px" alt="增强版水印"></div>
+  </div>
+</body></html>

@@ -1,0 +1,83 @@
+name: 发布文章
+description: 提交后约 2 分钟自动发布到网站，无需任何其他操作
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 使用说明
+
+        - **标题**填在下方"标题"输入框里，就是文章标题
+        - 正文支持 **加粗**、`## 小标题`、列表等格式，**图片直接拖进编辑框或 Ctrl+V 粘贴**即可
+        - 摘要可留空，留空时自动截取正文开头
+        - 提交后约 2 分钟自动上线，本工单会自动关闭并附上文章链接
+  - type: dropdown
+    id: game
+    attributes:
+      label: 游戏名
+      description: 这篇文章属于哪款游戏
+      options:
+        - 龙之谷启程
+        - 墨香情
+        - 星辰变：归来
+        - 飞飞：重逢
+        - 神泣：纷争
+        - 荣耀出征卡点服
+        - 千年盛世：千年传奇版
+        - 龙城秘境：凤凰沉默
+        - 剑与翼—经典复刻
+        - 龙城秘境：觉醒合击
+        - 小小屠龙：原始火龙
+        - 荣耀出征
+        - 龙城秘境：重返冰雪
+        - 决战破晓
+        - 小小屠龙：幻变三职业
+        - 小小屠龙：灵符自由版
+        - 小小屠龙：3D合击版
+        - 风暴远征：英雄年代联动版
+        - 永恒岛：高清重制版
+        - 魔力宝贝回忆十宠版
+        - 武林外传：十年之约
+        - 热江：武林版
+        - 小小屠龙：卡点重置版
+        - 奇迹世界：起源
+        - 天天龙族怀旧服
+        - 寻梦丝路
+        - 小小屠龙：冰雪骑战
+        - 烈火屠龙：美杜莎卡点服
+        - 永恒岛：怀旧版
+        - 修仙家族模拟器2
+        - 义战龙城：3D纯净服
+        - 热江：全新玩法
+        - 巴风特之怒：RO怀旧
+        - 千年盛世：原始千年
+        - 永恒岛：彩虹回忆
+        - 金装裁决
+        - 屠龙决战沙城：传奇三光通版
+        - 热血传说：复古传奇
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: 文章分类
+      options:
+        - 攻略
+        - 资讯
+        - 评测
+      default: 0
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: 内容摘要
+      description: 一两句话概括文章内容，显示在文章列表里（可留空）
+    validations:
+      required: false
+  - type: textarea
+    id: content
+    attributes:
+      label: 正文内容
+      description: 支持 Markdown 格式，图片直接拖进来或粘贴即可
+    validations:
+      required: true

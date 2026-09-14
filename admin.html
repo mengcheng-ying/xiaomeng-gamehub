@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>文章管理后台 - 小梦怀旧手游</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: #0a0f1a;
+      color: #e0e0e0;
+      min-height: 100vh;
+      display: flex;
+    }
+    /* 侧边栏 */
+    .sidebar {
+      width: 260px;
+      background: #0d1322;
+      border-right: 1px solid #1a2240;
+      padding: 24px 0;
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+    .sidebar-logo {
+      padding: 0 24px 24px;
+      font-size: 20px;
+      font-weight: 700;
+      color: #00d4ff;
+      border-bottom: 1px solid #1a2240;
+      margin-bottom: 16px;
+    }
+    .sidebar-nav { flex: 1; }
+    .sidebar-nav a {
+      display: block;
+      padding: 12px 24px;
+      color: #8892b0;
+      text-decoration: none;
+      font-size: 14px;
+      transition: all 0.2s;
+      border-left: 3px solid transparent;
+    }
+    .sidebar-nav a:hover, .sidebar-nav a.active {
+      color: #00d4ff;
+      background: rgba(0,212,255,0.06);
+      border-left-color: #00d4ff;
+    }
+    .sidebar-footer {
+      padding: 16px 24px;
+      border-top: 1px solid #1a2240;
+      font-size: 12px;
+      color: #555;
+    }
+    .sidebar-footer a { color: #00d4ff; text-decoration: none; }
+    /* 主区域 */
+    .main {
+      flex: 1;
+      padding: 32px 36px;
+      max-width: 1000px;
+      overflow-y: auto;
+    }
+    .page-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .page-subtitle { color: #8892b0; margin-bottom: 28px; font-size: 14px; }
+    /* 卡片 */
+    .card {
+      background: #111827;
+      border: 1px solid #1a2240;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .card h3 { font-size: 16px; margin-bottom: 16px; color: #00d4ff; }
+    /* 表单 */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+    .form-row.single { grid-template-columns: 1fr; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label { font-size: 13px; color: #8892b0; font-weight: 500; }
+    .form-group input, .form-group textarea, .form-group select {
+      background: #0a0f1a;
+      border: 1px solid #1a2240;
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: #e0e0e0;
+      font-size: 14px;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      outline: none;
+      border-color: #00d4ff;
+    }
+    .form-group textarea { resize: vertical; min-height: 120px; }
+    /* 按钮 */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-primary { background: #00d4ff; color: #0a0f1a; }
+    .btn-primary:hover { background: #00b8e0; }
+    .btn-secondary { background: #1a2240; color: #e0e0e0; }
+    .btn-secondary:hover { background: #243050; }
+    .btn-danger { background: #ff444420; color: #ff4444; }
+    .btn-danger:hover { background: #ff444440; }
+    .btn-sm { padding: 6px 12px; font-size: 12px; }
+    .btn-row { display: flex; gap: 10px; margin-top: 16px; }
+    /* 文章列表 */
+    .article-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+      border-bottom: 1px solid #1a2240;
+      gap: 16px;
+    }
+    .article-item:last-child { border-bottom: none; }
+    .article-item-title {
+      font-weight: 600;
+      font-size: 14px;
+      flex: 1;
+    }
+    .article-item-meta {
+      font-size: 12px;
+      color: #8892b0;
+      white-space: nowrap;
+    }
+    .article-item-local {
+      display: inline-block;
+      background: #00d4ff20;
+      color: #00d4ff;
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      margin-left: 8px;
+    }
+    .article-item-actions { display: flex; gap: 6px; }
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: #555;
+      font-size: 14px;
+    }
+    /* 消息提示 */
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      z-index: 9999;
+      animation: slideIn 0.3s ease;
+      pointer-events: none;
+    }
+    .toast-success { background: #00c853; color: #fff; }
+    .toast-error { background: #ff4444; color: #fff; }
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    /* 响应式 */
+    @media (max-width: 768px) {
+      body { flex-direction: column; }
+      .sidebar { width: 100%; height: auto; position: static; padding: 12px 0; }
+      .sidebar-nav { display: flex; overflow-x: auto; }
+      .sidebar-nav a { padding: 10px 16px; white-space: nowrap; border-left: none; border-bottom: 3px solid transparent; }
+      .sidebar-nav a.active { border-left: none; border-bottom-color: #00d4ff; }
+      .sidebar-footer { display: none; }
+      .main { padding: 20px 16px; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+    #editor-section { display: none; }
+    #editor-section.show { display: block; }
+  </style>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="favicon-192.png">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-logo">小梦怀旧手游 后台</div>
+    <nav class="sidebar-nav">
+      <a href="#" class="active" data-tab="list">📋 文章列表</a>
+      <a href="#" data-tab="new">➕ 新建文章</a>
+      <a href="#" data-tab="export">📦 导入导出</a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="index.html" target="_blank" rel="noopener noreferrer">← 回到网站</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <!-- 文章列表 -->
+    <div id="tab-list">
+      <h1 class="page-title">文章列表</h1>
+      <p class="page-subtitle">管理所有文章，包括内置文章和本地添加的文章</p>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <h3 style="margin:0;">全部文章（<span id="total-count">0</span>篇）</h3>
+          <button class="btn btn-primary btn-sm" onclick="switchTab('new')">➕ 新建文章</button>
+        </div>
+        <div id="article-list"></div>
+      </div>
+    </div>
+
+    <!-- 新建/编辑文章 -->
+    <div id="tab-new">
+      <h1 class="page-title" id="editor-title">新建文章</h1>
+      <p class="page-subtitle">填写文章信息，保存后即可在网站攻略页看到</p>
+      <div class="card">
+        <div class="form-row single">
+          <div class="form-group">
+            <label>文章标题 *</label>
+            <input type="text" id="article-title" placeholder="如：龙之谷启程新手攻略">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>所属游戏 *</label>
+            <select id="article-game"></select>
+          </div>
+          <div class="form-group">
+            <label>分类</label>
+            <select id="article-category">
+              <option value="攻略">攻略</option>
+              <option value="评测">评测</option>
+              <option value="资讯">资讯</option>
+              <option value="技巧">技巧</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>作者</label>
+            <input type="text" id="article-author" value="小梦攻略组">
+          </div>
+          <div class="form-group">
+            <label>日期</label>
+            <input type="date" id="article-date">
+          </div>
+        </div>
+        <div class="form-row single">
+          <div class="form-group">
+            <label>封面图URL（可选，留空使用默认）</label>
+            <input type="text" id="article-cover" placeholder="如：assets/images/longzhigu_cover.jpg">
+          </div>
+        </div>
+        <div class="form-row single">
+          <div class="form-group">
+            <label>摘要 *</label>
+            <input type="text" id="article-summary" placeholder="一句话描述文章内容，会在列表页显示">
+          </div>
+        </div>
+        <div class="form-row single">
+          <div class="form-group">
+            <label>正文内容 *</label>
+            <textarea id="article-content" rows="10" placeholder="支持HTML格式：<h2>标题</h2><p>段落</p><h3>小标题</h3>"></textarea>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="saveArticle()">💾 保存文章</button>
+          <button class="btn btn-secondary" onclick="cancelEdit()">取消</button>
+          <input type="hidden" id="edit-id">
+        </div>
+      </div>
+    </div>
+
+    <!-- 导入导出 -->
+    <div id="tab-export">
+      <h1 class="page-title">导入导出</h1>
+      <p class="page-subtitle">把本地写的文章变成可发布上线的代码</p>
+      <div class="card">
+        <h3>导出为发布代码（推荐）</h3>
+        <p style="color:#8892b0;font-size:13px;margin-bottom:14px;">把你在后台写的本地文章生成为 JavaScript 代码。复制后粘贴到 <b>data/articles.js</b> 文件末尾（最后一行 <b>];</b> 的上方），再用 GitHub Desktop 推送，全网站就能看到。</p>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="exportAsJS()">📄 生成发布代码并复制</button>
+          <button class="btn btn-secondary" onclick="downloadJS()">⬇️ 下载为 .js 文件</button>
+        </div>
+        <textarea id="js-output" rows="8" style="display:none;margin-top:14px;background:#0a0f1a;border:1px solid #1a2240;border-radius:8px;padding:12px;color:#9fe8c8;font-size:12px;font-family:Consolas,monospace;width:100%;" readonly></textarea>
+      </div>
+      <div class="card">
+        <h3>导出本地文章（JSON备份）</h3>
+        <p style="color:#8892b0;font-size:13px;margin-bottom:14px;">仅导出你自行添加的文章（不含内置文章），下载为JSON文件，用于备份。</p>
+        <button class="btn btn-primary" onclick="exportArticles()">📥 导出本地文章</button>
+      </div>
+      <div class="card">
+        <h3>导入文章</h3>
+        <p style="color:#8892b0;font-size:13px;margin-bottom:14px;">选择之前导出的JSON文件，批量导入文章。新文章会自动分配ID，不会覆盖已有文章。</p>
+        <div class="btn-row">
+          <label class="btn btn-secondary" style="cursor:pointer;">
+            📤 选择文件
+            <input type="file" id="import-file" accept=".json" style="display:none" onchange="importArticles(this)">
+          </label>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="data/games.js"></script>
+  <script src="data/articles.js"></script>
+  <script>
+    const STORAGE_KEY = 'gamehub_articles';
+    // 静态文章数据（从 articles.js 同步，仅用于区分哪些是内置文章）
+    const STATIC_IDS = ARTICLES_DATA.map(a => a.id);
+
+    // 获取本地文章
+    function getLocalArticles() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      } catch(e) {
+        return [];
+      }
+    }
+
+    // 保存本地文章
+    function saveLocalArticles(arr) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+    }
+
+    // 生成新ID
+    function generateId() {
+      const allIds = [...STATIC_IDS, ...getLocalArticles().map(a => a.id)];
+      return allIds.length > 0 ? Math.max(...allIds) + 1 : 1000;
+    }
+
+    // Toast 提示
+    function showToast(msg, type) {
+      const t = document.createElement('div');
+      t.className = 'toast toast-' + (type || 'success');
+      t.textContent = msg;
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 2500);
+    }
+
+    // 切换标签
+    function switchTab(name) {
+      ['list', 'new', 'export'].forEach(t => {
+        document.getElementById('tab-' + t).style.display = t === name ? 'block' : 'none';
+        document.querySelectorAll('.sidebar-nav a').forEach(a => {
+          a.classList.toggle('active', a.dataset.tab === name);
+        });
+      });
+      if (name === 'list') renderArticleList();
+      if (name === 'new') { resetForm(); }
+    }
+
+    // 渲染文章列表
+    function renderArticleList() {
+      const localArticles = getLocalArticles();
+      const total = ARTICLES_DATA.length + localArticles.length;
+      document.getElementById('total-count').textContent = total;
+
+      const list = document.getElementById('article-list');
+      // 显示所有文章：先静态，再本地
+      const allArticles = [
+        ...ARTICLES_DATA.map(a => ({ ...a, isLocal: false })),
+        ...localArticles.map(a => ({ ...a, isLocal: true }))
+      ];
+
+      if (allArticles.length === 0) {
+        list.innerHTML = '<div class="empty-state">还没有文章，点击"新建文章"开始创作</div>';
+        return;
+      }
+
+      list.innerHTML = allArticles.map(a => `
+        <div class="article-item">
+          <div class="article-item-title">
+            ${a.title}
+            ${a.isLocal ? '<span class="article-item-local">本地</span>' : ''}
+          </div>
+          <div class="article-item-meta">${a.category} · ${a.author} · ${a.date}</div>
+          <div class="article-item-actions">
+            <button class="btn btn-secondary btn-sm" onclick="editArticle(${a.id})">编辑</button>
+            ${a.isLocal ? `<button class="btn btn-danger btn-sm" onclick="deleteArticle(${a.id})">删除</button>` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // 编辑文章
+    function editArticle(id) {
+      // 先查本地
+      const localArticles = getLocalArticles();
+      const local = localArticles.find(a => a.id === id);
+      const article = local || ARTICLES_DATA.find(a => a.id === id);
+      if (!article) return;
+
+      document.getElementById('edit-id').value = id;
+      document.getElementById('article-title').value = article.title;
+      document.getElementById('article-game').value = article.gameId || '';
+      document.getElementById('article-category').value = article.category;
+      document.getElementById('article-author').value = article.author;
+      document.getElementById('article-date').value = article.date;
+      document.getElementById('article-cover').value = article.cover || '';
+      document.getElementById('article-summary').value = article.summary;
+      document.getElementById('article-content').value = article.content;
+      document.getElementById('editor-title').textContent = '编辑文章';
+      switchTab('new');
+
+      if (!local) {
+        showToast('⚠️ 内置文章编辑后会自动保存为本地副本', 'error');
+      }
+    }
+
+    // 删除文章（仅本地）
+    function deleteArticle(id) {
+      if (!confirm('确定删除这篇文章吗？此操作不可恢复。')) return;
+      let arr = getLocalArticles();
+      arr = arr.filter(a => a.id !== id);
+      saveLocalArticles(arr);
+      renderArticleList();
+      showToast('已删除');
+    }
+
+    // 重置表单
+    function resetForm() {
+      document.getElementById('edit-id').value = '';
+      document.getElementById('article-title').value = '';
+      document.getElementById('article-game').value = '';
+      document.getElementById('article-category').value = '攻略';
+      document.getElementById('article-author').value = '小梦攻略组';
+      document.getElementById('article-date').value = new Date().toISOString().split('T')[0];
+      document.getElementById('article-cover').value = '';
+      document.getElementById('article-summary').value = '';
+      document.getElementById('article-content').value = '';
+      document.getElementById('editor-title').textContent = '新建文章';
+    }
+
+    function cancelEdit() {
+      resetForm();
+      switchTab('list');
+    }
+
+    // 保存文章
+    function saveArticle() {
+      const title = document.getElementById('article-title').value.trim();
+      const summary = document.getElementById('article-summary').value.trim();
+      const content = document.getElementById('article-content').value.trim();
+
+      if (!title || !summary || !content) {
+        showToast('请填写标题、摘要和正文内容', 'error');
+        return;
+      }
+
+      const editId = document.getElementById('edit-id').value;
+      const article = {
+        id: editId ? parseInt(editId) : generateId(),
+        gameId: parseInt(document.getElementById('article-game').value) || null,
+        title,
+        category: document.getElementById('article-category').value,
+        author: document.getElementById('article-author').value.trim() || '小梦攻略组',
+        date: document.getElementById('article-date').value || new Date().toISOString().split('T')[0],
+        cover: document.getElementById('article-cover').value.trim() || 'assets/images/longzhigu_cover.jpg',
+        summary,
+        content,
+        views: Math.floor(Math.random() * 5000) + 1000
+      };
+
+      let arr = getLocalArticles();
+      const idx = arr.findIndex(a => a.id === article.id);
+      if (idx >= 0) {
+        arr[idx] = article;
+      } else {
+        arr.push(article);
+      }
+      saveLocalArticles(arr);
+
+      resetForm();
+      switchTab('list');
+      showToast(editId ? '文章已更新！刷新网站即可看到' : '文章已保存！刷新网站即可看到');
+    }
+
+    // 生成可粘贴进 articles.js 的代码
+    function buildJSCode() {
+      const arr = getLocalArticles();
+      if (arr.length === 0) {
+        showToast('还没有本地文章，先去「新建文章」写一篇吧', 'error');
+        return null;
+      }
+      const body = arr.map(a => {
+        const content = String(a.content).replace(/`/g, '\\`').replace(/\$\{/g, '\\${');
+        return `  {
+    id: ${a.id},
+    gameId: ${a.gameId || 'null'},
+    title: "${String(a.title).replace(/"/g, '\\"')}",
+    summary: "${String(a.summary || '').replace(/"/g, '\\"')}",
+    content: \`${content}\`,
+    author: "${a.author}",
+    date: "${a.date}",
+    category: "${a.category}",
+    cover: "${a.cover}",
+    views: ${a.views || 1000}
+  },`;
+      }).join('\n');
+      return body;
+    }
+
+    function exportAsJS() {
+      const code = buildJSCode();
+      if (!code) return;
+      const ta = document.getElementById('js-output');
+      ta.style.display = 'block';
+      ta.value = code;
+      ta.select();
+      try {
+        document.execCommand('copy');
+        showToast('已复制！到 data/articles.js 末尾粘贴（]; 的上方）');
+      } catch(e) {
+        showToast('请手动全选复制下方代码', 'error');
+      }
+    }
+
+    function downloadJS() {
+      const code = buildJSCode();
+      if (!code) return;
+      const blob = new Blob([code], { type: 'text/javascript' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'new_articles_' + new Date().toISOString().split('T')[0] + '.js';
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('已下载，内容同上，可直接复制文件里的代码');
+    }
+
+    // 导出
+    function exportArticles() {
+      const arr = getLocalArticles();
+      if (arr.length === 0) {
+        showToast('没有可导出的本地文章', 'error');
+        return;
+      }
+      const blob = new Blob([JSON.stringify(arr, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'gamehub_articles_backup_' + new Date().toISOString().split('T')[0] + '.json';
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('导出成功');
+    }
+
+    // 导入
+    function importArticles(input) {
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (!Array.isArray(imported)) throw new Error('格式错误');
+          let arr = getLocalArticles();
+          const existingIds = new Set([...STATIC_IDS, ...arr.map(a => a.id)]);
+          let count = 0;
+          imported.forEach(a => {
+            while (existingIds.has(a.id)) a.id++;
+            existingIds.add(a.id);
+            arr.push(a);
+            count++;
+          });
+          saveLocalArticles(arr);
+          switchTab('list');
+          showToast(`成功导入 ${count} 篇文章`);
+        } catch(err) {
+          showToast('文件格式错误，请选择有效的JSON文件', 'error');
+        }
+      };
+      reader.readAsText(file);
+      input.value = '';
+    }
+
+    // 初始化
+    document.querySelectorAll('.sidebar-nav a').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        switchTab(a.dataset.tab);
+      });
+    });
+    // 填充所属游戏下拉框
+    const gameSelect = document.getElementById('article-game');
+    gameSelect.innerHTML = '<option value="">— 请选择游戏 —</option>' +
+      GAMES_DATA.map(g => `<option value="${g.id}">${g.name}（${g.id}）</option>`).join('');
+    renderArticleList();
+    document.getElementById('article-date').value = new Date().toISOString().split('T')[0];
+  </script>
+</body>
+</html>
