@@ -1,12 +1,12 @@
 {
   "2026-09-14": {
-    "totalItems": 608,
+    "totalItems": 609,
     "archives": 10,
     "perArchive": {
       "jz": 25,
       "dn": 109,
       "mxq": 43,
-      "wlwz": 157,
+      "wlwz": 158,
       "jzpx": 47,
       "fgcs": 27,
       "ff": 88,
@@ -16,7 +16,7 @@
     },
     "categories": {
       "开服公告": 4,
-      "维护公告": 80,
+      "维护公告": 81,
       "官方资讯": 197,
       "活动": 108,
       "攻略": 34,
@@ -24,9 +24,9 @@
       "赛事": 33,
       "合服公告": 43
     },
-    "newSummaries": 6,
-    "skippedOld": 0,
+    "newBodies": 609,
+    "noBody": 0,
     "pending": 0
   },
-  "updatedAt": "2026-09-14T06:07:22.139Z"
+  "updatedAt": "2026-09-14T07:09:55.993Z"
 }

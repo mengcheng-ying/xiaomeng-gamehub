@@ -5,14 +5,16 @@
  * 数据来源：3975.com 系列官方专区（游戏发行方三九互娱的官方站点）
  * 输出：
  *   data/official-news.js    → const OFFICIAL_NEWS = { generatedAt, sourceNote, archives, games }
+ *   data/news-bodies.js      → const NEWS_BODIES = { <key>: [段落, …] }（公告正文，生成站内独立页用）
  *   data/news-history.json   → 每日快照，供日报做趋势对比
  *
  * 设计要点
  * - 翻页参数实测为 ?tid=0&page=N；翻到内容与前页重复即视为末页。
  * - **只收录 KEEP_SINCE 之后的公告**（默认近 3 个月）。列表页按时间倒序，
  *   一旦出现整页都早于 KEEP_SINCE 就停止翻页 —— 比全量翻到底快得多，也不必再担心 MAX_PAGES 截断。
- * - 详情页（正文摘要）**只抓没抓过的**：已有摘要从上次的 official-news.js 里继承，
- *   所以首次运行较慢，之后每天只补新增的几条。
+ * - 详情页**只抓没抓过的**：正文按 key 从 data/news-bodies.js 继承，已抓过的不再请求官方站。
+ * - 正文来自详情页的 de_contain / artText / newsCon 容器，只取纯文本段落，**不保留图片与任何外站链接**，
+ *   使生成的站内公告页完全自包含（用户硬要求：站内不得跳转到任何外部站点）。
  * - 每抓 SAVE_EVERY 条详情就落盘一次，中断也不会白跑。
  * - 某个专区抓取失败时保留其原有数据，绝不用渠道站/AI 站内容补位。
  *
@@ -27,12 +29,18 @@ const ROOT = path.join(__dirname, '..');
 const OUT = path.join(ROOT, 'data', 'official-news.js');
 const HISTORY = path.join(ROOT, 'data', 'news-history.json');
 const DATECACHE = path.join(ROOT, 'data', 'news-datecache.json');   // url → 真实日期（或 'ND'）
+const BODIES = path.join(ROOT, 'data', 'news-bodies.js');           // key → 正文段落（生成站内独立页用）
 
 const MAX_SUMMARY = 160;      // 每条公告的正文摘要字数上限
 const DELAY = 200;            // 请求间隔（ms）
 const MAX_PAGES = 30;         // 单专区最多翻页数（防止死循环）
 const MAX_DETAIL_PER_RUN = 1500; // 单次运行最多抓多少条详情（防跑飞）
 const SAVE_EVERY = 120;       // 每抓 N 条详情落盘一次
+const MAX_BODY_CHARS = 20000; // 单条正文硬上限（防某个模板把整页噪声都吞进来）
+
+// 正文容器候选（取文本最长的那个）。实测 3975 系列详情页有三种模板：
+//   通用模板 de_contain / 复古传世 fgcs 用 artText / 热血传说 rxcs 用 newsCon
+const BODY_SELECTORS = ['de_contain', 'artText', 'newsCon'];
 
 // ── 收录窗口（分阶段上量的第一步）──────────────────────────────
 // 只收录这个日期（含）之后的公告。更早的直接不入库、不渲染。
@@ -240,6 +248,134 @@ function dateFromHtml(html) {
   return validDate(s) ? s : '';
 }
 
+/**
+ * 官方原文 URL → 站内独立页 key（同一 URL 永远得同一个 key，列表排序变化不会错位）。
+ * 用纯 JS 哈希而不是 require('crypto')：本机环境里 crypto.createHash 不可用。
+ * 10 位十六进制，600 条量级碰撞概率可忽略。
+ */
+function keyOf(url) {
+  const s = String(url);
+  let h1 = 0x811c9dc5, h2 = 0x1000193;
+  for (let i = 0; i < s.length; i++) {
+    const c = s.charCodeAt(i);
+    h1 = Math.imul(h1 ^ c, 0x01000193) >>> 0;
+    h2 = Math.imul(h2 + c, 0x85ebca6b) >>> 0;
+  }
+  return h1.toString(16).padStart(8, '0') + (h2 >>> 26).toString(16).padStart(2, '0');
+}
+
+/** 按 class 名取 <div>，并按 div 深度配对取出完整内容 */
+function extractByClass(html, cls) {
+  const re = new RegExp('<div[^>]*class="[^"]*\\b' + cls + '\\b[^"]*"[^>]*>', 'i');
+  const m = re.exec(html);
+  if (!m) return null;
+  const start = m.index + m[0].length;
+  let depth = 1;
+  const re2 = /<div\b|<\/div>/gi;
+  re2.lastIndex = start;
+  let t;
+  while ((t = re2.exec(html))) {
+    if (t[0][1] === '/') { depth--; if (depth === 0) return html.slice(start, t.index); }
+    else depth++;
+  }
+  return html.slice(start);
+}
+
+/** 选正文容器：取候选里文本最长的那个（个别模板的 de_contain 只是片段） */
+function pickContainer(html) {
+  let best = null, bestLen = 0;
+  for (const cls of BODY_SELECTORS) {
+    const box = extractByClass(html, cls);
+    if (!box) continue;
+    const len = box.replace(/<[^>]+>/g, '').replace(/\s+/g, '').length;
+    if (len > bestLen) { best = box; bestLen = len; }
+  }
+  return best;
+}
+
+// 与正文无关的行（导航、页脚、备案、扫码下载、上下篇、推荐位……）
+const BODY_SKIP_RE = /^(首页|新闻资讯|游戏攻略|游戏预约|前往论坛|交易平台|客服中心|游戏资讯|NEWS|您的当前位置|当前位置|App Store|下载|安卓下载|苹果下载|iOS下载|请扫码下载体验游戏|扫码下载|上一篇|下一篇|相关阅读|热门推荐|返回列表|分享到|更多|最新资讯|推荐阅读|猜你喜欢|上一篇：|下一篇：|返回顶部|top)/;
+const BODY_NOISE_RE = /职业介绍之|职业攻略之|猜你喜欢|关注公众号|扫码关注|扫码下载|微信公众号|官方QQ群内|点击右下角|版权所有|Copyright|ICP备|备案号|网络文化经营|增值电信|健康游戏忠告|抑制不良游戏|抵制不良游戏|适龄提示|举报电话|纠纷处理|沪网文|京网文|粤网文|苏网文|浙网文|All Rights Reserved|运营团队\s*$|本页地址|文章地址/;
+
+/** HTML 片段 → 文本行 */
+function htmlToLines(html) {
+  const clean = String(html)
+    .replace(/<head[\s\S]*?<\/head>/gi, '')
+    .replace(/<script[\s\S]*?<\/script>/gi, '')
+    .replace(/<style[\s\S]*?<\/style>/gi, '')
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/<img[^>]*>/gi, '\n')          // 图片位置留断点，保留文本顺序
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/(p|div|li|h\d|tr|td|section)>/gi, '\n')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;|&#160;/g, ' ')
+    .replace(/&ldquo;|&rdquo;/g, '"')
+    .replace(/&hellip;/g, '…')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/[ \t\u00a0]+/g, ' ');
+  return clean.split('\n').map((l) => l.trim()).filter(Boolean);
+}
+
+/** 过滤噪声行 → 干净的正文行 */
+function cleanBodyLines(lines, title) {
+  const out = [];
+  for (const raw of lines) {
+    let l = raw.replace(/^[-–—·•\s]+/, '').trim();
+    if (!l) continue;
+    if (l.length < 2) continue;
+    if (BODY_SKIP_RE.test(l)) continue;
+    if (BODY_NOISE_RE.test(l)) continue;
+    if (title && (l === title || (l.length > 8 && title.startsWith(l) && l.length > title.length * 0.6))) continue;
+    if (/^(作者|来源|编辑|时间)\s*[：:]/.test(l)) continue;         // rxcs 模板的「作者：3975 时间：…」
+    if (/^\d{4}[-./]\d{1,2}[-./]\d{1,2}([\s:]|$)/.test(l) && l.length < 24) continue;
+    if (/^[\d\s\-–—~～:：,.。/、+%]+$/.test(l)) continue;
+    if (/^https?:\/\//i.test(l)) continue;                        // 裸链接抽掉
+    if (/^[a-z0-9.-]+\.(com|cn|net|org|xyz|vip)(\/\S*)?$/i.test(l)) continue;
+    out.push(l);
+  }
+  return out;
+}
+
+/**
+ * 行 → 段落：**保留官方原文的换行，一行一段**。
+ * 早期版本按句号把多行合并成自然段，结果把「烈焰海洋15区 开服时间：…」这类
+ * 逐行信息压成一坨，可读性反而更差 —— 官方模板里的 <br> 本身就是有意义的换行。
+ * 这里只做一件事：去掉连续重复的行。
+ */
+function groupParagraphs(lines) {
+  const out = [];
+  for (const l of lines) {
+    if (out.length && out[out.length - 1] === l) continue;
+    out.push(l);
+  }
+  return out;
+}
+
+/** 从详情页提取正文段落；提不到容器时退回全页文本（仍走同一套噪声过滤） */
+function extractBody(html, title) {
+  const box = pickContainer(html);
+  const lines = cleanBodyLines(htmlToLines(box || html), title);
+  const paras = groupParagraphs(lines);
+  let total = 0;
+  const capped = [];
+  for (const p of paras) {
+    if (total + p.length > MAX_BODY_CHARS) break;
+    capped.push(p);
+    total += p.length;
+  }
+  return capped;
+}
+
+/** 正文前 160 字作列表摘要 */
+function bodyToSummary(body) {
+  const s = withSpace((body || []).join(' '));
+  if (s.length <= MAX_SUMMARY) return s;
+  return s.slice(0, MAX_SUMMARY) + '…';
+}
+
 /** 读回上一次的输出（用于继承摘要、判断新增） */
 function loadPrev() {
   if (!fs.existsSync(OUT)) return null;
@@ -273,14 +409,39 @@ function writeOut(payload) {
   fs.writeFileSync(OUT, banner + 'const OFFICIAL_NEWS = ' + JSON.stringify(payload, null, 2) + ';\n', 'utf8');
 }
 
+/** 读回上一次抓到的正文（按 key）：已抓过的不再重复请求官方站 */
+function loadBodies() {
+  if (!fs.existsSync(BODIES)) return {};
+  try {
+    const src = fs.readFileSync(BODIES, 'utf8');
+    const o = new Function(src + '\nreturn NEWS_BODIES;')();
+    return o && typeof o === 'object' ? o : {};
+  } catch (e) { return {}; }
+}
+
+/** 正文单独存一个文件：official-news.js 保持轻量，正文（体量大、变动少）单独一份 */
+function writeBodies(bodies) {
+  const banner = [
+    '// ⚠️ 本文件由 scripts/fetch-official-news.js 自动生成，请勿手工编辑',
+    '// 官方公告正文段落：key = 官方原文 URL 的哈希，value = 段落数组',
+    '// 用途：为每条公告生成站内独立页（/news/<专区>/<key>），使站内不再跳转外部站点',
+    ''
+  ].join('\n');
+  const keys = Object.keys(bodies).sort();
+  const lines = keys.map((k) => '  ' + JSON.stringify(k) + ': ' + JSON.stringify(bodies[k]));
+  fs.writeFileSync(BODIES, banner + 'const NEWS_BODIES = {\n' + lines.join(',\n') + '\n};\n', 'utf8');
+}
+
 // ---------- 主流程 ----------
 (async () => {
   const started = Date.now();
-  console.log(`开始抓取三九互娱官方专区公告（窗口 ≥ ${KEEP_SINCE}，增量补摘要）…\n`);
+  console.log(`开始抓取三九互娱官方专区公告（窗口 ≥ ${KEEP_SINCE}，增量补正文）…\n`);
 
   const prev = loadPrev();
   const prevArchives = (prev && prev.archives) || {};
   const dateCache = loadDateCache();
+  const bodies = loadBodies();
+  const inheritedBodies = Object.keys(bodies).length;
 
   // 1) 先只用列表页把窗口内的全部条目收集齐（很快）
   //    列表页按时间倒序，因此一旦整页都早于 KEEP_SINCE 就可以停止翻页。
@@ -399,26 +560,25 @@ function writeOut(payload) {
   }
 
   // 3) 需要抓详情页的条目：
+  //    - 还没有正文的（新公告；正文既用于站内独立页，也用于列表摘要）
   //    - mdOnly（列表页只给月-日，年份必须核实）
   //    - 完全没有日期的
-  //    - 没摘要且在 SUMMARY_SINCE 之后的
   const need = [];
-  const skippedOld = [];
   for (const arc of Object.values(archives)) {
     for (const it of arc.items) {
-      if (it.nd) continue;
+      it.key = keyOf(it.url);
+      const needsBody = !bodies[it.key] || !bodies[it.key].length;
       const needsDate = it.mdOnly || !it.date;
-      const needsSummary = !it.summary && it.date && !it.mdOnly && it.date >= SUMMARY_SINCE;
-      if (needsDate || needsSummary) need.push(it);
-      else if (!it.summary) skippedOld.push(it);
+      if (needsBody || needsDate) need.push(it);
     }
   }
+  const noBodyYet = Object.values(archives).reduce((s, a) => s + a.items.filter((it) => !bodies[it.key] || !bodies[it.key].length).length, 0);
   const mdCount = need.filter((x) => x.mdOnly).length;
-  console.log(`摘要：继承 ${inherited} 条 | 需要新抓 ${need.length} 条（其中 ${mdCount} 条是年份待核实的） | 早于 ${SUMMARY_SINCE} 的 ${skippedOld.length} 条只收录标题与日期` + (need.length > MAX_DETAIL_PER_RUN ? `（本次上限 ${MAX_DETAIL_PER_RUN}，其余下次运行补齐）` : ''));
+  console.log(`正文：已有 ${inheritedBodies} 条 | 本次需抓 ${need.length} 条（其中 ${mdCount} 条年份待核实） | 抓完后仍缺正文 ${Math.max(0, noBodyYet - need.length)} 条`);
   console.log('');
 
   const todo = need.slice(0, MAX_DETAIL_PER_RUN);
-  let fetched = 0, failed = 0;
+  let fetched = 0, failed = 0, gotBody = 0;
   const snapshot = () => {
     const snapshotNow = new Date().toISOString();
     const games = {};
@@ -428,6 +588,7 @@ function writeOut(payload) {
       }
     }
     writeOut({ generatedAt: snapshotNow, sourceNote: '数据来源：三九互娱官方专区（3975.com 系列站点）公开公告，自动同步', archives, games });
+    writeBodies(bodies);
   };
 
   for (let i = 0; i < todo.length; i++) {
@@ -436,7 +597,11 @@ function writeOut(payload) {
       const d = await fetchUrl(it.url);
       if (d.status === 200) {
         const html = d.buf.toString('utf8');
-        if (!it.summary) it.summary = extractSummary(html, it.title) || '';
+        if (!bodies[it.key] || !bodies[it.key].length) {
+          const body = extractBody(html, it.title);
+          if (body.length) { bodies[it.key] = body; gotBody++; }
+        }
+        if (!it.summary && bodies[it.key]) it.summary = bodyToSummary(bodies[it.key]);
         const dd = dateFromHtml(html);
         if (dd) {
           it.date = dd;
@@ -475,6 +640,25 @@ function writeOut(payload) {
   }
   if (refiltered) console.log(`\n🔎 按详情页真实年份二次过滤：剔除 ${refiltered} 条（实际早于 ${KEEP_SINCE}）：${refilterDetail.join(' ')}\n`);
 
+  // 3.6) 正文裁剪：只保留当前窗口内条目引用到的正文，避免正文文件随窗口滚动无限膨胀
+  const liveKeys = new Set();
+  for (const arc of Object.values(archives)) for (const it of arc.items) if (it.key) liveKeys.add(it.key);
+  let pruned = 0;
+  for (const k of Object.keys(bodies)) if (!liveKeys.has(k)) { delete bodies[k]; pruned++; }
+  if (pruned) console.log(`🧹 正文裁剪：移除窗口外正文 ${pruned} 条，保留 ${Object.keys(bodies).length} 条\n`);
+
+  // 缺正文的条目：不生成站内独立页，列表里只显示标题（绝不回退到外站链接）
+  const noBodyItems = [];
+  for (const arc of Object.values(archives)) {
+    for (const it of arc.items) if (!bodies[it.key] || !bodies[it.key].length) noBodyItems.push(`${arc.slug}:${it.title}`);
+  }
+  if (noBodyItems.length) {
+    console.log(`⚠️  ${noBodyItems.length} 条未取到正文（只展示标题，不生成独立页）：`);
+    noBodyItems.slice(0, 12).forEach((x) => console.log('     - ' + x));
+    if (noBodyItems.length > 12) console.log(`     …另有 ${noBodyItems.length - 12} 条`);
+    console.log('');
+  }
+
   // 4) 排序修正（补完日期后重排一次）
   for (const arc of Object.values(archives)) {
     arc.items.sort((a, b) => {
@@ -506,8 +690,8 @@ function writeOut(payload) {
       Object.values(archives).forEach((a) => a.items.forEach((it) => { c[it.category || '官方资讯'] = (c[it.category || '官方资讯'] || 0) + 1; }));
       return c;
     })(),
-    newSummaries: todo.length,
-    skippedOld: skippedOld.length,
+    newBodies: gotBody,
+    noBody: noBodyItems.length,
     pending: Math.max(0, need.length - todo.length)
   };
   hist.updatedAt = new Date().toISOString();
@@ -517,8 +701,9 @@ function writeOut(payload) {
   console.log('\n—— 汇总 ——');
   console.log('专区数：' + Object.keys(archives).length);
   console.log('公告总条数：' + totalItems);
-  console.log('本次新抓摘要：' + fetched + ' 条' + (failed ? '（失败 ' + failed + ' 条）' : ''));
-  console.log('剩余待补摘要：' + Math.max(0, need.length - todo.length) + ' 条');
+  console.log('本次抓取详情页：' + fetched + ' 条' + (failed ? '（失败 ' + failed + ' 条）' : '') + '，其中新得正文 ' + gotBody + ' 条');
+  console.log('正文库：' + Object.keys(bodies).length + ' 条' + (noBodyItems.length ? '，缺正文 ' + noBodyItems.length + ' 条（不生成独立页）' : '，全部公告都有正文'));
+  console.log('剩余待抓：' + Math.max(0, need.length - todo.length) + ' 条');
   console.log('耗时：' + Math.round((Date.now() - started) / 1000) + ' 秒');
   console.log('输出：' + OUT);
 })().catch((e) => {

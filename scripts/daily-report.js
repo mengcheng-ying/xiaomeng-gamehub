@@ -63,6 +63,9 @@ const CATS = ['开服公告', '合服公告', '维护公告', '版本更新', '�
 const archives = NEWS && NEWS.archives ? Object.values(NEWS.archives) : [];
 const totalItems = archives.reduce((s, a) => s + a.items.length, 0);
 const withSummary = archives.reduce((s, a) => s + a.items.filter((i) => i.summary).length, 0);
+// 公告正文库（data/news-bodies.js）：有正文的条目才会生成站内独立页
+const BODIES = readJsObject('data/news-bodies.js', 'NEWS_BODIES') || {};
+const withBody = archives.reduce((s, a) => s + a.items.filter((i) => i.key && BODIES[i.key] && BODIES[i.key].length).length, 0);
 
 const catCount = {};
 const catRecent = {};   // 近 7 天各分类
@@ -151,10 +154,16 @@ const txt = [
   status.note ? `  备注：${status.note}` : '',
   '',
   '【需要你留意的三件事】',
-  '  1) 百度主动推送配额很小（用户口径 10 条/天），而站点现有 URL 已有 ' + sitemapCount + ' 条。',
-  '     若推送脚本每天固定从 sitemap 第一条开始推，后面的 URL 会长期推不到 —— 这个已单独说明。',
-  '  2) 公告内容为「标题 + 日期 + 分类 + 摘要 + 指向官方原文的 nofollow 链接」，不是全文转载；',
-  `     其中 ${totalItems - withSummary} 条（较早的历史公告）只有标题与日期，没有摘要。`,
+  '  1) 百度主动推送：配额很小（实测「会耗尽」，但响应体读不到 remain，具体数值未核实），',
+  '     而站点现有 URL 已有 ' + sitemapCount + ' 条，按每天 10 条推算约 12 天能轮完一轮。',
+  '     原脚本固定从 sitemap 第一条开始推、且没有状态记录，于是每天重复推同一批',
+  '     「首页 / 列表页 / 前几个归档页」，41 个游戏页与 58 个攻略页从未被主动推过。',
+  '     2026-09-14 已重写为「按优先级 + 状态文件」的 scripts/baidu-push-priority.js，',
+  '     定时从 03:30 挪到 13:00（排在 12:00 内容同步之后）、去掉 push 触发。',
+  '     ⚠️ 提交 ≠ 收录：提交只是让百度知道有这个 URL，收不收取决于站点质量评价。',
+  '  2) 公告内容为「标题 + 日期 + 分类 + 摘要 + 正文」，每条公告在本站都有独立页面',
+  `     （/news/<专区>/<key>），点击后停留在本站，全站不设任何站外跳转；`,
+  `     共 ${withBody} 条已取到正文，${totalItems - withBody} 条官方原文以图片为主、本站只保留文字。`,
   '  3) 未做核实的事项：百度推送每日配额的具体数值（只能确认"会耗尽"，无法读到总量），',
   '     以及 41 款游戏中 29 款无法查到官方来源的游戏其版号状态。',
   ''
@@ -200,7 +209,7 @@ a:hover{text-decoration:underline}
 <div class="kpis">
   <div class="kpi"><div class="n">${archives.length}</div><div class="l">官方专区数</div></div>
   <div class="kpi"><div class="n">${totalItems}</div><div class="l">公告总条数</div></div>
-  <div class="kpi"><div class="n">${withSummary}</div><div class="l">带正文摘要</div></div>
+  <div class="kpi"><div class="n">${withBody}</div><div class="l">有正文（站内独立页）</div></div>
   <div class="kpi"><div class="n">${archives.reduce((s, a) => s + a.items.filter((i) => i.date && i.date >= weekAgo).length, 0)}</div><div class="l">近 7 天新增</div></div>
   <div class="kpi"><div class="n">${delta == null ? '—' : (delta >= 0 ? '+' + delta : delta)}</div><div class="l">较上次变化</div></div>
 </div>
@@ -231,8 +240,8 @@ ${status.note ? `<tr><td>备注</td><td>${esc(status.note)}</td></tr>` : ''}
 <div class="warn"><ol>
 <li><strong>百度主动推送的配额比站点 URL 数量少一个数量级</strong>（口径 10 条/天，站点已有 ${sitemapCount} 条 URL）。
 如果推送脚本每天固定从 sitemap 第一条开始推，位置靠后的 URL 会长期推不到。</li>
-<li>公告内容为「标题 + 日期 + 分类 + 摘要 + 指向官方原文的 nofollow 链接」，<strong>不是全文转载</strong>；
-其中 ${totalItems - withSummary} 条较早的历史公告只有标题与日期，没有摘要。</li>
+<li>公告内容为「标题 + 日期 + 分类 + 摘要 + 正文」，<strong>每条公告在本站都有独立页面</strong>（/news/&lt;专区&gt;/&lt;key&gt;），点击后停留在本站，全站不设任何站外跳转；
+共 ${withBody} 条已取到正文，${totalItems - withBody} 条官方原文以图片为主，本站只保留文字。</li>
 <li><strong>未核实事项</strong>：百度推送每日配额的具体数值（能确认会耗尽，读不到总量）；
 29 款查不到官方来源的游戏，其版号状态未逐款核实。</li>
 </ol></div>
