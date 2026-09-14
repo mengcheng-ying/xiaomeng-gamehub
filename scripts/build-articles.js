@@ -73,6 +73,9 @@ const guideExtra = loadJsObjectSafe('data/guide-extra.js', 'GUIDE_EXTRA');
 const guideFaq = loadJsObjectSafe('data/guide-faq.js', 'GUIDE_FAQ');
 // 游戏页补充资料（可选）：{ 游戏id: { facts:[{k,v}], intro:'…', highlights:['…'] } }
 const gameExtra = loadJsObjectSafe('data/game-extra.js', 'GAME_EXTRA');
+// 官方动态（由 scripts/fetch-official-news.js 自动同步，来源：三九互娱官方专区）
+// 结构：{ generatedAt, games: { 游戏id: { official, site, newsUrl, items:[{date,category,title,url,summary}] } } }
+const officialNews = loadJsObjectSafe('data/official-news.js', 'OFFICIAL_NEWS');
 
 const gameById = {};
 games.forEach(g => { gameById[g.id] = g; });
@@ -213,6 +216,18 @@ const BASE_CSS = `
   .prose{font-size:16px;line-height:1.95;color:#26314c;margin-bottom:30px}
   .prose p{margin:0 0 16px}
   .hl{margin:0 0 30px;padding:0;list-style:none}
+  .news-src{font-size:13px;color:var(--muted);margin:-4px 0 16px;line-height:1.7}
+  .news-src a{color:var(--brand)}
+  .news{list-style:none;margin:0 0 30px;padding:0}
+  .news li{padding:15px 0;border-bottom:1px solid var(--line)}
+  .news li:first-child{padding-top:0}
+  .news li:last-child{border-bottom:0;padding-bottom:6px}
+  .news .nh{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+  .news .nd{font-size:13px;color:var(--muted);flex-shrink:0;font-variant-numeric:tabular-nums}
+  .news .nc{font-size:11px;font-weight:600;padding:2px 9px;border-radius:99px;background:var(--brand-soft);color:var(--brand);flex-shrink:0}
+  .news .nh a{font-weight:600;color:var(--ink);font-size:15px;line-height:1.6}
+  .news .nh a:hover{color:var(--brand)}
+  .news .ns{margin:7px 0 0;font-size:14px;line-height:1.75;color:var(--ink2)}
   .hl li{position:relative;padding-left:24px;margin-bottom:10px;font-size:15.5px;color:#33405f}
   .hl li:before{content:"◆";position:absolute;left:0;top:0;color:var(--brand);font-size:12px}
   .gcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:14px}
@@ -507,6 +522,21 @@ ${others.map(o => `  <a class="gcard" href="/game/${o.id}">
   </a>`).join('\n')}
 </div>`;
 
+  // 官方动态：来自三九互娱官方专区的真实公告（fetch-official-news.js 自动同步，非人工编撰）
+  const nz = officialNews && officialNews.games ? officialNews.games[String(g.id)] : null;
+  let newsHtml = '';
+  if (nz && Array.isArray(nz.items) && nz.items.length) {
+    const synced = String(officialNews.generatedAt || '').slice(0, 10);
+    newsHtml = `<h2 class="sec-h">官方动态</h2>
+<p class="news-src">以下内容来自 ${esc(nz.official)} 公开公告，自动同步于 ${esc(synced)} ·
+<a href="${esc(nz.newsUrl)}" target="_blank" rel="noopener">查看全部公告原文</a></p>
+<ul class="news">
+${nz.items.map(it => `  <li>
+    <div class="nh"><span class="nd">${esc(it.date || '')}</span><span class="nc">${esc(it.category || '公告')}</span><a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.title)}</a></div>${it.summary ? `\n    <p class="ns">${esc(it.summary)}</p>` : ''}
+  </li>`).join('\n')}
+</ul>`;
+  }
+
   const desc = (g.desc || '').replace(/\s+/g, ' ').slice(0, 150);
   const ldGame = {
     '@context': 'https://schema.org',
@@ -559,6 +589,8 @@ ${factsHtml}
 ${introHtml}
 
 ${hlHtml}
+
+${newsHtml}
 
 ${mineHtml}
 
