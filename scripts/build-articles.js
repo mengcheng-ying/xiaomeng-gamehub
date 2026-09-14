@@ -228,6 +228,17 @@ const BASE_CSS = `
   .news .nh a{font-weight:600;color:var(--ink);font-size:15px;line-height:1.6}
   .news .nh a:hover{color:var(--brand)}
   .news .ns{margin:7px 0 0;font-size:14px;line-height:1.75;color:var(--ink2)}
+  /* 公告归档页 */
+  .acards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin:0 0 30px}
+  .acard{border:1px solid var(--line);border-radius:11px;background:var(--card);padding:16px 18px;display:block;color:var(--ink)}
+  .acard:hover{box-shadow:0 6px 20px rgba(20,40,80,.09)}
+  .acard .an{font-weight:700;font-size:16px;margin-bottom:6px}
+  .acard .am{font-size:13px;color:var(--muted)}
+  .catnav{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 8px}
+  .catnav a{font-size:13px;padding:5px 12px;border:1px solid var(--line);border-radius:99px;color:var(--ink2);background:var(--card)}
+  .catnav a:hover{border-color:var(--brand);color:var(--brand)}
+  .cathd{margin:30px 0 4px;font-size:17px;font-weight:700;padding-bottom:8px;border-bottom:2px solid var(--line)}
+  .cathd .cn{font-size:13px;font-weight:400;color:var(--muted);margin-left:8px}
   .hl li{position:relative;padding-left:24px;margin-bottom:10px;font-size:15.5px;color:#33405f}
   .hl li:before{content:"◆";position:absolute;left:0;top:0;color:var(--brand);font-size:12px}
   .gcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:14px}
@@ -350,6 +361,7 @@ function foot() {
 // ===== 4. 目录准备 =====
 fs.mkdirSync(OUT_DIR, { recursive: true });
 fs.mkdirSync(GAME_DIR, { recursive: true });
+fs.mkdirSync(path.join(ROOT, 'news'), { recursive: true });
 
 const sitemapUrls = [];
 let writtenCount = 0;
@@ -523,16 +535,19 @@ ${others.map(o => `  <a class="gcard" href="/game/${o.id}">
 </div>`;
 
   // 官方动态：来自三九互娱官方专区的真实公告（fetch-official-news.js 自动同步，非人工编撰）
+  // 游戏页只展示最近 8 条，全量归档在 /news/<slug>
   const nz = officialNews && officialNews.games ? officialNews.games[String(g.id)] : null;
+  const nzArc = nz && officialNews.archives ? officialNews.archives[nz.slug] : null;
   let newsHtml = '';
-  if (nz && Array.isArray(nz.items) && nz.items.length) {
+  if (nzArc && Array.isArray(nzArc.items) && nzArc.items.length) {
     const synced = String(officialNews.generatedAt || '').slice(0, 10);
-    newsHtml = `<h2 class="sec-h">官方动态</h2>
-<p class="news-src">以下内容来自 ${esc(nz.official)} 公开公告，自动同步于 ${esc(synced)} ·
-<a href="${esc(nz.newsUrl)}" target="_blank" rel="noopener">查看全部公告原文</a></p>
+    newsHtml = `<h2 class="sec-h">官方动态（累计 ${nzArc.items.length} 条）</h2>
+<p class="news-src">以下内容来自 ${esc(nzArc.official)} 公开公告，自动同步于 ${esc(synced)} ·
+<a href="/news/${esc(nzArc.slug)}">全部 ${nzArc.items.length} 条公告归档</a>
+</p>
 <ul class="news">
-${nz.items.map(it => `  <li>
-    <div class="nh"><span class="nd">${esc(it.date || '')}</span><span class="nc">${esc(it.category || '公告')}</span><a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.title)}</a></div>${it.summary ? `\n    <p class="ns">${esc(it.summary)}</p>` : ''}
+${nzArc.items.slice(0, 8).map(it => `  <li>
+    <div class="nh"><span class="nd">${esc(it.date || '')}</span><span class="nc">${esc(it.category || '公告')}</span><a href="${esc(it.url)}" target="_blank" rel="nofollow noopener">${esc(it.title)}</a></div>${it.summary ? `\n    <p class="ns">${esc(it.summary)}</p>` : ''}
   </li>`).join('\n')}
 </ul>`;
   }
@@ -607,6 +622,135 @@ ${othersHtml}
   sitemapUrls.push({ loc: url, lastmod: TODAY, priority: '0.8' });
 });
 console.log('✅ 生成 ' + games.length + ' 款游戏独立页');
+
+// ===== 6.5 生成官方公告归档页 /news 与 /news/<slug> =====
+// 内容全部来自三九互娱官方专区公开公告（scripts/fetch-official-news.js 自动同步）
+// 结构：只做「标题 + 日期 + 分类 + 摘要 + 官方原文链接」，不为每条公告单独建页，
+//       避免一次性给新站灌入上千个薄页面。
+const NEWS_CATS = ['开服公告', '合服公告', '维护公告', '版本更新', '活动', '赛事', '攻略', '官方资讯'];
+const newsArchives = officialNews && officialNews.archives ? officialNews.archives : null;
+const archiveList = newsArchives
+  ? Object.values(newsArchives).filter(a => a && Array.isArray(a.items) && a.items.length)
+      .sort((m, n) => n.items.length - m.items.length)
+  : [];
+
+if (archiveList.length) {
+  const synced = String(officialNews.generatedAt || '').slice(0, 10);
+  const nameOfSlug = {};
+  archiveList.forEach(a => a.gameIds.forEach(id => { if (gameById[id]) nameOfSlug[a.slug] = gameById[id].name; }));
+  const titleOf = (a) => nameOfSlug[a.slug] || (a.official || '').replace(/^三九互娱《|》官方专区$/g, '');
+
+  // --- /news 总览 ---
+  const totalNews = archiveList.reduce((s, a) => s + a.items.length, 0);
+  const newsBody = `<main class="wrap">
+  <nav class="crumb"><a href="/">首页</a><i>/</i><span>官方公告</span></nav>
+  <h1>手游官方公告合集（${totalNews} 条）</h1>
+  <p class="lead">本页汇总本站收录的怀旧手游官方专区公开公告，包含开服、合服、维护、版本更新与活动等分类。
+  每条均标注日期与分类，并可跳转到官方专区原文核对。数据自动同步于 ${esc(synced)}。</p>
+  <div class="acards">
+${archiveList.map(a => `    <a class="acard" href="/news/${esc(a.slug)}">
+      <div class="an">${esc(titleOf(a))}</div>
+      <div class="am">累计 ${a.items.length} 条 · 最新 ${esc((a.items[0] && a.items[0].date) || '—')}</div>
+    </a>`).join('\n')}
+  </div>
+
+  <h2 class="sec-h">各游戏最新公告</h2>
+${archiveList.map(a => `  <h3 class="cathd">${esc(titleOf(a))}<span class="cn">共 ${a.items.length} 条 · <a href="/news/${esc(a.slug)}">查看全部</a></span></h3>
+  <ul class="news">
+${a.items.slice(0, 5).map(it => `    <li>
+      <div class="nh"><span class="nd">${esc(it.date || '')}</span><span class="nc">${esc(it.category || '公告')}</span><a href="${esc(it.url)}" target="_blank" rel="nofollow noopener">${esc(it.title)}</a></div>${it.summary ? `\n      <p class="ns">${esc(it.summary)}</p>` : ''}
+    </li>`).join('\n')}
+  </ul>`).join('\n')}
+
+  <div class="cta">
+    <p>想找更多经典 IP 正版复刻的怀旧手游？回到首页一次看全。</p>
+    <a class="cta-btn" href="/">← 返回小梦怀旧手游首页</a>
+  </div>
+</main>
+` + foot();
+
+  const newsUrl = SITE + '/news';
+  writeFile('news.html', head(
+    '手游官方公告合集 - 开服/合服/维护/活动 - 小梦怀旧手游',
+    `汇总 ${archiveList.length} 款怀旧手游的官方公告共 ${totalNews} 条，含开服、合服、维护、版本更新与活动分类，可跳转官方专区核对原文。`,
+    newsUrl,
+    { ld: [{
+      '@context': 'https://schema.org', '@type': 'CollectionPage',
+      name: '手游官方公告合集', url: newsUrl, inLanguage: 'zh-CN',
+      isPartOf: { '@type': 'WebSite', name: '小梦怀旧手游', url: SITE + '/' }
+    }] }
+  ) + newsBody);
+  sitemapUrls.push({ loc: newsUrl, lastmod: TODAY, priority: '0.7' });
+
+  // --- /news/<slug> 单专区全量归档 ---
+  archiveList.forEach(a => {
+    const gameName = titleOf(a);
+    const url = SITE + '/news/' + a.slug;
+    // 按分类分组（保持固定顺序，未列出的分类排最后）
+    const groups = {};
+    a.items.forEach(it => {
+      const c = NEWS_CATS.includes(it.category) ? it.category : '官方资讯';
+      (groups[c] = groups[c] || []).push(it);
+    });
+    const cats = NEWS_CATS.filter(c => groups[c] && groups[c].length);
+    // 月份分组：便于长列表浏览
+    const catNav = cats.map((c, i) => `    <a href="#c${i + 1}">${esc(c)}（${groups[c].length}）</a>`).join('\n');
+
+    const body = `<main class="wrap">
+  <nav class="crumb"><a href="/">首页</a><i>/</i><a href="/news">官方公告</a><i>/</i><span>${esc(gameName)}</span></nav>
+  <h1>《${esc(gameName)}》官方公告归档</h1>
+  <p class="lead">以下 ${a.items.length} 条公告均来自 ${esc(a.official)}公开信息，按分类整理，每条可跳转官方专区核对原文。
+  自动同步于 ${esc(synced)}。
+  <a href="${esc(a.newsUrl)}" target="_blank" rel="nofollow noopener">前往官方专区</a></p>
+
+  <nav class="catnav">
+${catNav}
+  </nav>
+
+${cats.map((c, i) => `  <h2 class="cathd" id="c${i + 1}">${esc(c)}<span class="cn">${groups[c].length} 条</span></h2>
+  <ul class="news">
+${groups[c].map(it => `    <li>
+      <div class="nh"><span class="nd">${esc(it.date || '')}</span><a href="${esc(it.url)}" target="_blank" rel="nofollow noopener">${esc(it.title)}</a></div>${it.summary ? `\n      <p class="ns">${esc(it.summary)}</p>` : ''}
+    </li>`).join('\n')}
+  </ul>`).join('\n')}
+
+  <h2 class="sec-h">这款游戏的其他内容</h2>
+  <div class="lst">
+${a.gameIds.filter(id => gameById[id]).map(id => `    <a href="/game/${id}"><span class="cat">下载</span><span><span class="nm">《${esc(gameById[id].name)}》下载入口与攻略</span><span class="sm">${esc((gameById[id].desc || '').slice(0, 60))}</span></span></a>`).join('\n')}
+    <a href="/news"><span class="cat">公告</span><span><span class="nm">全部游戏官方公告合集</span><span class="sm">按分类查看 ${archiveList.length} 款游戏的官方公告</span></span></a>
+  </div>
+
+  <div class="cta">
+    <p>想找更多经典 IP 正版复刻的怀旧手游？回到首页一次看全。</p>
+    <a class="cta-btn" href="/">← 返回小梦怀旧手游首页</a>
+  </div>
+</main>
+` + foot();
+
+    writeFile('news/' + a.slug + '.html', head(
+      `《${gameName}》官方公告归档（${a.items.length} 条）- 开服/维护/活动 - 小梦怀旧手游`,
+      `${gameName}官方公告共 ${a.items.length} 条，按开服、合服、维护、版本更新、活动等分类整理，含日期与原文出处，可跳转官方专区核对。`,
+      url,
+      { ld: [{
+        '@context': 'https://schema.org', '@type': 'CollectionPage',
+        name: `《${gameName}》官方公告归档`, url, inLanguage: 'zh-CN',
+        isPartOf: { '@type': 'WebSite', name: '小梦怀旧手游', url: SITE + '/' }
+      }, {
+        '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: '首页', item: SITE + '/' },
+          { '@type': 'ListItem', position: 2, name: '官方公告', item: newsUrl },
+          { '@type': 'ListItem', position: 3, name: `《${gameName}》官方公告归档`, item: url }
+        ]
+      }] }
+    ) + body);
+    sitemapUrls.push({ loc: url, lastmod: TODAY, priority: '0.6' });
+  });
+
+  console.log('✅ 生成官方公告归档页：1 个总览 + ' + archiveList.length + ' 个专区页，共 ' + totalNews + ' 条公告');
+} else {
+  console.log('⏭ 跳过公告归档页（data/official-news.js 无 archives 数据，先跑 scripts/fetch-official-news.js）');
+}
 
 // ===== 7. 生成攻略索引页 guides.html =====
 const byGame = articlesByGame;
