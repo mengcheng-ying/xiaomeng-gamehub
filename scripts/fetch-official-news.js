@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * 三九互娱官方专区公告抓取（全量历史 + 每日增量）
+ * 三九互娱官方专区公告抓取（近 3 个月窗口 + 每日增量）
  * ------------------------------------------------------------------
  * 数据来源：3975.com 系列官方专区（游戏发行方三九互娱的官方站点）
  * 输出：
@@ -9,9 +9,10 @@
  *
  * 设计要点
  * - 翻页参数实测为 ?tid=0&page=N；翻到内容与前页重复即视为末页。
- * - 每个专区全量历史一次抓完（列表页很轻，约 11 条/页）。
+ * - **只收录 KEEP_SINCE 之后的公告**（默认近 3 个月）。列表页按时间倒序，
+ *   一旦出现整页都早于 KEEP_SINCE 就停止翻页 —— 比全量翻到底快得多，也不必再担心 MAX_PAGES 截断。
  * - 详情页（正文摘要）**只抓没抓过的**：已有摘要从上次的 official-news.js 里继承，
- *   所以首次运行较慢（约 1000 次请求），之后每天只补新增的几条。
+ *   所以首次运行较慢，之后每天只补新增的几条。
  * - 每抓 SAVE_EVERY 条详情就落盘一次，中断也不会白跑。
  * - 某个专区抓取失败时保留其原有数据，绝不用渠道站/AI 站内容补位。
  *
@@ -25,14 +26,23 @@ const path = require('path');
 const ROOT = path.join(__dirname, '..');
 const OUT = path.join(ROOT, 'data', 'official-news.js');
 const HISTORY = path.join(ROOT, 'data', 'news-history.json');
+const DATECACHE = path.join(ROOT, 'data', 'news-datecache.json');   // url → 真实日期（或 'ND'）
 
 const MAX_SUMMARY = 160;      // 每条公告的正文摘要字数上限
 const DELAY = 200;            // 请求间隔（ms）
-const MAX_PAGES = 30;         // 单专区最多翻页数（防止死循环；部分专区历史长于此，会在日报里注明）
+const MAX_PAGES = 30;         // 单专区最多翻页数（防止死循环）
 const MAX_DETAIL_PER_RUN = 1500; // 单次运行最多抓多少条详情（防跑飞）
 const SAVE_EVERY = 120;       // 每抓 N 条详情落盘一次
-// 只有这个日期之后的公告才去抓详情页摘要。更早的公告照常收录标题/日期/分类，
-// 只是不再逐条请求详情页 —— 目的是把每天对官方站的请求量、以及归档页的重复内容密度压下来。
+
+// ── 收录窗口（分阶段上量的第一步）──────────────────────────────
+// 只收录这个日期（含）之后的公告。更早的直接不入库、不渲染。
+// 理由：公告页是"聚合页"，内容 100% 转载自 3975.com。全量 2236 条一次性放出，
+// 会让站点画面上呈现"大量采集内容"的特征，对百度评估站点质量没有好处，
+// 而这批旧公告的搜索量近乎为零。先把窗口收到近 3 个月，跑稳了再逐段往前扩。
+// 要往前扩：把这个日期改早即可（例如 '2025-09-14' = 12 个月）。
+const KEEP_SINCE = '2026-06-14';
+
+// 只有这个日期之后的公告才去抓详情页摘要（当前 KEEP_SINCE 晚于它，等于窗口内全抓）。
 const SUMMARY_SINCE = '2025-09-01';
 
 // 专区清单（同一专区被多款游戏共用时，写多个 gameId）
@@ -123,6 +133,7 @@ function parseList(html, base) {
 
     // 发布日期：优先完整格式（标题里的「9月13日」不会被误伤）
     let date = '';
+    let mdOnly = false;   // 列表页只给了「月-日」（如 11-25），年份是猜的，必须回详情页核实
     const dm = plain.match(/(\d{4})\s*[-./年]\s*(\d{1,2})\s*[-./月]\s*(\d{1,2})/);
     if (dm) {
       date = `${dm[1]}-${String(dm[2]).padStart(2, '0')}-${String(dm[3]).padStart(2, '0')}`;
@@ -130,8 +141,11 @@ function parseList(html, base) {
     } else {
       const dm2 = plain.match(/(?:^|\s)(\d{1,2})\s*[-./]\s*(\d{1,2})(?!\d)/);
       if (dm2) {
-        const y = new Date().getFullYear();
-        date = `${y}-${String(dm2[1]).padStart(2, '0')}-${String(dm2[2]).padStart(2, '0')}`;
+        // ⚠️ 这里不生成年份。用当前年份猜会同一批去年同月的公告被算成今年的，
+        //    归档页就会出现日期错一年的假信息（用户硬底线：站内不得有虚假信息）。
+        //    只记录「月-日」，标记 mdOnly，由详情页给出真实年份。
+        date = `${String(dm2[1]).padStart(2, '0')}-${String(dm2[2]).padStart(2, '0')}`;
+        mdOnly = true;
         plain = withSpace(plain.split(dm2[0].trim()).join(' '));
       }
     }
@@ -147,10 +161,12 @@ function parseList(html, base) {
 
     const title = plain.replace(/^[-–—·•\s]+/, '').trim();
     if (!title || title.length < 4) continue;
-    if (!validDate(date)) date = '';
+    // mdOnly 的日期形如 'MM-DD'，不能过 validDate（那是给完整日期用的）
+    if (!mdOnly && !validDate(date)) date = '';
+    if (mdOnly && !/^\d{2}-\d{2}$/.test(date)) { date = ''; mdOnly = false; }
 
     seen.add(href);
-    out.push({ date, category, title, url: new URL(href, base).href });
+    out.push({ date, category, title, url: new URL(href, base).href, mdOnly });
   }
   return out;
 }
@@ -234,6 +250,19 @@ function loadPrev() {
   } catch (e) { return null; }
 }
 
+/**
+ * 日期缓存：url → 真实日期（'YYYY-MM-DD'）或 'ND'（确认过、官方就是没给日期）。
+ * 存在的意义：列表页不给日期的条目，本来只能靠详情感知年份；
+ * 而这些条目里可能大量属于窗口之外（例如热血传说专区 130 条是去年的）。
+ * 没有缓存时，它们每天都会被重新抓一遍详情页再丢掉 —— 纯浪费对方服务器和我们的时间。
+ */
+function loadDateCache() {
+  try { return JSON.parse(fs.readFileSync(DATECACHE, 'utf8')) || {}; } catch (e) { return {}; }
+}
+function saveDateCache(c) {
+  try { fs.writeFileSync(DATECACHE, JSON.stringify(c), 'utf8'); } catch (e) {}
+}
+
 function writeOut(payload) {
   const banner = [
     '// ⚠️ 本文件由 scripts/fetch-official-news.js 自动生成，请勿手工编辑',
@@ -247,33 +276,53 @@ function writeOut(payload) {
 // ---------- 主流程 ----------
 (async () => {
   const started = Date.now();
-  console.log('开始抓取三九互娱官方专区公告（全量历史 + 增量补摘要）…\n');
+  console.log(`开始抓取三九互娱官方专区公告（窗口 ≥ ${KEEP_SINCE}，增量补摘要）…\n`);
 
   const prev = loadPrev();
   const prevArchives = (prev && prev.archives) || {};
+  const dateCache = loadDateCache();
 
-  // 1) 先只用列表页把全部历史条目收集齐（很快）
+  // 1) 先只用列表页把窗口内的全部条目收集齐（很快）
+  //    列表页按时间倒序，因此一旦整页都早于 KEEP_SINCE 就可以停止翻页。
   const archives = {};
   const listStats = [];
   for (const src of SOURCES) {
     const seen = new Map();
     let pages = 0;
     let lastSig = '';
+    let stoppedBy = '';
     try {
       for (let p = 1; p <= MAX_PAGES; p++) {
         const r = await fetchUrl(`${src.base}/news/index?tid=0&page=${p}`);
-        if (r.status !== 200) break;
+        if (r.status !== 200) { stoppedBy = 'http-' + r.status; break; }
         const html = r.buf.toString('utf8');
         const list = parseList(html, src.base);
         const sig = list.map((x) => x.url).join('|');
-        if (!list.length || sig === lastSig) break;   // 内容重复 = 已到末页
+        if (!list.length || sig === lastSig) { stoppedBy = '末页'; break; }   // 内容重复 = 已到末页
         lastSig = sig;
         pages = p;
-        for (const it of list) if (!seen.has(it.url)) seen.set(it.url, it);
+        let allOlder = true;
+        let certain = 0;
+        for (const it of list) {
+          if (!seen.has(it.url)) seen.set(it.url, it);
+          // 判断"这一页是否已经翻到窗口之外"：优先用列表页给的完整日期，
+          // 列表页没给年份时用日期缓存里已经核实过的真实日期。
+          let d = it.date && !it.mdOnly ? it.date : '';
+          if (!d) { const c = dateCache[it.url]; if (c && c !== 'ND') d = c; }
+          if (d) {
+            certain++;
+            if (d >= KEEP_SINCE) allOlder = false;
+          } else {
+            allOlder = false;                   // 年份未知，保守起见继续翻
+          }
+        }
+        if (allOlder && certain > 0) { stoppedBy = '整页早于 ' + KEEP_SINCE; break; }
         await sleep(DELAY);
       }
+      if (pages >= MAX_PAGES && !stoppedBy) stoppedBy = '达翻页上限 ' + MAX_PAGES;
     } catch (e) {
       console.log(`⚠️  ${src.name}（${src.slug}）列表抓取失败：${e.message}`);
+      stoppedBy = '异常';
     }
 
     if (!seen.size) {
@@ -287,11 +336,30 @@ function writeOut(payload) {
       continue;
     }
 
-    const items = [...seen.values()].sort((a, b) => {
-      if (!a.date && !b.date) return 0;
-      if (!a.date) return 1;
-      if (!b.date) return -1;
-      return a.date < b.date ? 1 : a.date > b.date ? -1 : 0;
+    // 先用日期缓存补齐（列表页没给日期 / 只给月-日 的条目）
+    let all = [...seen.values()];
+    let fromCache = 0;
+    for (const it of all) {
+      const c = dateCache[it.url];
+      if (c && (!it.date || it.mdOnly)) {
+        if (c === 'ND') { it.nd = true; }
+        else { it.date = c; it.dated = true; delete it.mdOnly; }
+        fromCache++;
+      }
+    }
+
+    // 窗口过滤：完整日期早于 KEEP_SINCE 的直接剔除；
+    // mdOnly（年份未知）/ 无日期的先留下，等详情页给出真实年份后再二次过滤。
+    const dropped = all.filter((it) => it.date && !it.mdOnly && it.date < KEEP_SINCE).length;
+    all = all.filter((it) => !it.date || it.mdOnly || it.date >= KEEP_SINCE);
+
+    const items = all.sort((a, b) => {
+      const da = a.date && !a.mdOnly ? a.date : '';
+      const db = b.date && !b.mdOnly ? b.date : '';
+      if (!da && !db) return 0;
+      if (!da) return 1;
+      if (!db) return -1;
+      return da < db ? 1 : da > db ? -1 : 0;
     });
     items.forEach((it) => { it.category = refineCategory(it.category, it.title); });
 
@@ -302,10 +370,11 @@ function writeOut(payload) {
       gameIds: src.gameIds,
       newsUrl: src.base + '/news/index',
       pages,
+      since: KEEP_SINCE,
       items
     };
-    listStats.push({ slug: src.slug, name: src.name, pages, total: items.length });
-    console.log(`✅ ${src.name.padEnd(18)} 翻 ${String(pages).padStart(2)} 页 → 共 ${items.length} 条`);
+    listStats.push({ slug: src.slug, name: src.name, pages, total: items.length, dropped });
+    console.log(`✅ ${src.name.padEnd(18)} 翻 ${String(pages).padStart(2)} 页 → 窗口内 ${items.length} 条（窗口外剔除 ${dropped} 条${fromCache ? '，缓存命中 ' + fromCache : ''}，${stoppedBy}）`);
     await sleep(DELAY);
   }
   console.log('');
@@ -319,29 +388,33 @@ function writeOut(payload) {
       const map = new Map(old.items.map((x) => [x.url, x]));
       for (const it of arc.items) {
         const o = map.get(it.url);
-        if (o) {
-          if (!it.summary && o.summary) { it.summary = o.summary; inherited++; }
-          if (!it.date && validDate(o.date)) it.date = o.date;
-          if (!it.date && o.nd) it.nd = true;
-        }
+        if (!o) continue;
+        if (it.mdOnly) continue;   // 年份还没确认 → 整条重抓（详情页一次拿日期+摘要）
+        if (!it.summary && o.summary) { it.summary = o.summary; inherited++; }
+        if (!it.date && validDate(o.date)) it.date = o.date;
+        if (!it.date && o.nd) it.nd = true;
+        if (o.dated) it.dated = true;
       }
     }
   }
 
   // 3) 需要抓详情页的条目：
-  //    - 还没有摘要的（新公告）
-  //    - 还没有日期的（个别专区列表页完全不给日期，只能从详情页提；抓过一次仍提不到就记 nd 标记，不再重试）
-  //    - 已知日期且早于 SUMMARY_SINCE 的，跳过详情页，只保留标题/日期/分类
+  //    - mdOnly（列表页只给月-日，年份必须核实）
+  //    - 完全没有日期的
+  //    - 没摘要且在 SUMMARY_SINCE 之后的
   const need = [];
   const skippedOld = [];
   for (const arc of Object.values(archives)) {
     for (const it of arc.items) {
-      if (it.summary && (it.date || it.nd)) continue;
-      if (it.date && it.date < SUMMARY_SINCE) { skippedOld.push(it); continue; }
-      need.push(it);
+      if (it.nd) continue;
+      const needsDate = it.mdOnly || !it.date;
+      const needsSummary = !it.summary && it.date && !it.mdOnly && it.date >= SUMMARY_SINCE;
+      if (needsDate || needsSummary) need.push(it);
+      else if (!it.summary) skippedOld.push(it);
     }
   }
-  console.log(`摘要：继承 ${inherited} 条 | 需要新抓 ${need.length} 条 | 早于 ${SUMMARY_SINCE} 的 ${skippedOld.length} 条只收录标题与日期` + (need.length > MAX_DETAIL_PER_RUN ? `（本次上限 ${MAX_DETAIL_PER_RUN}，其余下次运行补齐）` : ''));
+  const mdCount = need.filter((x) => x.mdOnly).length;
+  console.log(`摘要：继承 ${inherited} 条 | 需要新抓 ${need.length} 条（其中 ${mdCount} 条是年份待核实的） | 早于 ${SUMMARY_SINCE} 的 ${skippedOld.length} 条只收录标题与日期` + (need.length > MAX_DETAIL_PER_RUN ? `（本次上限 ${MAX_DETAIL_PER_RUN}，其余下次运行补齐）` : ''));
   console.log('');
 
   const todo = need.slice(0, MAX_DETAIL_PER_RUN);
@@ -363,11 +436,22 @@ function writeOut(payload) {
       const d = await fetchUrl(it.url);
       if (d.status === 200) {
         const html = d.buf.toString('utf8');
-        it.summary = extractSummary(html, it.title) || '';
-        if (!it.date) {
-          const dd = dateFromHtml(html);
-          if (dd) it.date = dd; else it.nd = true;   // 提不到日期就记标记，不再重复请求
+        if (!it.summary) it.summary = extractSummary(html, it.title) || '';
+        const dd = dateFromHtml(html);
+        if (dd) {
+          it.date = dd;
+          it.dated = true;
+          dateCache[it.url] = dd;          // 记住真实年份，下次不必再抓
+        } else if (it.mdOnly) {
+          // 连详情页都不给年份 → 无法核实，绝不猜。清掉月-日，标 nd 不再重试。
+          it.date = '';
+          it.nd = true;
+          dateCache[it.url] = 'ND';
+        } else if (!it.date) {
+          it.nd = true;   // 提不到日期就记标记，不再重复请求
+          dateCache[it.url] = 'ND';
         }
+        if (it.mdOnly) delete it.mdOnly;
         fetched++;
       } else { failed++; }
     } catch (e) { failed++; }
@@ -379,6 +463,17 @@ function writeOut(payload) {
     }
   }
   snapshot();
+
+  // 3.5) 二次窗口过滤：上面用详情页的真实年份确认后，把其实早于 KEEP_SINCE 的剔掉
+  let refiltered = 0;
+  const refilterDetail = [];
+  for (const arc of Object.values(archives)) {
+    const before = arc.items.length;
+    arc.items = arc.items.filter((it) => !it.date || it.date >= KEEP_SINCE);
+    const cut = before - arc.items.length;
+    if (cut) { refiltered += cut; refilterDetail.push(`${arc.slug}-${cut}`); }
+  }
+  if (refiltered) console.log(`\n🔎 按详情页真实年份二次过滤：剔除 ${refiltered} 条（实际早于 ${KEEP_SINCE}）：${refilterDetail.join(' ')}\n`);
 
   // 4) 排序修正（补完日期后重排一次）
   for (const arc of Object.values(archives)) {
@@ -417,6 +512,7 @@ function writeOut(payload) {
   };
   hist.updatedAt = new Date().toISOString();
   fs.writeFileSync(HISTORY, JSON.stringify(hist, null, 2), 'utf8');
+  saveDateCache(dateCache);   // 落盘日期缓存（含被窗口剔除的），下次不再重复请求详情页
 
   console.log('\n—— 汇总 ——');
   console.log('专区数：' + Object.keys(archives).length);
