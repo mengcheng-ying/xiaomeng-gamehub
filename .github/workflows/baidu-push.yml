@@ -1,46 +1,70 @@
 name: 百度链接自动推送
 
+# ── 为什么这样配置（2026-09-14 实测后重写）────────────────────────────
+# 旧配置有两个致命问题，导致 113 条 URL 的站点长期只有前 10 条被推过：
+#   1) 定时排在北京时间 03:30（UTC 19:30），跑在内容更新之前 ——
+#      凌晨那次把当天配额一次吃光，白天新上线的页面一条都推不进去。
+#      2026-09-14 当天触发了 5 次，后 4 次全部撞 over quota 空跑。
+#   2) 同时挂 on: push: [main]，每次推站都触发一次推送，互相抢同一份配额；
+#      且旧脚本固定从 sitemap 第 1 条开始推，遇上限就 break，没有状态记录，
+#      于是每天重复推同一批「首页/列表页」，排在后半段的 41 个游戏页永远轮不到。
+# 现在：只在每日定时推一次（排在 12:00 抓取/构建/推送之后），
+#       用 scripts/baidu-push-priority.js 按优先级推 + 状态文件记录已推 URL。
+
 on:
   schedule:
-    - cron: '30 19 * * *'   # 每天北京时间 03:30（UTC 19:30）定时逐条推送
-  push:
-    branches: [main]
+    # 每天北京时间 13:00（UTC 05:00）—— 必须晚于每天 12:00 的内容同步。
+    - cron: '0 5 * * *'
   workflow_dispatch:
     inputs:
-      mode:
-        description: '推送模式：incremental=增量(默认) / full=全量 / onebyone=逐条推到配额上限'
+      max:
+        description: '本次最多推送条数（默认 10，与每日配额量级匹配）'
         required: false
-        default: 'incremental'
-        type: choice
-        options:
-          - incremental
-          - full
-          - onebyone
+        default: '10'
+        type: string
+      dry:
+        description: '只演练不发送（不消耗配额）'
+        required: false
+        default: false
+        type: boolean
+  # ⚠️ 刻意不挂 on: push。配额按天算是稀缺资源，每次推站都触发推送只会互相抢占。
+  #    站点内容更新后由次日 13:00 的定时统一推，顺序上也保证在内容更新之后。
 
 jobs:
   baidu-push:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write          # 提交推送状态文件需要
     steps:
       - uses: actions/checkout@v4
-        with:
-          # 取完整历史，保证 git diff HEAD~1 可用
-          fetch-depth: 2
 
-      - name: 推送链接到百度
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 推送链接到百度（带状态与优先级）
         env:
           BAIDU_TOKEN: ${{ secrets.BAIDU_PUSH_TOKEN }}
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            if [ "${{ inputs.mode }}" = "full" ]; then
-              node .github/scripts/baidu-push.js --all
-            elif [ "${{ inputs.mode }}" = "incremental" ]; then
-              node .github/scripts/baidu-push.js
-            else
-              node .github/scripts/baidu-push-onebyone.js
-            fi
-          elif [ "${{ github.event_name }}" = "schedule" ]; then
-            # 每日定时逐条推送，把当前全部链接一条条提交给百度，用满当日配额
-            node .github/scripts/baidu-push-onebyone.js
-          else
-            node .github/scripts/baidu-push.js
+          MAX="${{ inputs.max }}"
+          if [ -z "$MAX" ]; then MAX=10; fi
+          ARGS="--max=$MAX"
+          if [ "${{ inputs.dry }}" = "true" ]; then ARGS="$ARGS --dry"; fi
+          echo "运行参数：$ARGS"
+          node scripts/baidu-push-priority.js $ARGS
+
+      - name: 提交推送状态（让明天的运行接着往下推）
+        run: |
+          if [ ! -f .github/baidu-push-state.json ]; then
+            echo "没有状态文件，跳过"
+            exit 0
           fi
+          git config user.name "gamehub-bot"
+          git config user.email "actions@github.com"
+          git add .github/baidu-push-state.json
+          if git diff --cached --quiet; then
+            echo "状态无变化，无需提交"
+            exit 0
+          fi
+          git commit -m "chore(baidu): 记录本次已推送 URL"
+          git push

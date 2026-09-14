@@ -22,6 +22,11 @@ process.argv.slice(2).forEach((a) => {
   const m = a.match(/^--([^=]+)=(.*)$/);
   if (m) args[m[1]] = m[2];
 });
+// --noteFile=<路径>：从文件读备注。
+// 本机 Git Bash 传中文参数会乱码，备注又是中文，所以走文件比走命令行可靠。
+if (args.noteFile) {
+  try { args.note = fs.readFileSync(args.noteFile, 'utf8').trim(); } catch (e) { /* 读不到就当没有 */ }
+}
 
 function readJsObject(rel, keyword) {
   const p = path.join(ROOT, rel);
