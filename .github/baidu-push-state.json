@@ -1,10 +1,10 @@
 {
   "pushed": {},
   "history": [],
-  "lastRun": "2026-09-14T11:59:34.917Z",
+  "lastRun": "2026-09-15T05:06:21.945Z",
   "lastResult": {
-    "at": "2026-09-14T11:59:34.917Z",
-    "attempted": 2,
+    "at": "2026-09-15T05:06:21.945Z",
+    "attempted": 10,
     "success": 0,
     "outcome": "over_quota",
     "errors": {}
