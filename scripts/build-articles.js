@@ -917,6 +917,30 @@ ${list.map(a => `    <a href="/article/${a.id}"><span class="cat">${esc(a.catego
 writeFile('guides.html', guidesIndexHtml);
 console.log('✅ 生成 guides.html（' + articles.length + ' 篇 / ' + gameGroups.length + ' 组）');
 
+// ===== 7b. 生成站内搜索索引 js/search-index.js =====
+// 首页顶部搜索框用；随内容自动重建，避免索引与页面脱节。
+const searchGuides = articles.map(a => ({
+  k: 'a',
+  t: a.title,
+  s: String(a.summary || '').slice(0, 60),
+  u: '/article/' + a.id,
+  g: (gameById[a.gameId] && gameById[a.gameId].name) || ''
+}));
+const searchGames = games.map(g => ({
+  k: 'g',
+  t: g.name,
+  s: [g.category, g.year].filter(Boolean).join(' · '),
+  u: '/game/' + g.id,
+  g: ''
+}));
+const searchIndexSrc = '/* 站内搜索索引 · 由 scripts/build-articles.js 自动生成，请勿手改 */\n' +
+  'var SEARCH_INDEX=' +
+  JSON.stringify(searchGuides.concat(searchGames)).replace(/</g, '\\u003c') +
+  ';\n';
+fs.writeFileSync(path.join(ROOT, 'js', 'search-index.js'), searchIndexSrc);
+console.log('✅ 生成 js/search-index.js（攻略 ' + searchGuides.length + ' + 游戏 ' + searchGames.length +
+  '，' + Buffer.byteLength(searchIndexSrc, 'utf8') + ' 字节）');
+
 // ===== 8. 生成游戏索引页 games.html =====
 const gamesHtml = head(
   '全部怀旧手游大全 - 小梦怀旧手游',

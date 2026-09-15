@@ -20,6 +20,7 @@
 <meta property="og:image" content="https://fmbly.com/assets/images/longzhigu_cover.jpg">
 <title>小梦怀旧手游-热血江湖龙之谷武林外传怀旧服下载攻略</title>
 <link rel="stylesheet" href="css/style.css?v=20260910d">
+<script src="js/search-index.js" defer></script>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png">
@@ -125,6 +126,40 @@
   .acard h3{font-size:1.02rem;font-weight:800;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   .acard p{font-size:.83rem;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1}
   .acard .rd{font-size:.8rem;color:var(--accent2);font-weight:600;display:flex;align-items:center;gap:5px}
+  /* 攻略聚合卡：同一游戏的多篇攻略合并为一张卡片 */
+  .acard.agg{cursor:default;gap:13px}
+  .acard.agg .top .gn{font-size:.92rem}
+  .glist{display:flex;flex-direction:column;gap:1px;flex:1}
+  .glist a{display:block;font-size:.85rem;line-height:1.5;color:var(--muted);padding:6px 9px;border-radius:8px;transition:.16s}
+  .glist a::before{content:"›";color:var(--accent2);font-weight:800;margin-right:7px}
+  .glist a:hover{background:rgba(61,123,255,.13);color:var(--ink)}
+  .gmore{font-size:.79rem;color:var(--accent2);font-weight:600;margin-top:auto;padding-top:8px;border-top:1px solid var(--line)}
+  .gmore:hover{color:var(--ink)}
+  /* 顶部站内搜索 */
+  .nav-srch{position:relative;flex:0 0 auto}
+  .nav-srch .ic{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:.8rem;opacity:.55;pointer-events:none}
+  .nav-srch input{width:182px;height:36px;padding:0 14px 0 33px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--ink);font-size:.85rem;font-family:inherit;outline:none;transition:.22s}
+  .nav-srch input::placeholder{color:var(--dim)}
+  .nav-srch input:focus{width:222px;border-color:rgba(61,123,255,.6);background:rgba(61,123,255,.1)}
+  .srch-panel{position:absolute;top:calc(100% + 10px);right:0;width:372px;max-height:392px;overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:var(--radius-sm);box-shadow:var(--shadow);padding:6px;z-index:120}
+  .srch-panel[hidden]{display:none}
+  .srch-item{display:block;padding:9px 12px;border-radius:8px;transition:.15s}
+  .srch-item:hover{background:rgba(61,123,255,.14)}
+  .srch-item .t{display:block;font-size:.86rem;font-weight:600;line-height:1.45}
+  .srch-item .m{display:block;font-size:.72rem;color:var(--dim);margin-top:3px}
+  .srch-item .m b{color:var(--accent2);font-weight:600}
+  .srch-empty{padding:18px 12px;text-align:center;font-size:.83rem;color:var(--dim)}
+  @media(max-width:980px){
+    .nav-srch input{width:140px}
+    .nav-srch input:focus{width:158px}
+    .srch-panel{width:308px}
+  }
+  @media(max-width:760px){
+    .nav-srch{order:98;margin-left:auto}
+    .nav-srch input{width:132px}
+    .nav-srch input:focus{width:150px}
+    .srch-panel{right:-46px;width:min(322px,88vw)}
+  }
 
   .faq{max-width:760px;margin:0 auto}
   .faq-item{border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--card);margin-bottom:12px;overflow:hidden}
@@ -285,6 +320,11 @@
       <a href="#guides">游戏攻略</a>
       <a href="#faq">常见问题</a>
     </div>
+    <div class="nav-srch">
+      <span class="ic" aria-hidden="true">🔍</span>
+      <input id="siteSearch" type="text" placeholder="搜索攻略 / 游戏" autocomplete="off" aria-label="站内搜索">
+      <div class="srch-panel" id="srchPanel" hidden></div>
+    </div>
     <a class="nav-cta" href="#games">全部游戏</a>
     <button class="nav-toggle" id="navToggle" aria-label="展开菜单" aria-expanded="false">☰</button>
   </div>
@@ -338,7 +378,7 @@
       <h2>游戏攻略</h2>
       <p>新手避坑 · 职业加点 · 打金搬砖 · 版本爆料，持续更新中</p>
     </div>
-    <div class="guide-grid" id="guideGrid"><a class="acard" href="/article/1"><div class="top"><img src="assets/images/longzhigu_cover.jpg" alt="龙之谷启程" loading="lazy"><div><div class="gn">龙之谷启程</div><div class="dt">2026-08-15</div></div></div><h3>龙之谷启程：新手职业选择与开荒避坑指南</h3><p>五大职业到底怎么选？战神、祭司、元素师、箭神、剑圣全解析，新手一看就懂。</p><span class="rd">查看完整攻略 →</span></a><a class="acard" href="/article/2"><div class="top"><img src="assets/images/moxiangqing_cover.jpg" alt="墨香情" loading="lazy"><div><div class="gn">墨香情</div><div class="dt">2026-08-14</div></div></div><h3>墨香情：六大武器流派全解析与新手推荐</h3><p>墨香情无职业设定，武器即流派。刀剑枪弓箭拳暗器六大武器详解，帮你找到最适合的江湖路。</p><span class="rd">查看完整攻略 →</span></a><a class="acard" href="/article/47"><div class="top"><img src="assets/images/moxiangqing_cover.jpg" alt="墨香情" loading="lazy"><div><div class="gn">墨香情</div><div class="dt">2026-08-30</div></div></div><h3>墨香情：当年藏在网吧里的水墨江湖，终于又能握在手心</h3><p>从《墨香OL》到正版复刻归来，兰州城、六大兵器、人幽两界，写给80、90后老玩家的一篇情怀长文。</p><span class="rd">查看完整攻略 →</span></a><a class="acard" href="/article/3"><div class="top"><img src="assets/images/xingchenbian_cover.jpg" alt="星辰变：归来" loading="lazy"><div><div class="gn">星辰变：归来</div><div class="dt">2026-08-13</div></div></div><h3>星辰变归来：境界突破全攻略与战力提升避坑</h3><p>六大修真境界详解，突破顺序、材料获取、渡劫技巧，帮你少走弯路快速提升战力。</p><span class="rd">查看完整攻略 →</span></a><a class="acard" href="/article/4"><div class="top"><img src="assets/images/feifei_cover.jpg" alt="飞飞：重逢" loading="lazy"><div><div class="gn">飞飞：重逢</div><div class="dt">2026-08-12</div></div></div><h3>飞飞重逢：新手飞行系统与四大职业入门指南</h3><p>自由飞行是飞飞的核心特色，本文详解飞行器选择、养成与四大职业定位，助你快速上手。</p><span class="rd">查看完整攻略 →</span></a><a class="acard" href="/article/5"><div class="top"><img src="assets/images/shenqi_cover.jpg" alt="神泣：纷争" loading="lazy"><div><div class="gn">神泣：纷争</div><div class="dt">2026-08-11</div></div></div><h3>神泣纷争：光暗阵营选择与六大职业深度解析</h3><p>光之同盟vs愤怒联合，两大阵营各有优劣。六大职业全解析，帮你选对阵营和职业。</p><span class="rd">查看完整攻略 →</span></a><a class="acard" href="/article/6"><div class="top"><img src="assets/images/rongyao_cover.jpg" alt="荣耀出征" loading="lazy"><div><div class="gn">荣耀出征</div><div class="dt">2026-08-10</div></div></div><h3>荣耀出征：奇迹MU经典三职业加点与装备指南</h3><p>剑士、法师、弓箭手三职业经典加点方案，1.03H黄金版本装备路线全解析。</p><span class="rd">查看完整攻略 →</span></a><a class="acard" href="/article/19"><div class="top"><img src="assets/images/yonghengdao_cover.jpg" alt="永恒岛：高清重制版" loading="lazy"><div><div class="gn">永恒岛：高清重制版</div><div class="dt">2026-08-08</div></div></div><h3>永恒岛高清重制版：六大职业定位与新手成长路线</h3><p>战士、盾卫、法师、游侠、术士、工程师六大职业详解，新手选职与成长路线推荐。</p><span class="rd">查看完整攻略 →</span></a><a class="acard" href="/article/39"><div class="top"><img src="assets/images/bafengte_cover.jpg" alt="巴风特之怒：RO怀旧" loading="lazy"><div><div class="gn">巴风特之怒：RO怀旧</div><div class="dt">2026-08-03</div></div></div><h3>巴风特之怒RO怀旧：六大经典职业加点与转职攻略</h3><p>RO经典职业体系详解，剑士、法师、弓箭手、服事、盗贼、商人一转二转全攻略。</p><span class="rd">查看完整攻略 →</span></a><a class="acard" href="/article/11"><div class="top"><img src="assets/images/xiaoxiaotulong_cover.jpg" alt="小小屠龙：原始火龙" loading="lazy"><div><div class="gn">小小屠龙：原始火龙</div><div class="dt">2026-08-06</div></div></div><h3>小小屠龙原始火龙：单职业打金全攻略</h3><p>火龙单职业版本打金路线、装备过渡、BOSS刷新点全整理，散人打金必看。</p><span class="rd">查看完整攻略 →</span></a></div>
+    <div class="guide-grid" id="guideGrid"><div class="acard agg"><div class="top"><img src="assets/images/longzhigu_cover.jpg" alt="龙之谷启程" loading="lazy"><div><div class="gn">龙之谷启程</div><div class="dt">1 篇攻略</div></div></div><div class="glist"><a href="/article/1">龙之谷启程：新手职业选择与开荒避坑指南</a></div><a class="gmore" href="/game/1">进入游戏 →</a></div><div class="acard agg"><div class="top"><img src="assets/images/moxiangqing_cover.jpg" alt="墨香情" loading="lazy"><div><div class="gn">墨香情</div><div class="dt">2 篇攻略</div></div></div><div class="glist"><a href="/article/2">墨香情：六大武器流派全解析与新手推荐</a><a href="/article/47">墨香情：当年藏在网吧里的水墨江湖，终于又能握在手心</a></div><a class="gmore" href="/game/2">进入游戏 →</a></div><div class="acard agg"><div class="top"><img src="assets/images/xingchenbian_cover.jpg" alt="星辰变：归来" loading="lazy"><div><div class="gn">星辰变：归来</div><div class="dt">1 篇攻略</div></div></div><div class="glist"><a href="/article/3">星辰变归来：境界突破全攻略与战力提升避坑</a></div><a class="gmore" href="/game/3">进入游戏 →</a></div><div class="acard agg"><div class="top"><img src="assets/images/feifei_cover.jpg" alt="飞飞：重逢" loading="lazy"><div><div class="gn">飞飞：重逢</div><div class="dt">1 篇攻略</div></div></div><div class="glist"><a href="/article/4">飞飞重逢：新手飞行系统与四大职业入门指南</a></div><a class="gmore" href="/game/23">进入游戏 →</a></div><div class="acard agg"><div class="top"><img src="assets/images/shenqi_cover.jpg" alt="神泣：纷争" loading="lazy"><div><div class="gn">神泣：纷争</div><div class="dt">1 篇攻略</div></div></div><div class="glist"><a href="/article/5">神泣纷争：光暗阵营选择与六大职业深度解析</a></div><a class="gmore" href="/game/5">进入游戏 →</a></div><div class="acard agg"><div class="top"><img src="assets/images/rongyao_cover.jpg" alt="荣耀出征" loading="lazy"><div><div class="gn">荣耀出征</div><div class="dt">1 篇攻略</div></div></div><div class="glist"><a href="/article/6">荣耀出征：奇迹MU经典三职业加点与装备指南</a></div><a class="gmore" href="/game/12">进入游戏 →</a></div><div class="acard agg"><div class="top"><img src="assets/images/yonghengdao_cover.jpg" alt="永恒岛：高清重制版" loading="lazy"><div><div class="gn">永恒岛：高清重制版</div><div class="dt">1 篇攻略</div></div></div><div class="glist"><a href="/article/19">永恒岛高清重制版：六大职业定位与新手成长路线</a></div><a class="gmore" href="/game/19">进入游戏 →</a></div><div class="acard agg"><div class="top"><img src="assets/images/bafengte_cover.jpg" alt="巴风特之怒：RO怀旧" loading="lazy"><div><div class="gn">巴风特之怒：RO怀旧</div><div class="dt">1 篇攻略</div></div></div><div class="glist"><a href="/article/39">巴风特之怒RO怀旧：六大经典职业加点与转职攻略</a></div><a class="gmore" href="/game/39">进入游戏 →</a></div><div class="acard agg"><div class="top"><img src="assets/images/xiaoxiaotulong_cover.jpg" alt="小小屠龙：原始火龙" loading="lazy"><div><div class="gn">小小屠龙：原始火龙</div><div class="dt">1 篇攻略</div></div></div><div class="glist"><a href="/article/11">小小屠龙原始火龙：单职业打金全攻略</a></div><a class="gmore" href="/game/11">进入游戏 →</a></div><div class="acard agg"><div class="top"><img src="assets/images/wulin_cover.jpg" alt="武林外传：十年之约" loading="lazy"><div><div class="gn">武林外传：十年之约</div><div class="dt">10 篇攻略</div></div></div><div class="glist"><a href="/article/48">武林外传：十年江湖路，七侠镇再相逢</a><a href="/article/49">武林外传十年之约：新服首日冲级，稳上30级攻略</a><a href="/article/50">武林外传十年之约：装备获取全路径，从零到毕业不迷茫</a><a href="/article/51">武林外传十年之约：零氪搬砖玩法与稳定变现指南</a><a href="/article/52">武林外传十年之约：全职业选择指南，找到最适合你的门派</a><a href="/article/53">武林外传十年之约：BT武器全收集，零氪必拿的特色福利</a><a href="/article/54">武林外传十年之约：月卡与永久卡，性价比怎么选最划算</a><a href="/article/55">武林外传十年之约：每日限时活动全解，收益拉满别错过</a><a href="/article/56">武林外传十年之约：新手开荒避坑，这8个弯路别踩</a><a href="/article/57">武林外传：有人的地方，才是真正的江湖</a></div><a class="gmore" href="/game/21">进入游戏 →</a></div><div class="acard agg"><div class="top"><img src="assets/images/jizhan_cover.jpg" alt="机战：钢铁巨舰" loading="lazy"><div><div class="gn">机战：钢铁巨舰</div><div class="dt">6 篇攻略</div></div></div><div class="glist"><a href="/article/58">机战钢铁巨舰：新手开荒全攻略，从零到舰队指挥官</a><a href="/article/59">机战钢铁巨舰：机甲改装入门指南，五大流派详解</a><a href="/article/60">机战钢铁巨舰：近战格斗机甲推荐与配件搭配</a><a href="/article/61">机战钢铁巨舰：远程武器详解与火力最大化方案</a><a href="/article/62">机战钢铁巨舰：舰队系统详解，跨服舰队战全攻略</a><a href="/article/63">机战钢铁巨舰：资源采集指南，高效发展路线推荐</a></div><a class="gmore" href="/game/46">进入游戏 →</a></div>
   </div>
 </section>
 
@@ -735,14 +775,58 @@ function renderNotices(){
 function fmtHeat(h){return h>=10000?(h/10000).toFixed(1)+'万':h}
 buildTabs();renderGames();renderNotices();
 
-/* ===== 攻略（直链 SEO 静态页） ===== */
+/* ===== 攻略（同一游戏的多篇攻略合并为一张卡片） ===== */
 var guideEl=document.getElementById('guideGrid');
-guideEl.innerHTML=GUIDES.map(function(a){
-  return '<a class="acard" href="/article/'+esc(a.aid)+'">'+
-    '<div class="top"><img src="'+a.cover+'" alt="'+esc(a.g)+'" loading="lazy"><div><div class="gn">'+esc(a.g)+'</div><div class="dt">'+esc(a.date)+'</div></div></div>'+
-    '<h3>'+esc(a.title)+'</h3><p>'+esc(a.sum)+'</p>'+
-    '<span class="rd">查看完整攻略 →</span></a>';
-}).join('');
+if(guideEl){
+  var gOrder=[],gMap={};
+  GUIDES.forEach(function(a){
+    if(!gMap[a.g]){gMap[a.g]={name:a.g,cover:a.cover,list:[]};gOrder.push(a.g);}
+    gMap[a.g].list.push(a);
+  });
+  guideEl.innerHTML=gOrder.map(function(k){
+    var o=gMap[k],gid=null;
+    for(var i=0;i<GAMES.length;i++){if(GAMES[i].name===k){gid=GAMES[i].id;break;}}
+    return '<div class="acard agg">'+
+      '<div class="top"><img src="'+o.cover+'" alt="'+esc(k)+'" loading="lazy"><div><div class="gn">'+esc(k)+'</div><div class="dt">'+o.list.length+' 篇攻略</div></div></div>'+
+      '<div class="glist">'+o.list.map(function(a){
+        return '<a href="/article/'+a.aid+'">'+esc(a.title)+'</a>';
+      }).join('')+'</div>'+
+      (gid?'<a class="gmore" href="/game/'+gid+'">进入游戏 →</a>':'<a class="gmore" href="/games">查看全部游戏 →</a>')+
+    '</div>';
+  }).join('');
+}
+
+/* ===== 顶部站内搜索（索引见 js/search-index.js，随构建自动重建） ===== */
+(function(){
+  var input=document.getElementById('siteSearch'),panel=document.getElementById('srchPanel');
+  if(!input||!panel)return;
+  function data(){return (typeof SEARCH_INDEX!=='undefined'&&SEARCH_INDEX)?SEARCH_INDEX:null;}
+  function esc2(s){var d=document.createElement('div');d.textContent=(s==null?'':String(s));return d.innerHTML;}
+  function render(q){
+    q=String(q||'').trim().toLowerCase();
+    if(!q){panel.hidden=true;panel.innerHTML='';return;}
+    var list=data();
+    if(!list){panel.innerHTML='<div class="srch-empty">搜索数据加载中…</div>';panel.hidden=false;return;}
+    var hits=[];
+    for(var i=0;i<list.length&&hits.length<8;i++){
+      var it=list[i];
+      if((it.t+' '+(it.s||'')+' '+(it.g||'')).toLowerCase().indexOf(q)>=0)hits.push(it);
+    }
+    if(!hits.length){panel.innerHTML='<div class="srch-empty">没有找到「'+esc2(q)+'」相关内容</div>';panel.hidden=false;return;}
+    panel.innerHTML=hits.map(function(it){
+      var meta=(it.k==='g')?('游戏 · '+(it.s||'经典怀旧手游')):('攻略 · '+(it.g||'小梦攻略组'));
+      return '<a class="srch-item" href="'+it.u+'"><span class="t">'+esc2(it.t)+'</span><span class="m">'+esc2(meta)+'</span></a>';
+    }).join('');
+    panel.hidden=false;
+  }
+  input.addEventListener('input',function(){render(input.value)});
+  input.addEventListener('focus',function(){if(input.value)render(input.value)});
+  input.addEventListener('keydown',function(e){
+    if(e.key==='Escape'){input.value='';panel.hidden=true;input.blur();}
+    else if(e.key==='Enter'){var f=panel.querySelector('.srch-item');if(f){location.href=f.getAttribute('href');}}
+  });
+  document.addEventListener('click',function(e){if(!panel.contains(e.target)&&e.target!==input)panel.hidden=true;});
+})();
 
 /* ===== 导航高亮 & 移动端菜单 ===== */
 var navToggle=document.getElementById('navToggle'),navLinksEl=document.getElementById('navLinks');

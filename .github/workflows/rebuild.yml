@@ -45,7 +45,7 @@ jobs:
         run: |
           git config user.name "gamehub-bot"
           git config user.email "actions@github.com"
-          git add -A article game news guides.html games.html news.html 404.html index.html sitemap.xml assets/images data
+          git add -A article game news guides.html games.html news.html 404.html index.html sitemap.xml assets/images data js/search-index.js
           if git diff --cached --quiet; then
             echo "本次构建没有产生变化，无需提交"
             exit 0
