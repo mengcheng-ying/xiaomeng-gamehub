@@ -1,11 +1,11 @@
-# GAMEHUB 游戏链接表
+# 小梦怀旧手游 游戏链接表
 
 > 本文件由 `scripts/generate-links-doc.js` 自动生成，请勿手动编辑。
 > 修改游戏链接请编辑 `data/games.js`，然后运行 `node scripts/generate-links-doc.js` 重新生成此文件。
 
-**最后更新：** 2026-09-07
+**最后更新：** 2026-09-15
 
-**统计：** 共 40 个游戏 · 已补充分平台链接 4 个（4 个同时有安卓+苹果）
+**统计：** 共 42 个游戏 · 已补充分平台链接 5 个（5 个同时有安卓+苹果）
 
 ## 说明
 
@@ -18,8 +18,10 @@
 
 | id | 热度 | 游戏名 | 通用链接 | 安卓链接 | 苹果链接 |
 |----|------|--------|----------|----------|----------|
+| 46 | 950000 | 机战：钢铁巨舰 | https://jz.fmbly.com/ | https://sdkn-ldy.zhangyu39.com/?app_id=7609&promote_id=1778 | https://sdkn-ldy.zhangyu39.com/?app_id=7164&promote_id=1778 |
 | 1 | 930000 | 龙之谷启程 | https://sdkn-ldy.zhangyu39.com/?app_id=7259&promote_id=1778 | https://sdkn-ldy.zhangyu39.com/?app_id=7485&promote_id=1778 | https://sdkn-ldy.zhangyu39.com/?app_id=7259&promote_id=1778 |
 | 45 | 925000 | 热血江湖2.0 | https://jh.fmbly.com/ | https://res-engine-rxyqcy.cyltc.com/package/rx/4510454/promote/4510454_4515285_c866021f3ef54b8bdece6de6a4ae7951.apk?v=1788665710 | https://uf5.uwanting.com/gr7bt2 |
+| 47 | 918000 | 屠龙世界：再战沙巴克 | https://229663.youxin75.com/qudao.php?s=/Download/f/WzUwNjEsNTA2MCwyMjk2NjNd | `⚠️ 未提供` | `⚠️ 未提供` |
 | 21 | 915000 | 武林外传：十年之约 | https://wulin.fmbly.com/ | https://sdkn-ldy.zhangyu39.com/?app_id=7631&promote_id=1778 | https://sdkn-ldy.zhangyu39.com/?app_id=7606&promote_id=1778 |
 | 2 | 880000 | 墨香情 | https://sdkn-ldy.zhangyu39.com/?app_id=7032&promote_id=1778 | https://sdkn-ldy.zhangyu39.com/?app_id=7408&promote_id=1778 | https://sdkn-ldy.zhangyu39.com/?app_id=7032&promote_id=1778 |
 | 6 | 860000 | 荣耀出征卡点服 | https://229663.youxin75.com/qudao.php?s=/Download/f/WzUwODgsNTA4NywyMjk2NjNd | `⚠️ 未提供` | `⚠️ 未提供` |
