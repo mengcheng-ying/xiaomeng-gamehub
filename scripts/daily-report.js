@@ -67,6 +67,11 @@ const withSummary = archives.reduce((s, a) => s + a.items.filter((i) => i.summar
 const BODIES = readJsObject('data/news-bodies.js', 'NEWS_BODIES') || {};
 const withBody = archives.reduce((s, a) => s + a.items.filter((i) => i.key && BODIES[i.key] && BODIES[i.key].length).length, 0);
 
+// 有官方专区的游戏 id 集合（用于统计"查不到官方来源"的款数）
+const gamesWithOfficial = new Set();
+archives.forEach((a) => (a.gameIds || []).forEach((id) => gamesWithOfficial.add(id)));
+const noOfficialCount = GAMES.filter((g) => !gamesWithOfficial.has(g.id)).length;
+
 const catCount = {};
 const catRecent = {};   // 近 7 天各分类
 const weekAgo = new Date(Date.parse(today) - 7 * 86400000).toISOString().slice(0, 10);
@@ -157,7 +162,7 @@ const txt = [
   '  1) 百度主动推送：配额很小（实测「会耗尽」，但响应体读不到 remain，具体数值未核实），',
   '     而站点现有 URL 已有 ' + sitemapCount + ' 条，按每天 10 条推算约 12 天能轮完一轮。',
   '     原脚本固定从 sitemap 第一条开始推、且没有状态记录，于是每天重复推同一批',
-  '     「首页 / 列表页 / 前几个归档页」，41 个游戏页与 58 个攻略页从未被主动推过。',
+  '     「首页 / 列表页 / 前几个归档页」，' + nGames + ' 个游戏页与 ' + nArticles + ' 个攻略页从未被主动推过。',
   '     2026-09-14 已重写为「按优先级 + 状态文件」的 scripts/baidu-push-priority.js，',
   '     定时从 03:30 挪到 13:00（排在 12:00 内容同步之后）、去掉 push 触发。',
   '     ⚠️ 提交 ≠ 收录：提交只是让百度知道有这个 URL，收不收取决于站点质量评价。',
@@ -165,7 +170,7 @@ const txt = [
   `     （/news/<专区>/<key>），点击后停留在本站，全站不设任何站外跳转；`,
   `     共 ${withBody} 条已取到正文，${totalItems - withBody} 条官方原文以图片为主、本站只保留文字。`,
   '  3) 未做核实的事项：百度推送每日配额的具体数值（只能确认"会耗尽"，无法读到总量），',
-  '     以及 41 款游戏中 29 款无法查到官方来源的游戏其版号状态。',
+  '     以及 ' + GAMES.length + ' 款游戏中 ' + noOfficialCount + ' 款无法查到官方来源的游戏其版号状态。',
   ''
 ].filter((l) => l !== null).join('\n');
 
@@ -243,7 +248,7 @@ ${status.note ? `<tr><td>备注</td><td>${esc(status.note)}</td></tr>` : ''}
 <li>公告内容为「标题 + 日期 + 分类 + 摘要 + 正文」，<strong>每条公告在本站都有独立页面</strong>（/news/&lt;专区&gt;/&lt;key&gt;），点击后停留在本站，全站不设任何站外跳转；
 共 ${withBody} 条已取到正文，${totalItems - withBody} 条官方原文以图片为主，本站只保留文字。</li>
 <li><strong>未核实事项</strong>：百度推送每日配额的具体数值（能确认会耗尽，读不到总量）；
-29 款查不到官方来源的游戏，其版号状态未逐款核实。</li>
+${noOfficialCount} 款查不到官方来源的游戏（全站共 ${GAMES.length} 款），其版号状态未逐款核实。</li>
 </ol></div>
 
 <div class="foot">本报告由 scripts/daily-report.js 自动生成 · 数据来源：三九互娱官方专区（3975.com）公开公告</div>
