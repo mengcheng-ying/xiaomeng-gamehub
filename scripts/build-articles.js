@@ -1028,9 +1028,12 @@ const indexSrc = fs.readFileSync(path.join(ROOT, indexRel), 'utf8');
 
 const sortedGames = [...games].sort((a, b) => (b.heat || 0) - (a.heat || 0));
 const sortedArticles = [...articles].sort((a, b) => String(b.date).localeCompare(String(a.date)));
+/* 2026-09-15 用户要求：页脚到版权行为止，下方不再有可见链接区块。
+   只保留 <noscript> —— 人看不到，但不执行 JS 的爬虫仍能从这里发现全部内页。 */
 const seoBlock = `${SEO_START}
   <noscript>
   <div class="seo-noscript">
+    <p><a href="/games">全部游戏（${games.length} 款）</a> · <a href="/guides">全部攻略（${articles.length} 篇）</a></p>
     <h2>全部游戏（${games.length} 款）</h2>
     <ul>
 ${sortedGames.map(g => `      <li><a href="/game/${g.id}">${esc(g.name)}</a></li>`).join('\n')}
@@ -1041,17 +1044,6 @@ ${sortedArticles.map(a => `      <li><a href="/article/${a.id}">${esc(a.title)}<
     </ul>
   </div>
   </noscript>
-  <!-- 爬虫可见的真实链接入口（不依赖 JS） -->
-  <section class="seo-crawl-links" aria-label="全站导航">
-    <a href="/games">全部游戏（${games.length}）</a>
-    <a href="/guides">全部攻略（${articles.length}）</a>
-  </section>
-  <section class="seo-crawl-links" aria-label="游戏直达">
-${sortedGames.map(g => `    <a href="/game/${g.id}">${esc(g.name)}</a>`).join('\n')}
-  </section>
-  <section class="seo-crawl-links" aria-label="攻略直达">
-${sortedArticles.map(a => `    <a href="/article/${a.id}">${esc(a.title)}</a>`).join('\n')}
-  </section>
   ${SEO_END}`;
 
 if (indexSrc.includes(SEO_START) && indexSrc.includes(SEO_END)) {
