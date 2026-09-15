@@ -16,6 +16,10 @@
 /js/*
   Cache-Control: public, max-age=604800, stale-while-revalidate=86400
 
+# 站点图标：给搜索引擎留较短的缓存，方便换图标后及时生效
+/favicon.ico
+  Cache-Control: public, max-age=86400
+
 /favicon-32.png
   Cache-Control: public, max-age=604800
 

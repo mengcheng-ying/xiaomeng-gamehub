@@ -369,7 +369,8 @@ function head(title, desc, canonical, opts) {
 <meta name="twitter:description" content="${esc(desc)}">
 <meta name="twitter:image" content="${esc(img)}">
 ${o.published ? `<meta property="article:published_time" content="${esc(o.published)}">` : ''}
-<link rel="icon" type="image/svg+xml" href="${prefix}favicon.svg">
+<link rel="icon" href="${prefix}favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="${prefix}favicon.svg" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="${prefix}favicon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="${prefix}favicon-192.png">
 <link rel="apple-touch-icon" sizes="180x180" href="${prefix}favicon-192.png">
