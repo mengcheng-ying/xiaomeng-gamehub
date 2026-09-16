@@ -27,6 +27,7 @@
 <link rel="manifest" href="../../site.webmanifest">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"NewsArticle","headline":"9月3日合服公告","description":"你当前位置：首页>新闻中心 发布于： 2026-09-01 顺应广大玩家的需求，为了活跃游戏气氛，给您提供更好的游戏体验、更多的伙伴、更多的挑战，我们将对部分区服进行合服操作，合服期间玩家无法登陆游戏，开服时间会根据实际情况提前或延迟，请相互转告！ 【合服时间】：2026年9月3日14:30~16:","datePublished":"2026-09-01","dateModified":"2026-09-15","articleSection":"合服公告","inLanguage":"zh-CN","isBasedOn":"https://fgcs.3975.com/news/newsdetail?id=ROVR3tij+RTaq6rhGg","author":{"@type":"Organization","name":"三九互娱官方专区"},"publisher":{"@type":"Organization","name":"小梦怀旧手游","logo":{"@type":"ImageObject","url":"https://fmbly.com/assets/images/logo_xiaomeng.png"}},"mainEntityOfPage":{"@type":"WebPage","@id":"https://fmbly.com/news/fgcs/4505895001"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://fmbly.com/"},{"@type":"ListItem","position":2,"name":"官方公告","item":"https://fmbly.com/news"},{"@type":"ListItem","position":3,"name":"《金装裁决》官方公告","item":"https://fmbly.com/news/fgcs"},{"@type":"ListItem","position":4,"name":"9月3日合服公告","item":"https://fmbly.com/news/fgcs/4505895001"}]}</script>
+
 <style>
   :root{--ink:#16203a;--ink2:#495571;--muted:#8b94a8;--line:#e7ecf5;--brand:#2456c8;--brand-soft:#eef3fe;--accent:#ff9d2e;--bg:#f6f8fc;--card:#fff}
   *{box-sizing:border-box}
@@ -179,7 +180,24 @@
   .lst .cat{flex:none;font-size:11px;font-weight:600;color:#fff;background:var(--brand);border-radius:5px;padding:2px 9px;margin-top:2px}
   .lst .nm{font-size:15px;font-weight:600;line-height:1.6;display:block}
   .lst .sm{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.6;display:block}
-  .foot{text-align:center;padding:34px 20px;border-top:1px solid var(--line);background:#fff;font-size:13px;color:var(--muted)}
+    /* ===== 站内搜索 / 分类芯片（攻略中心 · 资讯中心） ===== */
+  .srchbar{display:flex;gap:12px;align-items:center;margin:0 0 20px}
+  .srchbar input{flex:1;min-width:0;height:48px;padding:0 16px;border-radius:12px;border:1px solid var(--line);
+    background:var(--card);color:var(--ink);font-size:15px;font-family:inherit;outline:none;transition:border-color .18s,box-shadow .18s}
+  .srchbar input:focus{border-color:#b9cdf3;box-shadow:0 0 0 4px rgba(36,86,200,.08)}
+  .srchbar .hint{flex:none;font-size:13px;color:var(--muted);white-space:nowrap}
+  .srch-res{margin:0 0 26px}
+  .srch-res .hd{font-size:13px;color:var(--muted);margin:0 0 10px}
+  .srch-res .empty{font-size:14px;color:var(--muted);padding:18px 0;margin:0}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 26px}
+  .chips a{font-size:13px;padding:6px 13px;border:1px solid var(--line);border-radius:99px;color:var(--ink2);background:var(--card)}
+  .chips a:hover{border-color:var(--brand);color:var(--brand)}
+  .chips a b{font-weight:600;color:var(--muted);margin-left:5px}
+  @media (max-width:640px){
+    .srchbar{flex-direction:column;align-items:stretch;gap:8px}
+    .srchbar .hint{text-align:right}
+  }
+.foot{text-align:center;padding:34px 20px;border-top:1px solid var(--line);background:#fff;font-size:13px;color:var(--muted)}
   .foot a{color:var(--muted);margin:0 10px}
   .foot a:hover{color:var(--brand)}
   @media (max-width:640px){

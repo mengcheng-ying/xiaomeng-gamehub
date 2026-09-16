@@ -27,6 +27,7 @@
 <link rel="manifest" href="../../site.webmanifest">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"NewsArticle","headline":"技能质变！技能纹章解锁强力招式效果","description":"纹章是角色战力提升的核心进阶玩法，通过镶嵌、升级、洗炼纹章，可海量提升角色基础属性，解锁专属技能词条、改变技能形态，实现战力与战斗机制双重提升。所有纹章相关操作，均需前往对应纹章学者NPC处完成。 （一）纹章学者NPC位置 全主城设有专属纹章学者，具体点位如下： 普雷利镇：纹章学者伯恩施坦 魔法山脊","datePublished":"2026-07-06","dateModified":"2026-09-15","articleSection":"攻略","inLanguage":"zh-CN","isBasedOn":"https://dn.3975.com/news/newsdetail?id=GuFR0InxqEfaq6PhHQ","author":{"@type":"Organization","name":"三九互娱官方专区"},"publisher":{"@type":"Organization","name":"小梦怀旧手游","logo":{"@type":"ImageObject","url":"https://fmbly.com/assets/images/logo_xiaomeng.png"}},"mainEntityOfPage":{"@type":"WebPage","@id":"https://fmbly.com/news/dn/3eaafa451c"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://fmbly.com/"},{"@type":"ListItem","position":2,"name":"官方公告","item":"https://fmbly.com/news"},{"@type":"ListItem","position":3,"name":"《龙之谷启程》官方公告","item":"https://fmbly.com/news/dn"},{"@type":"ListItem","position":4,"name":"技能质变！技能纹章解锁强力招式效果","item":"https://fmbly.com/news/dn/3eaafa451c"}]}</script>
+
 <style>
   :root{--ink:#16203a;--ink2:#495571;--muted:#8b94a8;--line:#e7ecf5;--brand:#2456c8;--brand-soft:#eef3fe;--accent:#ff9d2e;--bg:#f6f8fc;--card:#fff}
   *{box-sizing:border-box}
@@ -179,7 +180,24 @@
   .lst .cat{flex:none;font-size:11px;font-weight:600;color:#fff;background:var(--brand);border-radius:5px;padding:2px 9px;margin-top:2px}
   .lst .nm{font-size:15px;font-weight:600;line-height:1.6;display:block}
   .lst .sm{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.6;display:block}
-  .foot{text-align:center;padding:34px 20px;border-top:1px solid var(--line);background:#fff;font-size:13px;color:var(--muted)}
+    /* ===== 站内搜索 / 分类芯片（攻略中心 · 资讯中心） ===== */
+  .srchbar{display:flex;gap:12px;align-items:center;margin:0 0 20px}
+  .srchbar input{flex:1;min-width:0;height:48px;padding:0 16px;border-radius:12px;border:1px solid var(--line);
+    background:var(--card);color:var(--ink);font-size:15px;font-family:inherit;outline:none;transition:border-color .18s,box-shadow .18s}
+  .srchbar input:focus{border-color:#b9cdf3;box-shadow:0 0 0 4px rgba(36,86,200,.08)}
+  .srchbar .hint{flex:none;font-size:13px;color:var(--muted);white-space:nowrap}
+  .srch-res{margin:0 0 26px}
+  .srch-res .hd{font-size:13px;color:var(--muted);margin:0 0 10px}
+  .srch-res .empty{font-size:14px;color:var(--muted);padding:18px 0;margin:0}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 26px}
+  .chips a{font-size:13px;padding:6px 13px;border:1px solid var(--line);border-radius:99px;color:var(--ink2);background:var(--card)}
+  .chips a:hover{border-color:var(--brand);color:var(--brand)}
+  .chips a b{font-weight:600;color:var(--muted);margin-left:5px}
+  @media (max-width:640px){
+    .srchbar{flex-direction:column;align-items:stretch;gap:8px}
+    .srchbar .hint{text-align:right}
+  }
+.foot{text-align:center;padding:34px 20px;border-top:1px solid var(--line);background:#fff;font-size:13px;color:var(--muted)}
   .foot a{color:var(--muted);margin:0 10px}
   .foot a:hover{color:var(--brand)}
   @media (max-width:640px){

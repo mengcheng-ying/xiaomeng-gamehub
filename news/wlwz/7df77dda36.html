@@ -27,6 +27,7 @@
 <link rel="manifest" href="../../site.webmanifest">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"NewsArticle","headline":"群英会聚，风云再起！「霞客杯」武林大会海选今日开赛","description":"硝烟已起，战意正浓。今日，「霞客杯」武林大会海选赛正式打响！全服高手同台竞技，横跨区服的真实较量即将上演。是黑马逆袭，还是强者恒强？让我们拭目以待~ 海选阶段：8月14日-8月25日 海选赛为积分模式，每日21:00-21:30可进行匹配，匹配到参赛战队后和此战队的AI镜像对战。积分排名决出四个赛区","datePublished":"2026-08-14","dateModified":"2026-09-15","articleSection":"赛事","inLanguage":"zh-CN","isBasedOn":"https://wlwz.3975.com/news/newsdetail/id/49691","author":{"@type":"Organization","name":"三九互娱官方专区"},"publisher":{"@type":"Organization","name":"小梦怀旧手游","logo":{"@type":"ImageObject","url":"https://fmbly.com/assets/images/logo_xiaomeng.png"}},"mainEntityOfPage":{"@type":"WebPage","@id":"https://fmbly.com/news/wlwz/7df77dda36"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://fmbly.com/"},{"@type":"ListItem","position":2,"name":"官方公告","item":"https://fmbly.com/news"},{"@type":"ListItem","position":3,"name":"《武林外传：十年之约》官方公告","item":"https://fmbly.com/news/wlwz"},{"@type":"ListItem","position":4,"name":"群英会聚，风云再起！「霞客杯」武林大会海选今日开赛","item":"https://fmbly.com/news/wlwz/7df77dda36"}]}</script>
+
 <style>
   :root{--ink:#16203a;--ink2:#495571;--muted:#8b94a8;--line:#e7ecf5;--brand:#2456c8;--brand-soft:#eef3fe;--accent:#ff9d2e;--bg:#f6f8fc;--card:#fff}
   *{box-sizing:border-box}
@@ -179,7 +180,24 @@
   .lst .cat{flex:none;font-size:11px;font-weight:600;color:#fff;background:var(--brand);border-radius:5px;padding:2px 9px;margin-top:2px}
   .lst .nm{font-size:15px;font-weight:600;line-height:1.6;display:block}
   .lst .sm{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.6;display:block}
-  .foot{text-align:center;padding:34px 20px;border-top:1px solid var(--line);background:#fff;font-size:13px;color:var(--muted)}
+    /* ===== 站内搜索 / 分类芯片（攻略中心 · 资讯中心） ===== */
+  .srchbar{display:flex;gap:12px;align-items:center;margin:0 0 20px}
+  .srchbar input{flex:1;min-width:0;height:48px;padding:0 16px;border-radius:12px;border:1px solid var(--line);
+    background:var(--card);color:var(--ink);font-size:15px;font-family:inherit;outline:none;transition:border-color .18s,box-shadow .18s}
+  .srchbar input:focus{border-color:#b9cdf3;box-shadow:0 0 0 4px rgba(36,86,200,.08)}
+  .srchbar .hint{flex:none;font-size:13px;color:var(--muted);white-space:nowrap}
+  .srch-res{margin:0 0 26px}
+  .srch-res .hd{font-size:13px;color:var(--muted);margin:0 0 10px}
+  .srch-res .empty{font-size:14px;color:var(--muted);padding:18px 0;margin:0}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 26px}
+  .chips a{font-size:13px;padding:6px 13px;border:1px solid var(--line);border-radius:99px;color:var(--ink2);background:var(--card)}
+  .chips a:hover{border-color:var(--brand);color:var(--brand)}
+  .chips a b{font-weight:600;color:var(--muted);margin-left:5px}
+  @media (max-width:640px){
+    .srchbar{flex-direction:column;align-items:stretch;gap:8px}
+    .srchbar .hint{text-align:right}
+  }
+.foot{text-align:center;padding:34px 20px;border-top:1px solid var(--line);background:#fff;font-size:13px;color:var(--muted)}
   .foot a{color:var(--muted);margin:0 10px}
   .foot a:hover{color:var(--brand)}
   @media (max-width:640px){

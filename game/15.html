@@ -27,6 +27,7 @@
 <link rel="manifest" href="../site.webmanifest">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"小小屠龙：幻变三职业","description":"《小小屠龙：幻变三职业》是安徽游昕正版运营的冰雪传奇变种手游，以「一人三职、自由幻变」为核心特色。玩家可在战士、法师、道士三大职业间自由切换，搭配冰、火、雷三系元素技能组合实现多样化战斗策略。游戏采用冰雪版本经典设定，元宝装备全靠打，无VIP特权，打造公平纯粹的复古传奇战场。","image":"https://fmbly.com/assets/images/xxtl_huanbian_cover.jpg","applicationCategory":"Game","operatingSystem":"Android, iOS","genre":"角色扮演","author":{"@type":"Organization","name":"安徽游昕"},"datePublished":"2026","inLanguage":"zh-CN"}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://fmbly.com/"},{"@type":"ListItem","position":2,"name":"游戏大厅","item":"https://fmbly.com/games"},{"@type":"ListItem","position":3,"name":"小小屠龙：幻变三职业","item":"https://fmbly.com/game/15"}]}</script>
+
 <style>
   :root{--ink:#16203a;--ink2:#495571;--muted:#8b94a8;--line:#e7ecf5;--brand:#2456c8;--brand-soft:#eef3fe;--accent:#ff9d2e;--bg:#f6f8fc;--card:#fff}
   *{box-sizing:border-box}
@@ -179,7 +180,24 @@
   .lst .cat{flex:none;font-size:11px;font-weight:600;color:#fff;background:var(--brand);border-radius:5px;padding:2px 9px;margin-top:2px}
   .lst .nm{font-size:15px;font-weight:600;line-height:1.6;display:block}
   .lst .sm{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.6;display:block}
-  .foot{text-align:center;padding:34px 20px;border-top:1px solid var(--line);background:#fff;font-size:13px;color:var(--muted)}
+    /* ===== 站内搜索 / 分类芯片（攻略中心 · 资讯中心） ===== */
+  .srchbar{display:flex;gap:12px;align-items:center;margin:0 0 20px}
+  .srchbar input{flex:1;min-width:0;height:48px;padding:0 16px;border-radius:12px;border:1px solid var(--line);
+    background:var(--card);color:var(--ink);font-size:15px;font-family:inherit;outline:none;transition:border-color .18s,box-shadow .18s}
+  .srchbar input:focus{border-color:#b9cdf3;box-shadow:0 0 0 4px rgba(36,86,200,.08)}
+  .srchbar .hint{flex:none;font-size:13px;color:var(--muted);white-space:nowrap}
+  .srch-res{margin:0 0 26px}
+  .srch-res .hd{font-size:13px;color:var(--muted);margin:0 0 10px}
+  .srch-res .empty{font-size:14px;color:var(--muted);padding:18px 0;margin:0}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 26px}
+  .chips a{font-size:13px;padding:6px 13px;border:1px solid var(--line);border-radius:99px;color:var(--ink2);background:var(--card)}
+  .chips a:hover{border-color:var(--brand);color:var(--brand)}
+  .chips a b{font-weight:600;color:var(--muted);margin-left:5px}
+  @media (max-width:640px){
+    .srchbar{flex-direction:column;align-items:stretch;gap:8px}
+    .srchbar .hint{text-align:right}
+  }
+.foot{text-align:center;padding:34px 20px;border-top:1px solid var(--line);background:#fff;font-size:13px;color:var(--muted)}
   .foot a{color:var(--muted);margin:0 10px}
   .foot a:hover{color:var(--brand)}
   @media (max-width:640px){

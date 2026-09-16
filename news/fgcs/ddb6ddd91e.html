@@ -27,6 +27,7 @@
 <link rel="manifest" href="../../site.webmanifest">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"NewsArticle","headline":"【巅峰1410区/时光1360区/荣耀568区】8月3日08:00开启","description":"你当前位置：首页>新闻中心 发布于： 2026-08-01 铁血魔城，浴血重燃，复古传世火热开服。炫酷技能，助你掌控雷电。 不删档内测：【巅峰1410区/时光1360区/荣耀568区】8月3日08:00开启 净化游戏环境声明： 对于在游戏中出现的非法言论行为，包含但不限于：恶意虚假信息或广告、非法或","datePublished":"2026-08-01","dateModified":"2026-09-15","articleSection":"官方资讯","inLanguage":"zh-CN","isBasedOn":"https://fgcs.3975.com/news/newsdetail?id=GrlY2Ymj+UPaq6bnHA","author":{"@type":"Organization","name":"三九互娱官方专区"},"publisher":{"@type":"Organization","name":"小梦怀旧手游","logo":{"@type":"ImageObject","url":"https://fmbly.com/assets/images/logo_xiaomeng.png"}},"mainEntityOfPage":{"@type":"WebPage","@id":"https://fmbly.com/news/fgcs/ddb6ddd91e"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://fmbly.com/"},{"@type":"ListItem","position":2,"name":"官方公告","item":"https://fmbly.com/news"},{"@type":"ListItem","position":3,"name":"《金装裁决》官方公告","item":"https://fmbly.com/news/fgcs"},{"@type":"ListItem","position":4,"name":"【巅峰1410区/时光1360区/荣耀568区】8月3日08:00开启","item":"https://fmbly.com/news/fgcs/ddb6ddd91e"}]}</script>
+
 <style>
   :root{--ink:#16203a;--ink2:#495571;--muted:#8b94a8;--line:#e7ecf5;--brand:#2456c8;--brand-soft:#eef3fe;--accent:#ff9d2e;--bg:#f6f8fc;--card:#fff}
   *{box-sizing:border-box}
@@ -179,7 +180,24 @@
   .lst .cat{flex:none;font-size:11px;font-weight:600;color:#fff;background:var(--brand);border-radius:5px;padding:2px 9px;margin-top:2px}
   .lst .nm{font-size:15px;font-weight:600;line-height:1.6;display:block}
   .lst .sm{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.6;display:block}
-  .foot{text-align:center;padding:34px 20px;border-top:1px solid var(--line);background:#fff;font-size:13px;color:var(--muted)}
+    /* ===== 站内搜索 / 分类芯片（攻略中心 · 资讯中心） ===== */
+  .srchbar{display:flex;gap:12px;align-items:center;margin:0 0 20px}
+  .srchbar input{flex:1;min-width:0;height:48px;padding:0 16px;border-radius:12px;border:1px solid var(--line);
+    background:var(--card);color:var(--ink);font-size:15px;font-family:inherit;outline:none;transition:border-color .18s,box-shadow .18s}
+  .srchbar input:focus{border-color:#b9cdf3;box-shadow:0 0 0 4px rgba(36,86,200,.08)}
+  .srchbar .hint{flex:none;font-size:13px;color:var(--muted);white-space:nowrap}
+  .srch-res{margin:0 0 26px}
+  .srch-res .hd{font-size:13px;color:var(--muted);margin:0 0 10px}
+  .srch-res .empty{font-size:14px;color:var(--muted);padding:18px 0;margin:0}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 26px}
+  .chips a{font-size:13px;padding:6px 13px;border:1px solid var(--line);border-radius:99px;color:var(--ink2);background:var(--card)}
+  .chips a:hover{border-color:var(--brand);color:var(--brand)}
+  .chips a b{font-weight:600;color:var(--muted);margin-left:5px}
+  @media (max-width:640px){
+    .srchbar{flex-direction:column;align-items:stretch;gap:8px}
+    .srchbar .hint{text-align:right}
+  }
+.foot{text-align:center;padding:34px 20px;border-top:1px solid var(--line);background:#fff;font-size:13px;color:var(--muted)}
   .foot a{color:var(--muted);margin:0 10px}
   .foot a:hover{color:var(--brand)}
   @media (max-width:640px){

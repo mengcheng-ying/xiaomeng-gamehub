@@ -315,7 +315,24 @@ const BASE_CSS = `
   .lst .cat{flex:none;font-size:11px;font-weight:600;color:#fff;background:var(--brand);border-radius:5px;padding:2px 9px;margin-top:2px}
   .lst .nm{font-size:15px;font-weight:600;line-height:1.6;display:block}
   .lst .sm{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.6;display:block}
-  .foot{text-align:center;padding:34px 20px;border-top:1px solid var(--line);background:#fff;font-size:13px;color:var(--muted)}
+    /* ===== 站内搜索 / 分类芯片（攻略中心 · 资讯中心） ===== */
+  .srchbar{display:flex;gap:12px;align-items:center;margin:0 0 20px}
+  .srchbar input{flex:1;min-width:0;height:48px;padding:0 16px;border-radius:12px;border:1px solid var(--line);
+    background:var(--card);color:var(--ink);font-size:15px;font-family:inherit;outline:none;transition:border-color .18s,box-shadow .18s}
+  .srchbar input:focus{border-color:#b9cdf3;box-shadow:0 0 0 4px rgba(36,86,200,.08)}
+  .srchbar .hint{flex:none;font-size:13px;color:var(--muted);white-space:nowrap}
+  .srch-res{margin:0 0 26px}
+  .srch-res .hd{font-size:13px;color:var(--muted);margin:0 0 10px}
+  .srch-res .empty{font-size:14px;color:var(--muted);padding:18px 0;margin:0}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 26px}
+  .chips a{font-size:13px;padding:6px 13px;border:1px solid var(--line);border-radius:99px;color:var(--ink2);background:var(--card)}
+  .chips a:hover{border-color:var(--brand);color:var(--brand)}
+  .chips a b{font-weight:600;color:var(--muted);margin-left:5px}
+  @media (max-width:640px){
+    .srchbar{flex-direction:column;align-items:stretch;gap:8px}
+    .srchbar .hint{text-align:right}
+  }
+.foot{text-align:center;padding:34px 20px;border-top:1px solid var(--line);background:#fff;font-size:13px;color:var(--muted)}
   .foot a{color:var(--muted);margin:0 10px}
   .foot a:hover{color:var(--brand)}
   @media (max-width:640px){
@@ -376,6 +393,7 @@ ${o.published ? `<meta property="article:published_time" content="${esc(o.publis
 <link rel="apple-touch-icon" sizes="180x180" href="${prefix}favicon-192.png">
 <link rel="manifest" href="${prefix}site.webmanifest">
 ${lds}
+${o.extraHead || ''}
 <style>${BASE_CSS}</style>
 </head>
 <body>
@@ -682,6 +700,7 @@ const archiveList = newsArchives
       .sort((m, n) => n.items.length - m.items.length)
   : [];
 
+let hubNews = null;
 if (archiveList.length) {
   const synced = String(officialNews.generatedAt || '').slice(0, 10);
   const nameOfSlug = {};
@@ -690,32 +709,109 @@ if (archiveList.length) {
 
   // --- /news 总览 ---
   const totalNews = archiveList.reduce((s, a) => s + a.items.length, 0);
-  const newsBody = `<main class="wrap">
+    // 首页入口区需要的汇总（第 10 步生成首页「资讯/攻略」按键 + 最新一条）
+  let latestNewsItem = null;
+  archiveList.forEach(a => {
+    a.items.forEach(it => {
+      const href = newsHref(a.slug, it);
+      if (!href) return;
+      const d = String(it.date || '');
+      if (!latestNewsItem || d > latestNewsItem.d) {
+        latestNewsItem = { d, url: href, title: it.title, game: titleOf(a) };
+      }
+    });
+  });
+  hubNews = {
+    total: totalNews,
+    archives: archiveList.length,
+    latestUrl: latestNewsItem ? latestNewsItem.url : '/news',
+    latestTitle: latestNewsItem ? latestNewsItem.title : '前往资讯中心查看全部公告',
+    latestDate: latestNewsItem ? latestNewsItem.d : ''
+  };
+
+  // 每个专区一个区块（标题 + 最近 5 条），外加顶部「按游戏分类」的锚点芯片
+  const newsArchiveHtml = archiveList.map(a => {
+    const list = a.items.slice(0, 5).map(it => {
+      const hd = `<div class="nh"><span class="nd">${esc(it.date || '')}</span><span class="nc">${esc(it.category || '公告')}</span>${newsTitleHtml(a.slug, it)}</div>`;
+      const sm = it.summary ? `\n      <p class="ns">${esc(it.summary)}</p>` : '';
+      return `    <li>\n      ${hd}${sm}\n    </li>`;
+    }).join('\n');
+    return `  <section class="nsec">\n  <h3 class="cathd" id="s-${esc(a.slug)}">${esc(titleOf(a))}<span class="cn">共 ${a.items.length} 条 · <a href="/news/${esc(a.slug)}">查看全部</a></span></h3>\n  <ul class="news">\n${list}\n  </ul>\n  </section>`;
+  }).join('\n');
+
+  const newsChipsHtml = archiveList
+    .map(a => `    <a href="#s-${esc(a.slug)}">${esc(titleOf(a))}<b>${a.items.length}</b></a>`).join('\n');
+
+  // 可点开的公告条数（无正文的条目只在归档页显示标题，不进搜索索引）
+  const newsSearchable = archiveList.reduce(
+    (s, a) => s + a.items.filter(it => newsHref(a.slug, it)).length, 0);
+
+  const newsBody = `<main class="wrap wide">
   <nav class="crumb"><a href="/">首页</a><i>/</i><span>官方公告</span></nav>
   <h1>手游官方公告合集（${totalNews} 条）</h1>
-  <p class="lead">本页汇总本站收录的怀旧手游官方专区公开公告，包含开服、合服、维护、版本更新与活动等分类。
+  <p class="lead">本页汇总本站收录的怀旧手游官方专区公开公告，<strong>按游戏分类</strong>整理，包含开服、合服、维护、版本更新与活动等。
   每条公告均已收录到本站独立页面，点击即可直接阅读全文，无需跳转任何外部站点。数据自动同步于 ${esc(synced)}。</p>
-  <div class="acards">
-${archiveList.map(a => `    <a class="acard" href="/news/${esc(a.slug)}">
-      <div class="an">${esc(titleOf(a))}</div>
-      <div class="am">累计 ${a.items.length} 条 · 最新 ${esc((a.items[0] && a.items[0].date) || '—')}</div>
-    </a>`).join('\n')}
+
+  <div class="srchbar">
+    <input id="newsSearch" type="search" placeholder="搜索游戏名或公告标题，例如「龙之谷」「维护」" autocomplete="off" aria-label="搜索官方资讯">
+    <span class="hint" id="newsHint">共 ${newsSearchable} 条可搜索</span>
+  </div>
+  <div class="srch-res" id="newsRes" hidden></div>
+
+  <div id="newsBrowse">
+  <h2 class="sec-h">按游戏分类（${archiveList.length} 个官方专区）</h2>
+  <div class="chips">
+${newsChipsHtml}
   </div>
 
   <h2 class="sec-h">各游戏最新公告</h2>
-${archiveList.map(a => `  <h3 class="cathd">${esc(titleOf(a))}<span class="cn">共 ${a.items.length} 条 · <a href="/news/${esc(a.slug)}">查看全部</a></span></h3>
-  <ul class="news">
-${a.items.slice(0, 5).map(it => `    <li>
-      <div class="nh"><span class="nd">${esc(it.date || '')}</span><span class="nc">${esc(it.category || '公告')}</span>${newsTitleHtml(a.slug, it)}</div>${it.summary ? `\n      <p class="ns">${esc(it.summary)}</p>` : ''}
-    </li>`).join('\n')}
-  </ul>`).join('\n')}
+${newsArchiveHtml}
+  </div>
 
   <div class="cta">
     <p>想找更多经典 IP 正版复刻的怀旧手游？回到首页一次看全。</p>
     <a class="cta-btn" href="/">← 返回小梦怀旧手游首页</a>
   </div>
+
+  <script>
+  (function(){
+    function idxData(){return (typeof NEWS_INDEX!=='undefined'&&NEWS_INDEX)?NEWS_INDEX:null;}
+    function esc2(s){var d=document.createElement('div');d.textContent=(s==null?'':String(s));return d.innerHTML;}
+    var box=document.getElementById('newsSearch'),res=document.getElementById('newsRes'),
+        browse=document.getElementById('newsBrowse'),hint=document.getElementById('newsHint');
+    if(!box||!res||!browse)return;
+    var TOTAL=${newsSearchable};
+    function render(){
+      var q=String(box.value||'').trim().toLowerCase();
+      if(!q){res.hidden=true;res.innerHTML='';browse.hidden=false;hint.textContent='共 '+TOTAL+' 条可搜索';return;}
+      var list=idxData();
+      if(!list){res.innerHTML='<p class="empty">搜索索引加载中，请稍候…</p>';res.hidden=false;browse.hidden=true;return;}
+      var hits=[],CAP=60,i;
+      for(i=0;i<list.length;i++){
+        var it=list[i];
+        if((it[0]+' '+it[2]).toLowerCase().indexOf(q)>=0){hits.push(it);if(hits.length>=CAP)break;}
+      }
+      browse.hidden=true;
+      hint.textContent='命中 '+hits.length+' 条'+(hits.length>=CAP?'（仅列出前 '+CAP+' 条）':'');
+      if(!hits.length){
+        res.innerHTML='<p class="empty">没有找到与「'+esc2(box.value.trim())+'」相关的公告。换个关键词试试，比如游戏名、「维护」、「开服」。</p>';
+        res.hidden=false;return;
+      }
+      var html='<p class="hd">共 '+hits.length+' 条结果</p><div class="lst">';
+      for(i=0;i<hits.length;i++){
+        var h=hits[i];
+        html+='<a href="'+esc2(h[1])+'"><span class="cat">'+esc2(h[2])+'</span><span><span class="nm">'+esc2(h[0])+'</span><span class="sm">'+esc2(h[3]||'')+'</span></span></a>';
+      }
+      res.innerHTML=html+'</div>';
+      res.hidden=false;
+    }
+    box.addEventListener('input',render);
+    box.addEventListener('keydown',function(e){if(e.key==='Escape'){box.value='';render();box.blur();}});
+  })();
+  </script>
 </main>
 ` + foot();
+
 
   const newsUrl = SITE + '/news';
   writeFile('news.html', head(
@@ -726,9 +822,25 @@ ${a.items.slice(0, 5).map(it => `    <li>
       '@context': 'https://schema.org', '@type': 'CollectionPage',
       name: '手游官方公告合集', url: newsUrl, inLanguage: 'zh-CN',
       isPartOf: { '@type': 'WebSite', name: '小梦怀旧手游', url: SITE + '/' }
-    }] }
+    }], extraHead: '<script src="/js/news-index.js" defer><\/script>' }
   ) + newsBody);
   sitemapUrls.push({ loc: newsUrl, lastmod: TODAY, priority: '0.7' });
+
+  // --- 站内搜索索引 /js/news-index.js（资讯中心用；随每日公告自动重建） ---
+  const newsIndexArr = [];
+  archiveList.forEach(a => {
+    const gname = titleOf(a);
+    a.items.forEach(it => {
+      const href = newsHref(a.slug, it);
+      if (!href) return;
+      newsIndexArr.push([it.title, href, gname, it.date || '']);
+    });
+  });
+  const newsIndexSrc = '/* 资讯搜索索引 · 由 scripts/build-articles.js 自动生成，请勿手改 */\n' +
+    'var NEWS_INDEX=' + JSON.stringify(newsIndexArr).replace(/</g, '\\u003c') + ';\n';
+  fs.writeFileSync(path.join(ROOT, 'js', 'news-index.js'), newsIndexSrc);
+  console.log('✅ 生成 js/news-index.js（' + newsIndexArr.length + ' 条 / ' +
+    Buffer.byteLength(newsIndexSrc, 'utf8') + ' 字节）');
 
   // --- /news/<slug> 单专区全量归档 ---
   archiveList.forEach(a => {
@@ -897,26 +1009,102 @@ const gameGroups = [...byGame.entries()].sort((x, y) => y[1].length - x[1].lengt
 
 const guidesIndexHtml = head(
   '全部游戏攻略索引 - 小梦怀旧手游',
-  `小梦怀旧手游全部 ${articles.length} 篇游戏攻略索引，按游戏分类整理：职业加点、开荒路线、打金搬砖、装备获取、版本玩法，一站式查阅。`,
+  `小梦怀旧手游全部 ${articles.length} 篇游戏攻略索引，按游戏分类整理：职业加点、开荒路线、打金搬砖、装备获取、版本玩法，一站式查阅，支持站内搜索。`,
   SITE + '/guides',
   { prefix: '', ld: [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: '全部游戏攻略索引', url: SITE + '/guides' }] }
-) + `<main class="wrap wide">
-  <nav class="crumb"><a href="/">首页</a><i>/</i><span>攻略中心</span></nav>
-  <h1 class="ttl">全部游戏攻略索引</h1>
-  <p class="lead">共收录 <strong>${articles.length}</strong> 篇原创攻略，覆盖 <strong>${gameGroups.length}</strong> 款怀旧手游。按游戏分组，点击标题直接阅读。</p>
-${gameGroups.map(([gid, list]) => {
+) + (() => {
+  /* 按游戏分组：每组一个 <section class="gsec">，搜索时整组一起隐藏；每条链接带 data-s 供前端过滤 */
+  const chips = gameGroups.map(([gid, list]) => {
+    const g = gameById[gid];
+    return `    <a href="#game-${gid}">${esc(g ? g.name : '其他攻略')}<b>${list.length}</b></a>`;
+  }).join('\n');
+
+  const sections = gameGroups.map(([gid, list]) => {
     const g = gameById[gid];
     const gname = g ? g.name : '其他攻略';
     const gLink = g ? `<a href="/game/${g.id}" style="font-size:13px;font-weight:400">查看游戏 →</a>` : '';
-    return `  <h2 class="grp-h" id="game-${gid}">${esc(gname)}<span class="cnt">${list.length} 篇</span>${gLink}</h2>
+    const items = list.map(a => {
+      const sm = (a.summary || '').slice(0, 80);
+      const hay = esc([gname, a.category || '', a.title, sm].join(' '));
+      return `    <a href="/article/${a.id}" data-s="${hay}"><span class="cat">${esc(a.category || '攻略')}</span><span><span class="nm">${esc(a.title)}</span><span class="sm">${esc(sm)}</span></span></a>`;
+    }).join('\n');
+    return `  <section class="gsec">
+  <h2 class="grp-h" id="game-${gid}">${esc(gname)}<span class="cnt">${list.length} 篇</span>${gLink}</h2>
   <div class="lst">
-${list.map(a => `    <a href="/article/${a.id}"><span class="cat">${esc(a.category || '攻略')}</span><span><span class="nm">${esc(a.title)}</span><span class="sm">${esc((a.summary || '').slice(0, 80))}</span></span></a>`).join('\n')}
-  </div>`;
-  }).join('\n')}
+${items}
+  </div>
+  </section>`;
+  }).join('\n');
+
+  return `<main class="wrap wide">
+  <nav class="crumb"><a href="/">首页</a><i>/</i><span>攻略中心</span></nav>
+  <h1 class="ttl">全部游戏攻略索引</h1>
+  <p class="lead">共收录 <strong>${articles.length}</strong> 篇原创攻略，覆盖 <strong>${gameGroups.length}</strong> 款怀旧手游。<strong>按游戏分组</strong>，点击标题直接阅读。</p>
+
+  <div class="srchbar">
+    <input id="guideSearch" type="search" placeholder="搜索游戏名或攻略标题，例如「龙之谷」「打金」" autocomplete="off" aria-label="搜索攻略">
+    <span class="hint" id="guideHint">共 ${articles.length} 篇</span>
+  </div>
+  <div class="srch-res" id="guideRes" hidden></div>
+
+  <div class="chips" id="guideChips">
+${chips}
+  </div>
+
+${sections}
+
+  <div class="cta">
+    <p>想找更多经典 IP 正版复刻的怀旧手游？回到首页一次看全。</p>
+    <a class="cta-btn" href="/">← 返回小梦怀旧手游首页</a>
+  </div>
+
+  <script>
+  (function(){
+    var box=document.getElementById('guideSearch'),chips=document.getElementById('guideChips'),
+        res=document.getElementById('guideRes'),hint=document.getElementById('guideHint');
+    if(!box)return;
+    var secs=[].slice.call(document.querySelectorAll('section.gsec'));
+    var all=[].slice.call(document.querySelectorAll('section.gsec .lst a'));
+    var TOTAL=${articles.length};
+    function render(){
+      var q=String(box.value||'').trim().toLowerCase();
+      var i,j;
+      if(!q){
+        for(i=0;i<secs.length;i++)secs[i].hidden=false;
+        for(i=0;i<all.length;i++)all[i].hidden=false;
+        if(chips)chips.hidden=false;
+        res.hidden=true;res.innerHTML='';
+        hint.textContent='共 '+TOTAL+' 篇';
+        return;
+      }
+      if(chips)chips.hidden=true;
+      var n=0;
+      for(i=0;i<secs.length;i++){
+        var items=[].slice.call(secs[i].querySelectorAll('.lst a')),hit=0;
+        for(j=0;j<items.length;j++){
+          var ok=(items[j].getAttribute('data-s')||'').toLowerCase().indexOf(q)>=0;
+          items[j].hidden=!ok;
+          if(ok)hit++;
+        }
+        secs[i].hidden=(hit===0);
+        n+=hit;
+      }
+      hint.textContent=(n?('命中 '+n+' 篇'):'0 篇');
+      if(n){res.hidden=true;res.innerHTML='';return;}
+      var d=document.createElement('div');
+      d.textContent=box.value.trim();
+      res.innerHTML='<p class="empty">没有找到与「'+d.innerHTML+'」相关的攻略。换个关键词试试，比如游戏名或「打金」「职业」。</p>';
+      res.hidden=false;
+    }
+    box.addEventListener('input',render);
+    box.addEventListener('keydown',function(e){if(e.key==='Escape'){box.value='';render();box.blur();}});
+  })();
+  </script>
 </main>
-` + foot();
+`;
+})() + foot();
 writeFile('guides.html', guidesIndexHtml);
-console.log('✅ 生成 guides.html（' + articles.length + ' 篇 / ' + gameGroups.length + ' 组）');
+console.log('✅ 生成 guides.html（' + articles.length + ' 篇 / ' + gameGroups.length + ' 组，含站内搜索）');
 
 // ===== 7b. 生成站内搜索索引 js/search-index.js =====
 // 首页顶部搜索框用；随内容自动重建，避免索引与页面脱节。
@@ -1048,8 +1236,10 @@ ensureIndexHooks();
 
 const SEO_START = '<!-- SEO-LINKS:START -->';
 const SEO_END = '<!-- SEO-LINKS:END -->';
+const HUB_START = '<!-- HOME-HUB:START -->';
+const HUB_END = '<!-- HOME-HUB:END -->';
 const indexRel = 'index.html';
-const indexSrc = fs.readFileSync(path.join(ROOT, indexRel), 'utf8');
+let indexSrc = fs.readFileSync(path.join(ROOT, indexRel), 'utf8');
 
 const sortedGames = [...games].sort((a, b) => (b.heat || 0) - (a.heat || 0));
 const sortedArticles = [...articles].sort((a, b) => String(b.date).localeCompare(String(a.date)));
@@ -1072,12 +1262,52 @@ ${sortedArticles.map(a => `      <li><a href="/article/${a.id}">${esc(a.title)}<
   ${SEO_END}`;
 
 if (indexSrc.includes(SEO_START) && indexSrc.includes(SEO_END)) {
-  const re = new RegExp(SEO_START + '[\\s\\S]*?' + SEO_END);
-  fs.writeFileSync(path.join(ROOT, indexRel), indexSrc.replace(re, seoBlock));
+  indexSrc = indexSrc.replace(new RegExp(SEO_START + '[\\s\\S]*?' + SEO_END), () => seoBlock);
   console.log('✅ index.html SEO 链接区块已更新（游戏 ' + games.length + ' / 攻略 ' + articles.length + '，游戏链接指向 /game/N）');
 } else {
   console.log('⚠️  跳过：index.html 里找不到 ' + SEO_START + ' 标记，请先手动加入标记');
 }
+
+/* ===== 10b. 首页「官网资讯 / 游戏攻略」入口区 =====
+   2026-09-16 用户要求：这两个板块内容太多、手机端滑不到底 → 收成两个导航按键放到独立页面。
+   首页只留：两张入口卡（带条数） + 各一条最新标题（CSS 截断，只露出几个字）。 */
+const shortDate = (d) => {
+  const m = String(d || '').match(/^\d{4}-(\d{2})-(\d{2})/);
+  return m ? m[1] + '-' + m[2] : String(d || '');
+};
+const latestArticle = sortedArticles[0];
+const hubCountNews = hubNews ? hubNews.total : '—';
+const hubCountArchives = hubNews ? hubNews.archives : '—';
+const hubBlock = `${HUB_START}
+    <div class="hub-grid">
+      <a class="hub-card" href="/news">
+        <div><span class="hub-ic">📣</span><span class="hub-kick">NOTICES</span></div>
+        <h3 class="hub-t">官网资讯</h3>
+        <p class="hub-p">开服 · 合服 · 维护 · 版本更新 · 活动福利，共 <b>${hubCountNews}</b> 条官方公告，覆盖 <b>${hubCountArchives}</b> 个游戏专区，按游戏分类，支持站内搜索。</p>
+        <span class="hub-go">进入资讯中心 →</span>
+      </a>
+      <a class="hub-card" href="/guides">
+        <div><span class="hub-ic">📖</span><span class="hub-kick">GUIDES</span></div>
+        <h3 class="hub-t">游戏攻略</h3>
+        <p class="hub-p">新手避坑 · 职业加点 · 打金搬砖 · 版本玩法，共 <b>${articles.length}</b> 篇攻略，覆盖 <b>${articlesByGame.size}</b> 款游戏，按游戏分类，支持站内搜索。</p>
+        <span class="hub-go">进入攻略中心 →</span>
+      </a>
+    </div>
+    <div class="hub-latest">
+      ${hubNews ? `<a class="hub-line" href="${hubNews.latestUrl}"><span class="lb">最新资讯</span><span class="tx">${esc(hubNews.latestTitle)}</span><span class="dt2">${esc(shortDate(hubNews.latestDate))}</span></a>` : ''}
+      <a class="hub-line" href="/article/${latestArticle.id}"><span class="lb">最新攻略</span><span class="tx">${esc(latestArticle.title)}</span><span class="dt2">${esc(shortDate(latestArticle.date))}</span></a>
+    </div>
+  ${HUB_END}`;
+
+if (indexSrc.includes(HUB_START) && indexSrc.includes(HUB_END)) {
+  indexSrc = indexSrc.replace(new RegExp(HUB_START + '[\\s\\S]*?' + HUB_END), () => hubBlock);
+  console.log('✅ index.html 资讯/攻略入口区已更新（资讯 ' + hubCountNews + ' 条 / ' + hubCountArchives +
+    ' 专区，攻略 ' + articles.length + ' 篇 / ' + articlesByGame.size + ' 款）');
+} else {
+  console.log('⚠️  跳过：index.html 里找不到 ' + HUB_START + ' 标记，入口区未生成');
+}
+
+fs.writeFileSync(path.join(ROOT, indexRel), indexSrc);
 
 // ===== 11. 重建 sitemap.xml =====
 const sitemapItems = [

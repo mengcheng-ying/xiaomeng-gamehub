@@ -117,26 +117,6 @@
   .btn-outline{padding:12px 34px;border-radius:999px;border:1px solid rgba(61,123,255,.5);color:var(--accent2);font-weight:700;font-size:.9rem;background:transparent;transition:.2s;cursor:pointer}
   .btn-outline:hover{background:rgba(61,123,255,.12)}
 
-  .guide-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-  .acard{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;transition:.25s;cursor:pointer;display:flex;flex-direction:column;gap:12px}
-  .acard:hover{transform:translateY(-4px);border-color:rgba(0,212,255,.4);box-shadow:var(--shadow)}
-  .acard .top{display:flex;align-items:center;gap:10px}
-  .acard .top img{width:44px;height:44px;border-radius:10px;object-fit:cover}
-  .acard .top .gn{font-size:.8rem;color:var(--accent2);font-weight:700}
-  .acard .top .dt{font-size:.72rem;color:var(--dim)}
-  .acard h3{font-size:1.02rem;font-weight:800;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-  .acard p{font-size:.83rem;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1}
-  .acard .rd{font-size:.8rem;color:var(--accent2);font-weight:600;display:flex;align-items:center;gap:5px}
-  /* 攻略聚合卡：同一游戏的多篇攻略合并为一张卡片 */
-  .acard.agg{cursor:default;gap:13px}
-  .acard.agg .top .gn{font-size:.92rem}
-  .glist{display:flex;flex-direction:column;gap:1px;flex:1}
-  .glist a{display:block;font-size:.85rem;line-height:1.5;color:var(--muted);padding:6px 9px;border-radius:8px;transition:.16s}
-  .glist a::before{content:"›";color:var(--accent2);font-weight:800;margin-right:7px}
-  .glist a:hover{background:rgba(61,123,255,.13);color:var(--ink)}
-  .gmore{font-size:.79rem;color:var(--accent2);font-weight:600;margin-top:auto;padding-top:8px;border-top:1px solid var(--line)}
-  .gmore:hover{color:var(--ink)}
-  /* 顶部站内搜索 */
   .nav-srch{position:relative;flex:0 0 auto}
   .nav-srch .ic{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:.8rem;opacity:.55;pointer-events:none}
   .nav-srch input{width:182px;height:36px;padding:0 14px 0 33px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--ink);font-size:.85rem;font-family:inherit;outline:none;transition:.22s}
@@ -269,34 +249,31 @@
     .gm-btn{width:100%;max-width:100%;flex:none}
   }
 
-/* ===== 官网资讯 / 公告 ===== */
-.notice-list{display:flex;flex-direction:column;gap:14px;max-width:920px;margin:0 auto}
-.notice-item{position:relative;background:linear-gradient(135deg,rgba(99,102,241,.10) 0%,rgba(139,92,246,.06) 100%);border:1px solid rgba(99,102,241,.22);border-radius:14px;padding:20px 22px;display:flex;gap:18px;align-items:flex-start;transition:all .25s ease}
-.notice-item:hover{transform:translateY(-2px);border-color:rgba(99,102,241,.5);box-shadow:0 8px 24px rgba(99,102,241,.18)}
-.notice-item.urgent{border-color:rgba(251,191,36,.45);background:linear-gradient(135deg,rgba(251,191,36,.12) 0%,rgba(99,102,241,.08) 100%)}
-.notice-item.urgent::before{content:"NEW";position:absolute;top:-10px;right:18px;background:linear-gradient(135deg,#f59e0b 0%,#ef4444 100%);color:#fff;font-size:.7rem;font-weight:800;padding:3px 10px;border-radius:12px;letter-spacing:1px;box-shadow:0 4px 12px rgba(239,68,68,.4)}
-.notice-date{flex-shrink:0;width:80px;text-align:center;background:rgba(99,102,241,.15);border-radius:10px;padding:10px 6px;border:1px solid rgba(99,102,241,.25)}
-.notice-date .day{display:block;font-size:1.6rem;font-weight:800;color:#fff;line-height:1}
-.notice-date .ym{display:block;font-size:.7rem;color:#9aa3bd;margin-top:4px;letter-spacing:.5px}
-.notice-body{flex:1;min-width:0}
-.notice-tags{margin-bottom:6px;display:flex;gap:6px;flex-wrap:wrap}
-.notice-tag{display:inline-block;font-size:.7rem;padding:2px 9px;border-radius:6px;font-weight:600}
-.notice-tag-game{background:rgba(99,102,241,.2);color:#a5b4fc;border:1px solid rgba(99,102,241,.35)}
-.notice-tag-type{background:rgba(251,191,36,.15);color:#fbbf24;border:1px solid rgba(251,191,36,.35)}
-.notice-title{font-size:1.05rem;font-weight:700;color:#fff;margin:2px 0 8px;line-height:1.4}
-.notice-content{font-size:.88rem;color:#c7cee0;line-height:1.7;margin:0}
-.notice-actions{margin-top:12px;display:flex;gap:8px}
-.notice-btn{display:inline-block;padding:7px 16px;font-size:.82rem;font-weight:600;border-radius:8px;text-decoration:none;background:linear-gradient(135deg,#6366f1 0%,#8b5cf6 100%);color:#fff;transition:all .2s}
-.notice-btn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(99,102,241,.45)}
-@media(max-width:560px){
-  .notice-item{flex-direction:column;gap:10px;padding:16px}
-  .notice-date{width:100%;display:flex;align-items:center;gap:8px;justify-content:center;padding:6px 10px}
-  .notice-date .day{font-size:1rem;display:inline}
-  .notice-date .ym{margin:0;display:inline}
-  .notice-date .day::after{content:" · ";color:#9aa3bd;margin:0 2px}
+/* ===== 资讯 / 攻略 入口（内容已独立成页，样式配套 #hub 区块） ===== */
+.hub-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.hub-card{position:relative;display:flex;flex-direction:column;gap:10px;padding:24px;border-radius:var(--radius);background:var(--card);border:1px solid var(--line);color:inherit;text-decoration:none;transition:.25s;overflow:hidden}
+.hub-card::before{content:"";position:absolute;top:0;bottom:0;left:0;width:3px;background:var(--grad)}
+.hub-card:hover{transform:translateY(-4px);border-color:rgba(0,212,255,.4);box-shadow:var(--shadow)}
+.hub-kick{font-size:.68rem;letter-spacing:2px;color:var(--accent2);font-weight:800}
+.hub-ic{font-size:1.35rem;line-height:1;margin-right:7px}
+.hub-t{font-size:1.24rem;font-weight:800;color:var(--ink);margin:0}
+.hub-p{font-size:.85rem;color:var(--muted);line-height:1.7;margin:0;flex:1}
+.hub-p b{color:var(--ink);font-weight:700}
+.hub-go{font-size:.85rem;color:var(--accent2);font-weight:700;margin-top:2px}
+.hub-latest{display:flex;flex-direction:column;gap:9px;margin-top:16px}
+.hub-line{display:flex;align-items:center;gap:10px;min-width:0;padding:12px 16px;border-radius:12px;background:rgba(255,255,255,.035);border:1px solid var(--line);color:var(--muted);text-decoration:none;font-size:.86rem;transition:.2s}
+.hub-line:hover{border-color:rgba(61,123,255,.45);color:var(--ink)}
+.hub-line .lb{flex:none;font-size:.7rem;font-weight:800;color:#fff;background:var(--grad);border-radius:6px;padding:2px 9px}
+.hub-line .tx{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hub-line .dt2{flex:none;font-size:.75rem;color:var(--dim)}
+@media(max-width:760px){
+  .hub-grid{grid-template-columns:1fr;gap:14px}
+  .hub-card{padding:20px}
+  .hub-line{padding:11px 13px;font-size:.82rem}
+  .hub-line .dt2{display:none}
 }
 
-  /* ===== 爬虫可见的站内链接区（由 build-articles.js 自动生成） ===== */
+/* ===== 爬虫可见的站内链接区（由 build-articles.js 自动生成） ===== */
   .seo-crawl-links{max-width:1200px;margin:0 auto;padding:26px 20px 34px;display:flex;gap:14px;flex-wrap:wrap;justify-content:center;border-top:1px solid rgba(255,255,255,.08)}
   .seo-crawl-links a{font-size:.85rem;color:var(--sub,#9aa3bd);padding:8px 18px;border:1px solid rgba(255,255,255,.12);border-radius:99px;transition:all .2s}
   .seo-crawl-links a:hover{color:#fff;border-color:var(--accent2,#6366f1)}
@@ -317,8 +294,8 @@
     <div class="nav-links" id="navLinks">
       <a href="#hero" class="active">首页</a>
       <a href="#games">游戏大厅</a>
-      <a href="#notices">官网资讯</a>
-      <a href="#guides">游戏攻略</a>
+      <a href="/news">官网资讯</a>
+      <a href="/guides">游戏攻略</a>
       <a href="#faq">常见问题</a>
     </div>
     <div class="nav-srch">
@@ -360,28 +337,33 @@
   </div>
 </section>
 
-<!-- ===== 官网资讯 / 公告 ===== -->
-<section class="sec" id="notices" style="background:linear-gradient(180deg,var(--bg1) 0%,var(--bg2) 100%);padding-top:48px;padding-bottom:48px">
+<!-- ===== 资讯 / 攻略 入口（内容已独立成页） ===== -->
+<section class="sec" id="hub" style="background:linear-gradient(180deg,var(--bg1) 0%,var(--bg2) 100%);padding-top:48px;padding-bottom:48px">
   <div class="wrap">
-    <div class="sec-head">
-      <span class="kick">NOTICES</span>
-      <h2>官网资讯</h2>
-      <p>最新开区 / 版本更新 / 活动福利，第一时间通知</p>
+<!-- HOME-HUB:START -->
+    <div class="hub-grid">
+      <a class="hub-card" href="/news">
+        <div><span class="hub-ic">📣</span><span class="hub-kick">NOTICES</span></div>
+        <h3 class="hub-t">官网资讯</h3>
+        <p class="hub-p">开服 · 合服 · 维护 · 版本更新 · 活动福利，共 <b>620</b> 条官方公告，覆盖 <b>10</b> 个游戏专区，按游戏分类，支持站内搜索。</p>
+        <span class="hub-go">进入资讯中心 →</span>
+      </a>
+      <a class="hub-card" href="/guides">
+        <div><span class="hub-ic">📖</span><span class="hub-kick">GUIDES</span></div>
+        <h3 class="hub-t">游戏攻略</h3>
+        <p class="hub-p">新手避坑 · 职业加点 · 打金搬砖 · 版本玩法，共 <b>58</b> 篇攻略，覆盖 <b>40</b> 款游戏，按游戏分类，支持站内搜索。</p>
+        <span class="hub-go">进入攻略中心 →</span>
+      </a>
     </div>
-    <div class="notice-list" id="noticeList"></div>
+    <div class="hub-latest">
+      <a class="hub-line" href="/news/wlwz/7430872922"><span class="lb">最新资讯</span><span class="tx">江湖寻人启事丨金句为凭，合影为证！（第58期）</span><span class="dt2">09-15</span></a>
+      <a class="hub-line" href="/article/48"><span class="lb">最新攻略</span><span class="tx">武林外传：十年江湖路，七侠镇再相逢</span><span class="dt2">09-09</span></a>
+    </div>
+  <!-- HOME-HUB:END -->
   </div>
 </section>
 
-<section class="sec" id="guides" style="background:var(--bg2)">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="kick">GUIDES</span>
-      <h2>游戏攻略</h2>
-      <p>新手避坑 · 职业加点 · 打金搬砖 · 版本爆料，持续更新中</p>
-    </div>
-    <div class="guide-grid" id="guideGrid"><div class="acard agg"><div class="top"><img src="assets/images/longzhigu_cover.jpg" alt="龙之谷启程" loading="lazy"><div><div class="gn">龙之谷启程</div><div class="dt">1 篇攻略</div></div></div><div class="glist"><a href="/article/1">龙之谷启程：新手职业选择与开荒避坑指南</a></div><a class="gmore" href="/game/1">进入游戏 →</a></div><div class="acard agg"><div class="top"><img src="assets/images/moxiangqing_cover.jpg" alt="墨香情" loading="lazy"><div><div class="gn">墨香情</div><div class="dt">2 篇攻略</div></div></div><div class="glist"><a href="/article/2">墨香情：六大武器流派全解析与新手推荐</a><a href="/article/47">墨香情：当年藏在网吧里的水墨江湖，终于又能握在手心</a></div><a class="gmore" href="/game/2">进入游戏 →</a></div><div class="acard agg"><div class="top"><img src="assets/images/xingchenbian_cover.jpg" alt="星辰变：归来" loading="lazy"><div><div class="gn">星辰变：归来</div><div class="dt">1 篇攻略</div></div></div><div class="glist"><a href="/article/3">星辰变归来：境界突破全攻略与战力提升避坑</a></div><a class="gmore" href="/game/3">进入游戏 →</a></div><div class="acard agg"><div class="top"><img src="assets/images/feifei_cover.jpg" alt="飞飞：重逢" loading="lazy"><div><div class="gn">飞飞：重逢</div><div class="dt">1 篇攻略</div></div></div><div class="glist"><a href="/article/4">飞飞重逢：新手飞行系统与四大职业入门指南</a></div><a class="gmore" href="/game/23">进入游戏 →</a></div><div class="acard agg"><div class="top"><img src="assets/images/shenqi_cover.jpg" alt="神泣：纷争" loading="lazy"><div><div class="gn">神泣：纷争</div><div class="dt">1 篇攻略</div></div></div><div class="glist"><a href="/article/5">神泣纷争：光暗阵营选择与六大职业深度解析</a></div><a class="gmore" href="/game/5">进入游戏 →</a></div><div class="acard agg"><div class="top"><img src="assets/images/rongyao_cover.jpg" alt="荣耀出征" loading="lazy"><div><div class="gn">荣耀出征</div><div class="dt">1 篇攻略</div></div></div><div class="glist"><a href="/article/6">荣耀出征：奇迹MU经典三职业加点与装备指南</a></div><a class="gmore" href="/game/12">进入游戏 →</a></div><div class="acard agg"><div class="top"><img src="assets/images/yonghengdao_cover.jpg" alt="永恒岛：高清重制版" loading="lazy"><div><div class="gn">永恒岛：高清重制版</div><div class="dt">1 篇攻略</div></div></div><div class="glist"><a href="/article/19">永恒岛高清重制版：六大职业定位与新手成长路线</a></div><a class="gmore" href="/game/19">进入游戏 →</a></div><div class="acard agg"><div class="top"><img src="assets/images/bafengte_cover.jpg" alt="巴风特之怒：RO怀旧" loading="lazy"><div><div class="gn">巴风特之怒：RO怀旧</div><div class="dt">1 篇攻略</div></div></div><div class="glist"><a href="/article/39">巴风特之怒RO怀旧：六大经典职业加点与转职攻略</a></div><a class="gmore" href="/game/39">进入游戏 →</a></div><div class="acard agg"><div class="top"><img src="assets/images/xiaoxiaotulong_cover.jpg" alt="小小屠龙：原始火龙" loading="lazy"><div><div class="gn">小小屠龙：原始火龙</div><div class="dt">1 篇攻略</div></div></div><div class="glist"><a href="/article/11">小小屠龙原始火龙：单职业打金全攻略</a></div><a class="gmore" href="/game/11">进入游戏 →</a></div><div class="acard agg"><div class="top"><img src="assets/images/wulin_cover.jpg" alt="武林外传：十年之约" loading="lazy"><div><div class="gn">武林外传：十年之约</div><div class="dt">10 篇攻略</div></div></div><div class="glist"><a href="/article/48">武林外传：十年江湖路，七侠镇再相逢</a><a href="/article/49">武林外传十年之约：新服首日冲级，稳上30级攻略</a><a href="/article/50">武林外传十年之约：装备获取全路径，从零到毕业不迷茫</a><a href="/article/51">武林外传十年之约：零氪搬砖玩法与稳定变现指南</a><a href="/article/52">武林外传十年之约：全职业选择指南，找到最适合你的门派</a><a href="/article/53">武林外传十年之约：BT武器全收集，零氪必拿的特色福利</a><a href="/article/54">武林外传十年之约：月卡与永久卡，性价比怎么选最划算</a><a href="/article/55">武林外传十年之约：每日限时活动全解，收益拉满别错过</a><a href="/article/56">武林外传十年之约：新手开荒避坑，这8个弯路别踩</a><a href="/article/57">武林外传：有人的地方，才是真正的江湖</a></div><a class="gmore" href="/game/21">进入游戏 →</a></div><div class="acard agg"><div class="top"><img src="assets/images/jizhan_cover.jpg" alt="机战：钢铁巨舰" loading="lazy"><div><div class="gn">机战：钢铁巨舰</div><div class="dt">6 篇攻略</div></div></div><div class="glist"><a href="/article/58">机战钢铁巨舰：新手开荒全攻略，从零到舰队指挥官</a><a href="/article/59">机战钢铁巨舰：机甲改装入门指南，五大流派详解</a><a href="/article/60">机战钢铁巨舰：近战格斗机甲推荐与配件搭配</a><a href="/article/61">机战钢铁巨舰：远程武器详解与火力最大化方案</a><a href="/article/62">机战钢铁巨舰：舰队系统详解，跨服舰队战全攻略</a><a href="/article/63">机战钢铁巨舰：资源采集指南，高效发展路线推荐</a></div><a class="gmore" href="/game/46">进入游戏 →</a></div>
-  </div>
-</section>
+
 
 <section class="sec" id="faq" style="padding-top:0">
   <div class="wrap">
@@ -480,35 +462,7 @@ var GAMES=[
 {id:47,name:"屠龙世界：再战沙巴克",dev:"安徽游昕",cover:"assets/images/tulongshijie_cover.jpg",url:"https://229663.youxin75.com/qudao.php?s=/Download/f/WzUwNjEsNTA2MCwyMjk2NjNd",heat:918000,grp:"传奇怀旧",sc:"8.6",androidUrl:"",iosUrl:""}
 ];
 
-/* ===== 攻略数据（链接到 SEO 静态页） ===== */
-var GUIDES=[
-{g:"龙之谷启程",cover:"assets/images/longzhigu_cover.jpg",aid:1,title:"龙之谷启程：新手职业选择与开荒避坑指南",sum:"五大职业到底怎么选？战神、祭司、元素师、箭神、剑圣全解析，新手一看就懂。",date:"2026-08-15"},
-{g:"墨香情",cover:"assets/images/moxiangqing_cover.jpg",aid:2,title:"墨香情：六大武器流派全解析与新手推荐",sum:"墨香情无职业设定，武器即流派。刀剑枪弓箭拳暗器六大武器详解，帮你找到最适合的江湖路。",date:"2026-08-14"},
-{g:"墨香情",cover:"assets/images/moxiangqing_cover.jpg",aid:47,title:"墨香情：当年藏在网吧里的水墨江湖，终于又能握在手心",sum:"从《墨香OL》到正版复刻归来，兰州城、六大兵器、人幽两界，写给80、90后老玩家的一篇情怀长文。",date:"2026-08-30"},
-{g:"星辰变：归来",cover:"assets/images/xingchenbian_cover.jpg",aid:3,title:"星辰变归来：境界突破全攻略与战力提升避坑",sum:"六大修真境界详解，突破顺序、材料获取、渡劫技巧，帮你少走弯路快速提升战力。",date:"2026-08-13"},
-{g:"飞飞：重逢",cover:"assets/images/feifei_cover.jpg",aid:4,title:"飞飞重逢：新手飞行系统与四大职业入门指南",sum:"自由飞行是飞飞的核心特色，本文详解飞行器选择、养成与四大职业定位，助你快速上手。",date:"2026-08-12"},
-{g:"神泣：纷争",cover:"assets/images/shenqi_cover.jpg",aid:5,title:"神泣纷争：光暗阵营选择与六大职业深度解析",sum:"光之同盟vs愤怒联合，两大阵营各有优劣。六大职业全解析，帮你选对阵营和职业。",date:"2026-08-11"},
-{g:"荣耀出征",cover:"assets/images/rongyao_cover.jpg",aid:6,title:"荣耀出征：奇迹MU经典三职业加点与装备指南",sum:"剑士、法师、弓箭手三职业经典加点方案，1.03H黄金版本装备路线全解析。",date:"2026-08-10"},
-{g:"永恒岛：高清重制版",cover:"assets/images/yonghengdao_cover.jpg",aid:19,title:"永恒岛高清重制版：六大职业定位与新手成长路线",sum:"战士、盾卫、法师、游侠、术士、工程师六大职业详解，新手选职与成长路线推荐。",date:"2026-08-08"},
-{g:"巴风特之怒：RO怀旧",cover:"assets/images/bafengte_cover.jpg",aid:39,title:"巴风特之怒RO怀旧：六大经典职业加点与转职攻略",sum:"RO经典职业体系详解，剑士、法师、弓箭手、服事、盗贼、商人一转二转全攻略。",date:"2026-08-03"},
-{g:"小小屠龙：原始火龙",cover:"assets/images/xiaoxiaotulong_cover.jpg",aid:11,title:"小小屠龙原始火龙：单职业打金全攻略",sum:"火龙单职业版本打金路线、装备过渡、BOSS刷新点全整理，散人打金必看。",date:"2026-08-06"},
-{g:"武林外传：十年之约",cover:"assets/images/wulin_cover.jpg",aid:48,title:"武林外传：十年江湖路，七侠镇再相逢",sum:"同福客栈、白展堂、BT武器……经典端游复刻归来，写给老玩家的一篇江湖情怀长文。",date:"2026-09-09"},
-{g:"武林外传：十年之约",cover:"assets/images/wulin_cover.jpg",aid:49,title:"武林外传十年之约：新服首日冲级，稳上30级攻略",sum:"主线+武林之路双线推进，17级切武林之路、20级拿BT锄头、限时活动全吃，首日稳上30级。",date:"2026-09-09"},
-{g:"武林外传：十年之约",cover:"assets/images/wulin_cover.jpg",aid:50,title:"武林外传十年之约：装备获取全路径，从零到毕业不迷茫",sum:"过渡精良装、BT武器、声望装、传说毕业装四条路径全梳理，平民也能稳步毕业。",date:"2026-09-09"},
-{g:"武林外传：十年之约",cover:"assets/images/wulin_cover.jpg",aid:51,title:"武林外传十年之约：零氪搬砖玩法与稳定变现指南",sum:"野外BOSS、副本掉落、挂机刷怪、生活技能四大产出渠道，结合摆摊与拍卖行变现方式。",date:"2026-09-09"},
-{g:"武林外传：十年之约",cover:"assets/images/wulin_cover.jpg",aid:52,title:"武林外传十年之约：全职业选择指南，找到最适合你的门派",sum:"枪豪、术士、剑客、医师四大职业定位详解，附35级二转正邪分支选择建议。",date:"2026-09-09"},
-{g:"武林外传：十年之约",cover:"assets/images/wulin_cover.jpg",aid:53,title:"武林外传十年之约：BT武器全收集，零氪必拿的特色福利",sum:"武林之路任务线解锁四大BT武器：锄头、擀面杖、折凳、苍蝇拍，免费拿全不花一分钱。",date:"2026-09-09"},
-{g:"武林外传：十年之约",cover:"assets/images/wulin_cover.jpg",aid:54,title:"武林外传十年之约：月卡与永久卡，性价比怎么选最划算",sum:"月卡核心在地宫权限、快捷拾取、摆摊功能；永久卡长期更划算，附两种选择建议。",date:"2026-09-09"},
-{g:"武林外传：十年之约",cover:"assets/images/wulin_cover.jpg",aid:55,title:"武林外传十年之约：每日限时活动全解，收益拉满别错过",sum:"12:00世界首领、18:30帮派传功、20级悬赏任务，时间与参与方式全解析，收益翻倍。",date:"2026-09-09"},
-{g:"武林外传：十年之约",cover:"assets/images/wulin_cover.jpg",aid:56,title:"武林外传十年之约：新手开荒避坑，这8个弯路别踩",sum:"组队、BT锄头、限时活动、经验符、过渡装、挂机、永久属性、月卡八个高发坑全避雷。",date:"2026-09-09"},
-{g:"武林外传：十年之约",cover:"assets/images/wulin_cover.jpg",aid:57,title:"武林外传：有人的地方，才是真正的江湖",sum:"帮派承载的不只是属性加成，更是一群人的江湖羁绊，写给喜欢社交的老玩家的一篇情怀文章。",date:"2026-09-09"},
-{g:"机战：钢铁巨舰",cover:"assets/images/jizhan_cover.jpg",aid:58,title:"机战钢铁巨舰：新手开荒全攻略，从零到舰队指挥官",sum:"新手入门必看：机甲选择、资源管理、主线任务路线、每日必做清单，帮你快速渡过开荒期。",date:"2026-09-10"},
-{g:"机战：钢铁巨舰",cover:"assets/images/jizhan_cover.jpg",aid:59,title:"机战钢铁巨舰：机甲改装入门指南，五大流派详解",sum:"近战突击型、远程火力型、防御型、支援型、全能型五大改装流派详解，附配件获取途径。",date:"2026-09-10"},
-{g:"机战：钢铁巨舰",cover:"assets/images/jizhan_cover.jpg",aid:60,title:"机战钢铁巨舰：近战格斗机甲推荐与配件搭配",sum:"近战机甲核心配件选择、技能优先级、战斗技巧，附推荐机型与获取方式。",date:"2026-09-10"},
-{g:"机战：钢铁巨舰",cover:"assets/images/jizhan_cover.jpg",aid:61,title:"机战钢铁巨舰：远程武器详解与火力最大化方案",sum:"远程机甲武器对比、射程与伤害数据分析、配件搭配推荐，教你打出最高DPS。",date:"2026-09-10"},
-{g:"机战：钢铁巨舰",cover:"assets/images/jizhan_cover.jpg",aid:62,title:"机战钢铁巨舰：舰队系统详解，跨服舰队战全攻略",sum:"舰队组建、职位分配、舰队战战术、跨服赛制详解，助你成为最强舰队指挥官。",date:"2026-09-10"},
-{g:"机战：钢铁巨舰",cover:"assets/images/jizhan_cover.jpg",aid:63,title:"机战钢铁巨舰：资源采集指南，高效发展路线推荐",sum:"星矿采集、能源获取、稀有材料途径全整理，附每日资源产出最大化方案。",date:"2026-09-10"}
-];
+;
 
 /* ===== 轮播（居中卡片轮播） ===== */
 var SLIDES=[
@@ -650,152 +604,11 @@ document.addEventListener('keydown',function(e){
   if(e.key==='Escape')closeGameModal();
 });
 
-/* ===== 官网资讯 / 公告 ===== */
-// 公告数据：内嵌版（和 data/notices.js 同步；改 data/notices.js 后这里也要改）
-var NOTICES=[
-    {
-      "id": "rongyao-2026-09-11-maintain",
-      "game": "荣耀出征卡点服",
-      "gameId": 6,
-      "type": "维护",
-      "title": "【维护公告】荣耀出征·原始点卡服 9月11日16:00-18:00全区全服维护",
-      "content": "《荣耀出征·原始点卡服》将于2026年9月11日16:00-18:00对全区全服进行维护更新。主要内容：1.新增\"免罪旗帜\"，插旗后在光圈内击杀不增加PK值；2.新增二代耳环合成（NPC：仙踪林·玛雅哥布林）；3.新增副属性加点方案切换；4.宝石交易行保底价调整（祝福/创造100点卡、生命1000、灵魂200、玛雅400）；5.面对面交易宝石需先激活称号【富甲一方】；6.优化交易行并修复部分道具无法上架问题；7.提高冰后、魔鬼戈登、魔王巴洛克、海魔希特拉、炽炎魔、丛林召唤者、天魔菲尼斯卓越掉落概率；8.镖车显示押镖角色名，高级镖车被劫有保底奖励；9.调整首饰翅膀耐久及修理价、SD药水冷却1.5秒、技能与套装调整；10.战盟系统优化（维护资金改为每日凌晨扣除）；11.优化升级经验并取消点卡赠送等级限制。",
-      "date": "2026-09-11",
-      "urgent": true
-    },
-    {
-      "id": "lzgqc-2026-09-09-s49",
-      "game": "龙之谷启程",
-      "gameId": 1,
-      "type": "开区",
-      "title": "【开服通知】\"S49.狂人研究\"9月10日09:50开启！",
-      "content": "《龙之谷：启程》新区「S49.狂人研究」将于 9月10日（明天）09:50 准时开启！全新起跑线、开服即冲级，登录即送成长大礼包，诚邀冒险家重返阿尔特里亚大陆！",
-      "date": "2026-09-09",
-      "urgent": true
-    },
-    {
-      "id": "lzgqc-2026-09-02-s47",
-      "game": "龙之谷启程",
-      "gameId": 1,
-      "type": "开区",
-      "title": "【开服通知】\"S47.边界之地\"9月3日09:50开启！",
-      "content": "《龙之谷：启程》新区「S47.边界之地」已于 9月3日 09:50 开启！巢穴首杀、竞技榜冲刺与开区限定活动同步上线，别错过冲榜好时机！",
-      "date": "2026-09-02"
-    },
-    {
-      "id": "lzgqc-2026-08-30-s46",
-      "game": "龙之谷启程",
-      "gameId": 1,
-      "type": "开区",
-      "title": "【开服通知】\"S46.陨石坠地\"8月31日09:50开启！",
-      "content": "《龙之谷：启程》新区「S46.陨石坠地」已于 8月31日 09:50 开启！七日登录送好礼，新区生态更公平、同步更稳健，助力冒险家极速成长！",
-      "date": "2026-08-30"
-    },
-    {
-      "id": "lzgqc-2026-08-27-s45",
-      "game": "龙之谷启程",
-      "gameId": 1,
-      "type": "开区",
-      "title": "【开服通知】\"S45.异变栖息\"8月28日09:50开启！",
-      "content": "《龙之谷：启程》新区「S45.异变栖息」已于 8月28日 09:50 开启！新区冲级赛、开服返利与组队情谊礼同步上线，更多全新内容等你探索！",
-      "date": "2026-08-27"
-    },
-    {
-      "id": "wulin-2026-09-08-g3",
-      "game": "武林外传：十年之约",
-      "gameId": 21,
-      "type": "开区",
-      "title": "【开区通知】\"G3.西凉河畔\"9月8日 10:00 开启！",
-      "content": "《武林外传：十年之约》绿色版新服「G3.西凉河畔」将于 9月8日（明天）10:00 准时开启。诚邀各位侠客重返七侠镇，再续江湖情缘！新服开启首日更有海量福利：登录即送橙色伙伴、转职卡、绑元大礼包，组队副本双倍掉落，等你来战！",
-      "date": "2026-09-07",
-      "urgent": true
-    },
-    {
-      "id": "jizhan-2026-09-10-open",
-      "game": "机战：钢铁巨舰",
-      "gameId": 46,
-      "type": "公测",
-      "title": "【公测公告】机战：钢铁巨舰正式公测，全平台开放下载！",
-      "content": "《机战：钢铁巨舰》正式公测开启！大型科幻机甲题材MMORPG手游，驾驶钢铁巨舰征战浩渺星际。海量机甲自由改装，星际舰队对决，支持iOS/安卓双端下载。开服首周登录即送SSR机甲碎片，机甲工坊全面升级，开放50+种改装方案，等你来战！",
-      "date": "2026-09-10",
-      "urgent": true
-    },
-    {
-      "id": "jizhan-2026-09-10-servers",
-      "game": "机战：钢铁巨舰",
-      "gameId": 46,
-      "type": "开服",
-      "title": "【开服通知】机战1区-机战9区 全部开启！",
-      "content": "机战：钢铁巨舰首批9个服务器全部开放！机战1区至机战9区同步开服，每个区服独立运行，跨服舰队战随时匹配。新服首日双倍经验、首充三倍返利、七日登录送SSR机甲，快来抢占排行榜！",
-      "date": "2026-09-10",
-      "urgent": false
-    },
-    {
-      "id": "jizhan-2026-09-10-login",
-      "game": "机战：钢铁巨舰",
-      "gameId": 46,
-      "type": "活动",
-      "title": "【七日登录】开服首周，每日登录送SSR机甲碎片！",
-      "content": "公测首周限时活动开启！连续7日登录游戏即可领取：Day1 金币x10万 | Day2 SR机甲碎片x5 | Day3 高级改装箱x3 | Day4 SSR机甲碎片x1 | Day5 舰队令x100 | Day6 星矿礼包x5 | Day7 限定SSR机甲[幻影猎手]整卡。错过不补，抓紧登录！",
-      "date": "2026-09-10",
-      "urgent": false
-    }
-  ];
-function renderNotices(){
-  var el=document.getElementById('noticeList');
-  if(!el)return;
-  if(!NOTICES.length){el.innerHTML='<p style="text-align:center;color:#9aa3bd;padding:40px 0">暂无公告</p>';return;}
-  el.innerHTML=NOTICES.map(function(n){
-    var d=n.date?(n.date+'').split('-'):[];
-    var day=d[2]||'';
-    var ym=d[0]&&d[1]?(d[0]+'-'+d[1]):'';
-    var game=n.game?findGame(n.gameId):null;
-    var gameBtn='';
-    if(game){
-      var hasAndroid=game.androidUrl&&game.androidUrl!=='';
-      var hasIos=game.iosUrl&&game.iosUrl!=='';
-      gameBtn='<div class="notice-actions"><a class="notice-btn" href="'+game.url+'" target="_blank" rel="noopener noreferrer">进入官网 ↗</a>'+
-        (hasAndroid?'<a class="notice-btn" style="background:linear-gradient(135deg,#10b981 0%,#06b6d4 100%)" href="'+game.androidUrl+'" target="_blank" rel="noopener noreferrer">🤖 安卓下载</a>':'')+
-        (hasIos?'<a class="notice-btn" style="background:linear-gradient(135deg,#a855f7 0%,#ec4899 100%)" href="'+game.iosUrl+'" target="_blank" rel="noopener noreferrer">🍎 苹果下载</a>':'')+
-        '</div>';
-    }
-    return '<div class="notice-item'+(n.urgent?' urgent':'')+'">'+
-      '<div class="notice-date"><span class="day">'+esc(day)+'</span><span class="ym">'+esc(ym)+'</span></div>'+
-      '<div class="notice-body">'+
-        '<div class="notice-tags">'+
-          (n.game?'<span class="notice-tag notice-tag-game">🎮 '+esc(n.game)+'</span>':'')+
-          (n.type?'<span class="notice-tag notice-tag-type">'+esc(n.type)+'</span>':'')+
-        '</div>'+
-        '<h3 class="notice-title">'+esc(n.title)+'</h3>'+
-        '<p class="notice-content">'+esc(n.content)+'</p>'+
-        gameBtn+
-      '</div>'+
-    '</div>';
-  }).join('');
-}
-function fmtHeat(h){return h>=10000?(h/10000).toFixed(1)+'万':h}
-buildTabs();renderGames();renderNotices();
 
-/* ===== 攻略（同一游戏的多篇攻略合并为一张卡片） ===== */
-var guideEl=document.getElementById('guideGrid');
-if(guideEl){
-  var gOrder=[],gMap={};
-  GUIDES.forEach(function(a){
-    if(!gMap[a.g]){gMap[a.g]={name:a.g,cover:a.cover,list:[]};gOrder.push(a.g);}
-    gMap[a.g].list.push(a);
-  });
-  guideEl.innerHTML=gOrder.map(function(k){
-    var o=gMap[k],gid=null;
-    for(var i=0;i<GAMES.length;i++){if(GAMES[i].name===k){gid=GAMES[i].id;break;}}
-    return '<div class="acard agg">'+
-      '<div class="top"><img src="'+o.cover+'" alt="'+esc(k)+'" loading="lazy"><div><div class="gn">'+esc(k)+'</div><div class="dt">'+o.list.length+' 篇攻略</div></div></div>'+
-      '<div class="glist">'+o.list.map(function(a){
-        return '<a href="/article/'+a.aid+'">'+esc(a.title)+'</a>';
-      }).join('')+'</div>'+
-      (gid?'<a class="gmore" href="/game/'+gid+'">进入游戏 →</a>':'<a class="gmore" href="/games">查看全部游戏 →</a>')+
-    '</div>';
-  }).join('');
-}
+function fmtHeat(h){return h>=10000?(h/10000).toFixed(1)+'万':h}
+buildTabs();renderGames();
+
+
 
 /* ===== 顶部站内搜索（索引见 js/search-index.js，随构建自动重建） ===== */
 (function(){
