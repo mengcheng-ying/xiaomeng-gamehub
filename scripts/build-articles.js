@@ -425,7 +425,7 @@ function foot() {
 // ===== 4. 目录准备 =====
 fs.mkdirSync(OUT_DIR, { recursive: true });
 fs.mkdirSync(GAME_DIR, { recursive: true });
-fs.mkdirSync(path.join(ROOT, 'news'), { recursive: true });
+// news/ 不再无条件预建：writeFile() 会按需逐级建目录，避免公告下线后留下一个空目录。
 
 const sitemapUrls = [];
 let writtenCount = 0;
@@ -607,9 +607,9 @@ ${others.map(o => `  <a class="gcard" href="/game/${o.id}">
   let newsHtml = '';
   if (nzArc && Array.isArray(nzArc.items) && nzArc.items.length) {
     const synced = String(officialNews.generatedAt || '').slice(0, 10);
-    newsHtml = `<h2 class="sec-h">官方动态（累计 ${nzArc.items.length} 条）</h2>
-<p class="news-src">以下内容来自 ${esc(nzArc.official)} 公开公告，自动同步于 ${esc(synced)} ·
-<a href="/news/${esc(nzArc.slug)}">全部 ${nzArc.items.length} 条公告归档</a>
+    newsHtml = `<h2 class="sec-h">官方动态</h2>
+<p class="news-src">以下内容来自 ${esc(nzArc.official)} 公开公告 ·
+<a href="/news/${esc(nzArc.slug)}">全部公告归档</a>
 </p>
 <ul class="news">
 ${nzArc.items.slice(0, 8).map(it => `  <li>
@@ -748,18 +748,18 @@ if (archiveList.length) {
 
   const newsBody = `<main class="wrap wide">
   <nav class="crumb"><a href="/">首页</a><i>/</i><span>官方公告</span></nav>
-  <h1>手游官方公告合集（${totalNews} 条）</h1>
+  <h1>手游官方公告合集</h1>
   <p class="lead">本页汇总本站收录的怀旧手游官方专区公开公告，<strong>按游戏分类</strong>整理，包含开服、合服、维护、版本更新与活动等。
-  每条公告均已收录到本站独立页面，点击即可直接阅读全文，无需跳转任何外部站点。数据自动同步于 ${esc(synced)}。</p>
+  每条公告均已收录到本站独立页面，点击即可直接阅读全文，无需跳转任何外部站点。</p>
 
   <div class="srchbar">
     <input id="newsSearch" type="search" placeholder="搜索游戏名或公告标题，例如「龙之谷」「维护」" autocomplete="off" aria-label="搜索官方资讯">
-    <span class="hint" id="newsHint">共 ${newsSearchable} 条可搜索</span>
+    <span class="hint" id="newsHint">输入即搜</span>
   </div>
   <div class="srch-res" id="newsRes" hidden></div>
 
   <div id="newsBrowse">
-  <h2 class="sec-h">按游戏分类（${archiveList.length} 个官方专区）</h2>
+  <h2 class="sec-h">按游戏分类</h2>
   <div class="chips">
 ${newsChipsHtml}
   </div>
@@ -783,7 +783,7 @@ ${newsArchiveHtml}
     var TOTAL=${newsSearchable};
     function render(){
       var q=String(box.value||'').trim().toLowerCase();
-      if(!q){res.hidden=true;res.innerHTML='';browse.hidden=false;hint.textContent='共 '+TOTAL+' 条可搜索';return;}
+      if(!q){res.hidden=true;res.innerHTML='';browse.hidden=false;hint.textContent='输入即搜';return;}
       var list=idxData();
       if(!list){res.innerHTML='<p class="empty">搜索索引加载中，请稍候…</p>';res.hidden=false;browse.hidden=true;return;}
       var hits=[],CAP=60,i;
@@ -816,7 +816,7 @@ ${newsArchiveHtml}
   const newsUrl = SITE + '/news';
   writeFile('news.html', head(
     '手游官方公告合集 - 开服/合服/维护/活动 - 小梦怀旧手游',
-    `汇总 ${archiveList.length} 款怀旧手游的官方公告共 ${totalNews} 条，含开服、合服、维护、版本更新与活动分类，每条均为站内独立页面，可直接阅读全文。`,
+    `按游戏分类汇总怀旧手游的开服、合服、维护、版本更新与活动公告，每条均为站内独立页面，可直接阅读全文。`,
     newsUrl,
     { prefix: '', ld: [{
       '@context': 'https://schema.org', '@type': 'CollectionPage',
@@ -859,8 +859,7 @@ ${newsArchiveHtml}
     const body = `<main class="wrap">
   <nav class="crumb"><a href="/">首页</a><i>/</i><a href="/news">官方公告</a><i>/</i><span>${esc(gameName)}</span></nav>
   <h1>《${esc(gameName)}》官方公告归档</h1>
-  <p class="lead">以下 ${a.items.length} 条公告均来自 ${esc(a.official)}公开信息，按分类整理，每条均可在本站直接阅读全文。
-  自动同步于 ${esc(synced)}。
+  <p class="lead">以下公告均来自 ${esc(a.official)}公开信息，按分类整理，每条均可在本站直接阅读全文。
   本站页面内不设任何指向外部站点的链接；如需核对原文，可在官方专区按标题检索。</p>
 
   <nav class="catnav">
@@ -888,8 +887,8 @@ ${a.gameIds.filter(id => gameById[id]).map(id => `    <a href="/game/${id}"><spa
 ` + foot();
 
     writeFile('news/' + a.slug + '.html', head(
-      `《${gameName}》官方公告归档（${a.items.length} 条）- 开服/维护/活动 - 小梦怀旧手游`,
-      `${gameName}官方公告共 ${a.items.length} 条，按开服、合服、维护、版本更新、活动等分类整理，每条均为站内独立页面，可直接阅读全文。`,
+      `《${gameName}》官方公告归档 - 开服/维护/活动 - 小梦怀旧手游`,
+      `${gameName}官方公告按开服、合服、维护、版本更新、活动等分类整理，每条均为站内独立页面，可直接阅读全文。`,
       url,
       { ld: [{
         '@context': 'https://schema.org', '@type': 'CollectionPage',
@@ -1000,7 +999,29 @@ ${moreHtml}
 
   console.log('✅ 生成官方公告归档页：1 个总览 + ' + archiveList.length + ' 个专区页，共 ' + totalNews + ' 条公告');
 } else {
-  console.log('⏭ 跳过公告归档页（data/official-news.js 无 archives 数据，先跑 scripts/fetch-official-news.js）');
+  /* 2026-09-16 用户要求清空全部官方公告（原抓取内容里有 QQ 群/微信/扫码等导流信息，且正文无图，
+     导致「扫描下方二维码」这类文字后面是空的）。这里仍重新生成一个干净的资讯中心空态页，
+     避免旧的 news.html 继续对外服务。将来要恢复抓取，把 data 文件填回去即可。 */
+  console.log('⏭ 无官方公告数据 → 生成资讯中心空态页');
+  writeFile('news.html', head(
+    '官网资讯中心 - 开服/合服/维护/活动公告 - 小梦怀旧手游',
+    '小梦怀旧手游官网资讯中心：按游戏分类整理手游开服、合服、维护、版本更新与活动公告，支持站内搜索。',
+    SITE + '/news',
+    { prefix: '', ld: [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: '官网资讯中心', url: SITE + '/news' }] }
+  ) + `<main class="wrap">
+  <nav class="crumb"><a href="/">首页</a><i>/</i><span>官网资讯</span></nav>
+  <h1 class="ttl">官网资讯中心</h1>
+  <p class="lead">这里按游戏分类汇总各款怀旧手游的官方公告：开服、合服、维护、版本更新与活动。</p>
+  <p class="lead">内容正在重新整理，整理好会一款一款放上来。</p>
+  <div class="cta">
+    <p>想先看看有哪些游戏？游戏大厅里有全部怀旧手游的下载入口和攻略。</p>
+    <a class="cta-btn" href="/games">← 去游戏大厅</a>
+  </div>
+</main>
+` + foot());
+  fs.writeFileSync(path.join(ROOT, 'js', 'news-index.js'),
+    '/* 资讯搜索索引 · 由 scripts/build-articles.js 自动生成，请勿手改 */\nvar NEWS_INDEX=[];\n');
+  console.log('✅ 生成 news.html（空态）与空的 js/news-index.js');
 }
 
 // ===== 7. 生成攻略索引页 guides.html =====
@@ -1009,7 +1030,7 @@ const gameGroups = [...byGame.entries()].sort((x, y) => y[1].length - x[1].lengt
 
 const guidesIndexHtml = head(
   '全部游戏攻略索引 - 小梦怀旧手游',
-  `小梦怀旧手游全部 ${articles.length} 篇游戏攻略索引，按游戏分类整理：职业加点、开荒路线、打金搬砖、装备获取、版本玩法，一站式查阅，支持站内搜索。`,
+  `小梦怀旧手游全部游戏攻略索引，按游戏分类整理：职业加点、开荒路线、打金搬砖、装备获取、版本玩法，一站式查阅，支持站内搜索。`,
   SITE + '/guides',
   { prefix: '', ld: [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: '全部游戏攻略索引', url: SITE + '/guides' }] }
 ) + (() => {
@@ -1039,11 +1060,11 @@ ${items}
   return `<main class="wrap wide">
   <nav class="crumb"><a href="/">首页</a><i>/</i><span>攻略中心</span></nav>
   <h1 class="ttl">全部游戏攻略索引</h1>
-  <p class="lead">共收录 <strong>${articles.length}</strong> 篇原创攻略，覆盖 <strong>${gameGroups.length}</strong> 款怀旧手游。<strong>按游戏分组</strong>，点击标题直接阅读。</p>
+  <p class="lead"><strong>按游戏分组</strong>整理，点击标题直接阅读；也可以在下方搜索框里直接搜游戏名或攻略标题。</p>
 
   <div class="srchbar">
     <input id="guideSearch" type="search" placeholder="搜索游戏名或攻略标题，例如「龙之谷」「打金」" autocomplete="off" aria-label="搜索攻略">
-    <span class="hint" id="guideHint">共 ${articles.length} 篇</span>
+    <span class="hint" id="guideHint">输入即搜</span>
   </div>
   <div class="srch-res" id="guideRes" hidden></div>
 
@@ -1065,7 +1086,7 @@ ${sections}
     if(!box)return;
     var secs=[].slice.call(document.querySelectorAll('section.gsec'));
     var all=[].slice.call(document.querySelectorAll('section.gsec .lst a'));
-    var TOTAL=${articles.length};
+    var IDLE_HINT='输入即搜';
     function render(){
       var q=String(box.value||'').trim().toLowerCase();
       var i,j;
@@ -1074,7 +1095,7 @@ ${sections}
         for(i=0;i<all.length;i++)all[i].hidden=false;
         if(chips)chips.hidden=false;
         res.hidden=true;res.innerHTML='';
-        hint.textContent='共 '+TOTAL+' 篇';
+        hint.textContent=IDLE_HINT;
         return;
       }
       if(chips)chips.hidden=true;
@@ -1124,7 +1145,7 @@ const searchGames = games.map(g => ({
 }));
 const searchIndexSrc = '/* 站内搜索索引 · 由 scripts/build-articles.js 自动生成，请勿手改 */\n' +
   'var SEARCH_INDEX=' +
-  JSON.stringify(searchGuides.concat(searchGames)).replace(/</g, '\\u003c') +
+  JSON.stringify(searchGames.concat(searchGuides)).replace(/</g, '\\u003c') +
   ';\n';
 fs.writeFileSync(path.join(ROOT, 'js', 'search-index.js'), searchIndexSrc);
 console.log('✅ 生成 js/search-index.js（攻略 ' + searchGuides.length + ' + 游戏 ' + searchGames.length +
@@ -1248,12 +1269,12 @@ const sortedArticles = [...articles].sort((a, b) => String(b.date).localeCompare
 const seoBlock = `${SEO_START}
   <noscript>
   <div class="seo-noscript">
-    <p><a href="/games">全部游戏（${games.length} 款）</a> · <a href="/guides">全部攻略（${articles.length} 篇）</a></p>
+    <p><a href="/games">全部游戏（${games.length} 款）</a> · <a href="/guides">全部攻略</a></p>
     <h2>全部游戏（${games.length} 款）</h2>
     <ul>
 ${sortedGames.map(g => `      <li><a href="/game/${g.id}">${esc(g.name)}</a></li>`).join('\n')}
     </ul>
-    <h2>全部攻略（${articles.length} 篇）</h2>
+    <h2>全部攻略</h2>
     <ul>
 ${sortedArticles.map(a => `      <li><a href="/article/${a.id}">${esc(a.title)}</a></li>`).join('\n')}
     </ul>
@@ -1268,6 +1289,41 @@ if (indexSrc.includes(SEO_START) && indexSrc.includes(SEO_END)) {
   console.log('⚠️  跳过：index.html 里找不到 ' + SEO_START + ' 标记，请先手动加入标记');
 }
 
+/* ===== 10c. 首页游戏网格「构建期预渲染」（2026-09-16 新增）=====
+   审计发现：首页 #gameGrid 的真实卡片全靠 JS 渲染（renderGames()），不执行 JS 的爬虫
+   在首页看不到任何 /game/N 链接；残留的那块旧静态网格还是 onclick 弹窗版、且硬编码了一条渠道链接。
+   这里按 renderGames() 完全相同的模板，把全部游戏静态写进 <!-- GAME-GRID:START/END -->，
+   让百度/搜狗等爬虫直接拿到 42 个真实 <a href="/game/N">。 */
+const GRID_START = '<!-- GAME-GRID:START -->';
+const GRID_END = '<!-- GAME-GRID:END -->';
+const fmtHeat = (h) => (h >= 10000 ? (h / 10000).toFixed(1) + '万' : h);
+let inlineGames = [];
+try {
+  inlineGames = new Function('return (' + extractBalanced(indexSrc, 'var GAMES', '[', ']') + ');')();
+} catch (e) {
+  console.log('⚠️  内联 var GAMES 解析失败，首页游戏网格未预渲染：' + e.message);
+}
+if (Array.isArray(inlineGames) && inlineGames.length) {
+  const gridCards = [...inlineGames].sort((a, b) => (b.heat || 0) - (a.heat || 0)).map((g) => {
+    const hasPlatform = (g.androidUrl && g.androidUrl !== '') || (g.iosUrl && g.iosUrl !== '');
+    return '<a class="gcard" href="/game/' + g.id + '">' +
+      '<div class="cv"><img src="' + g.cover + '" alt="' + esc(g.name) + '" loading="lazy"></div>' +
+      '<div class="bd"><div class="nm">' + esc(g.name) + '</div>' +
+      '<div class="meta"><span class="score">★ ' + esc(g.sc) + '</span>' +
+      (hasPlatform ? '<span class="plat" title="支持安卓/iOS分版本下载">📱 双端</span>' : '') + '</div>' +
+      '<div class="ft"><span class="heat">🔥 ' + fmtHeat(g.heat) + '</span><span class="go">查看详情 ↗</span></div>' +
+      '</div></a>';
+  }).join('');
+  const gridBlock = GRID_START + gridCards + GRID_END;
+  if (indexSrc.includes(GRID_START) && indexSrc.includes(GRID_END)) {
+    indexSrc = indexSrc.replace(new RegExp(GRID_START + '[\\s\\S]*?' + GRID_END), () => gridBlock);
+    console.log('✅ index.html 游戏网格已预渲染（' + inlineGames.length + ' 张卡片，链接为真实 /game/N）');
+  } else {
+    console.log('⚠️  跳过：index.html 的 #gameGrid 里找不到 ' + GRID_START + ' 标记');
+  }
+}
+
+
 /* ===== 10b. 首页「官网资讯 / 游戏攻略」入口区 =====
    2026-09-16 用户要求：这两个板块内容太多、手机端滑不到底 → 收成两个导航按键放到独立页面。
    首页只留：两张入口卡（带条数） + 各一条最新标题（CSS 截断，只露出几个字）。 */
@@ -1276,20 +1332,18 @@ const shortDate = (d) => {
   return m ? m[1] + '-' + m[2] : String(d || '');
 };
 const latestArticle = sortedArticles[0];
-const hubCountNews = hubNews ? hubNews.total : '—';
-const hubCountArchives = hubNews ? hubNews.archives : '—';
 const hubBlock = `${HUB_START}
     <div class="hub-grid">
       <a class="hub-card" href="/news">
         <div><span class="hub-ic">📣</span><span class="hub-kick">NOTICES</span></div>
         <h3 class="hub-t">官网资讯</h3>
-        <p class="hub-p">开服 · 合服 · 维护 · 版本更新 · 活动福利，共 <b>${hubCountNews}</b> 条官方公告，覆盖 <b>${hubCountArchives}</b> 个游戏专区，按游戏分类，支持站内搜索。</p>
+        <p class="hub-p">开服 · 合服 · 维护 · 版本更新 · 活动福利，按游戏分类整理，支持站内搜索。</p>
         <span class="hub-go">进入资讯中心 →</span>
       </a>
       <a class="hub-card" href="/guides">
         <div><span class="hub-ic">📖</span><span class="hub-kick">GUIDES</span></div>
         <h3 class="hub-t">游戏攻略</h3>
-        <p class="hub-p">新手避坑 · 职业加点 · 打金搬砖 · 版本玩法，共 <b>${articles.length}</b> 篇攻略，覆盖 <b>${articlesByGame.size}</b> 款游戏，按游戏分类，支持站内搜索。</p>
+        <p class="hub-p">新手避坑 · 职业加点 · 打金搬砖 · 版本玩法，按游戏分类整理，支持站内搜索。</p>
         <span class="hub-go">进入攻略中心 →</span>
       </a>
     </div>
@@ -1301,8 +1355,8 @@ const hubBlock = `${HUB_START}
 
 if (indexSrc.includes(HUB_START) && indexSrc.includes(HUB_END)) {
   indexSrc = indexSrc.replace(new RegExp(HUB_START + '[\\s\\S]*?' + HUB_END), () => hubBlock);
-  console.log('✅ index.html 资讯/攻略入口区已更新（资讯 ' + hubCountNews + ' 条 / ' + hubCountArchives +
-    ' 专区，攻略 ' + articles.length + ' 篇 / ' + articlesByGame.size + ' 款）');
+  console.log('✅ index.html 资讯/攻略入口区已更新（攻略 ' + articles.length + ' 篇 / ' + articlesByGame.size + ' 款，' +
+    (hubNews ? '资讯 ' + hubNews.total + ' 条 / ' + hubNews.archives + ' 专区' : '资讯暂无内容') + '）');
 } else {
   console.log('⚠️  跳过：index.html 里找不到 ' + HUB_START + ' 标记，入口区未生成');
 }

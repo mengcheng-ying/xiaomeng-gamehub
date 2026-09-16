@@ -4,19 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>全部游戏攻略索引 - 小梦怀旧手游</title>
-<meta name="description" content="小梦怀旧手游全部 58 篇游戏攻略索引，按游戏分类整理：职业加点、开荒路线、打金搬砖、装备获取、版本玩法，一站式查阅，支持站内搜索。">
+<meta name="description" content="小梦怀旧手游全部游戏攻略索引，按游戏分类整理：职业加点、开荒路线、打金搬砖、装备获取、版本玩法，一站式查阅，支持站内搜索。">
 <meta name="robots" content="index, follow">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="canonical" href="https://fmbly.com/guides">
 <meta property="og:type" content="website">
 <meta property="og:title" content="全部游戏攻略索引 - 小梦怀旧手游">
-<meta property="og:description" content="小梦怀旧手游全部 58 篇游戏攻略索引，按游戏分类整理：职业加点、开荒路线、打金搬砖、装备获取、版本玩法，一站式查阅，支持站内搜索。">
+<meta property="og:description" content="小梦怀旧手游全部游戏攻略索引，按游戏分类整理：职业加点、开荒路线、打金搬砖、装备获取、版本玩法，一站式查阅，支持站内搜索。">
 <meta property="og:url" content="https://fmbly.com/guides">
 <meta property="og:site_name" content="小梦怀旧手游">
 <meta property="og:image" content="https://fmbly.com/assets/images/logo_xiaomeng.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="全部游戏攻略索引 - 小梦怀旧手游">
-<meta name="twitter:description" content="小梦怀旧手游全部 58 篇游戏攻略索引，按游戏分类整理：职业加点、开荒路线、打金搬砖、装备获取、版本玩法，一站式查阅，支持站内搜索。">
+<meta name="twitter:description" content="小梦怀旧手游全部游戏攻略索引，按游戏分类整理：职业加点、开荒路线、打金搬砖、装备获取、版本玩法，一站式查阅，支持站内搜索。">
 <meta name="twitter:image" content="https://fmbly.com/assets/images/logo_xiaomeng.png">
 
 <link rel="icon" href="favicon.ico" sizes="any">
@@ -222,11 +222,11 @@
 <main class="wrap wide">
   <nav class="crumb"><a href="/">首页</a><i>/</i><span>攻略中心</span></nav>
   <h1 class="ttl">全部游戏攻略索引</h1>
-  <p class="lead">共收录 <strong>58</strong> 篇原创攻略，覆盖 <strong>40</strong> 款怀旧手游。<strong>按游戏分组</strong>，点击标题直接阅读。</p>
+  <p class="lead"><strong>按游戏分组</strong>整理，点击标题直接阅读；也可以在下方搜索框里直接搜游戏名或攻略标题。</p>
 
   <div class="srchbar">
     <input id="guideSearch" type="search" placeholder="搜索游戏名或攻略标题，例如「龙之谷」「打金」" autocomplete="off" aria-label="搜索攻略">
-    <span class="hint" id="guideHint">共 58 篇</span>
+    <span class="hint" id="guideHint">输入即搜</span>
   </div>
   <div class="srch-res" id="guideRes" hidden></div>
 
@@ -544,7 +544,7 @@
     if(!box)return;
     var secs=[].slice.call(document.querySelectorAll('section.gsec'));
     var all=[].slice.call(document.querySelectorAll('section.gsec .lst a'));
-    var TOTAL=58;
+    var IDLE_HINT='输入即搜';
     function render(){
       var q=String(box.value||'').trim().toLowerCase();
       var i,j;
@@ -553,7 +553,7 @@
         for(i=0;i<all.length;i++)all[i].hidden=false;
         if(chips)chips.hidden=false;
         res.hidden=true;res.innerHTML='';
-        hint.textContent='共 '+TOTAL+' 篇';
+        hint.textContent=IDLE_HINT;
         return;
       }
       if(chips)chips.hidden=true;
