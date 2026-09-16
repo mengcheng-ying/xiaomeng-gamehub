@@ -28,7 +28,7 @@
     "noBody": 0,
     "pending": 0
   },
-  "updatedAt": "2026-09-16T04:01:51.497Z",
+  "updatedAt": "2026-09-16T07:00:54.680Z",
   "2026-09-15": {
     "totalItems": 620,
     "archives": 10,
@@ -59,31 +59,15 @@
     "pending": 0
   },
   "2026-09-16": {
-    "totalItems": 631,
-    "archives": 10,
+    "totalItems": 1,
+    "archives": 1,
     "perArchive": {
-      "jz": 27,
-      "dn": 111,
-      "mxq": 45,
-      "wlwz": 162,
-      "jzpx": 48,
-      "fgcs": 29,
-      "ff": 91,
-      "xmsl": 55,
-      "qn": 8,
-      "rxcs": 55
+      "dn": 1
     },
     "categories": {
-      "活动": 113,
-      "官方资讯": 203,
-      "开服公告": 4,
-      "维护公告": 84,
-      "攻略": 34,
-      "版本更新": 111,
-      "赛事": 35,
-      "合服公告": 47
+      "版本更新": 1
     },
-    "newBodies": 11,
+    "newBodies": 1,
     "noBody": 0,
     "pending": 0
   }

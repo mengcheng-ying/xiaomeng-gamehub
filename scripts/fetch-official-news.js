@@ -433,7 +433,19 @@ function writeBodies(bodies) {
 }
 
 // ---------- 主流程 ----------
-(async () => {
+// ── 精选模式（2026-09-16 新增）────────────────────────────────
+// 用户改为「每天手动喂一点点」后不再需要全量抓取。两个参数：
+//   --only=dn,mxq          只处理这些专区（不传 = 全部 10 个专区，即原行为）
+//   --pick=2026-09-14,关键词  只入库「日期完全相等」或「标题包含」的条目（不传 = 窗口内全部）
+// 合并规则：本次命中条目 + 上次该专区已入库条目（追加式，不会把已入库的冲掉）。
+// 例：node scripts/fetch-official-news.js --only=dn --pick=2026-09-14
+const ONLY = (process.argv.find((a) => a.startsWith('--only=')) || '').replace('--only=', '')
+  .split(',').map((s) => s.trim()).filter(Boolean);
+const PICK = (process.argv.find((a) => a.startsWith('--pick=')) || '').replace('--pick=', '')
+  .split(',').map((s) => s.trim()).filter(Boolean);
+const ACTIVE_SOURCES = ONLY.length ? SOURCES.filter((s) => ONLY.includes(s.slug)) : SOURCES;
+
+async function main() {
   const started = Date.now();
   console.log(`开始抓取三九互娱官方专区公告（窗口 ≥ ${KEEP_SINCE}，增量补正文）…\n`);
 
@@ -447,7 +459,7 @@ function writeBodies(bodies) {
   //    列表页按时间倒序，因此一旦整页都早于 KEEP_SINCE 就可以停止翻页。
   const archives = {};
   const listStats = [];
-  for (const src of SOURCES) {
+  for (const src of ACTIVE_SOURCES) {
     const seen = new Map();
     let pages = 0;
     let lastSig = '';
@@ -523,6 +535,28 @@ function writeBodies(bodies) {
       return da < db ? 1 : da > db ? -1 : 0;
     });
     items.forEach((it) => { it.category = refineCategory(it.category, it.title); });
+
+    // ── 精选模式：只留命中条目 + 上次该专区已入库的条目（追加式，不覆盖）──
+    if (PICK.length) {
+      const hit = items.filter((it) => PICK.some((k) => (it.date || '') === k || (it.title || '').includes(k)));
+      const prevItems = (prevArchives[src.slug] && prevArchives[src.slug].items) || [];
+      const hitUrls = new Set(hit.map((x) => x.url));
+      const carried = prevItems.filter((x) => !hitUrls.has(x.url));
+      const merged = hit.concat(carried);
+      merged.sort((a, b) => {
+        const da = a.date || '', db = b.date || '';
+        if (!da && !db) return 0;
+        if (!da) return 1;
+        if (!db) return -1;
+        return da < db ? 1 : da > db ? -1 : 0;
+      });
+      console.log(`🔎 精选：命中 ${hit.length} 条 + 沿用已入库 ${carried.length} 条 = ${merged.length} 条`);
+      if (!hit.length) {
+        console.log('   ⚠️ 没有任何条目命中 --pick，本次该专区不新增内容（已入库的照旧保留）');
+      }
+      items.length = 0;
+      merged.forEach((x) => items.push(x));
+    }
 
     archives[src.slug] = {
       slug: src.slug,
@@ -706,7 +740,9 @@ function writeBodies(bodies) {
   console.log('剩余待抓：' + Math.max(0, need.length - todo.length) + ' 条');
   console.log('耗时：' + Math.round((Date.now() - started) / 1000) + ' 秒');
   console.log('输出：' + OUT);
-})().catch((e) => {
+}
+
+main().catch((e) => {
   console.error('❌ 抓取脚本异常：' + e.stack);
   process.exit(1);
 });
