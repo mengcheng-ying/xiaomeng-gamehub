@@ -320,6 +320,9 @@ const BASE_CSS = `
   .srchbar input{flex:1;min-width:0;height:48px;padding:0 16px;border-radius:12px;border:1px solid var(--line);
     background:var(--card);color:var(--ink);font-size:15px;font-family:inherit;outline:none;transition:border-color .18s,box-shadow .18s}
   .srchbar input:focus{border-color:#b9cdf3;box-shadow:0 0 0 4px rgba(36,86,200,.08)}
+  .srchbar .srchbtn{display:none;flex:none;width:48px;height:48px;border:none;border-radius:12px;
+    background:var(--brand);color:#fff;cursor:pointer;align-items:center;justify-content:center}
+  .srchbar .srchbtn:hover{opacity:.9}
   .srchbar .hint{flex:none;font-size:13px;color:var(--muted);white-space:nowrap}
   .srch-res{margin:0 0 26px}
   .srch-res .hd{font-size:13px;color:var(--muted);margin:0 0 10px}
@@ -356,11 +359,11 @@ const BASE_CSS = `
     .gcard .cover img{height:auto;aspect-ratio:16/9}
   }
   @media (max-width:640px){
-    .srchbar{flex-direction:column;align-items:stretch;gap:8px}
-    .srchbar input{height:60px;font-size:17px;padding:0 56px 0 18px;border-radius:16px;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%232456c8' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E");
-      background-repeat:no-repeat;background-position:right 18px center;background-size:22px}
-    .srchbar .hint{display:none}
+    .srchbar{position:relative;flex-direction:row;align-items:center;gap:10px;margin-bottom:28px}
+    .srchbar input{flex:1;height:70px;font-size:17px;padding:0 18px;border-radius:16px;background-image:none}
+    .srchbar .srchbtn{display:flex;width:70px;height:70px;border-radius:16px}
+    .srchbar .srchbtn svg{width:26px;height:26px}
+    .srchbar .hint{display:block;position:absolute;top:100%;left:0;right:0;text-align:center;font-size:12px;margin-top:6px}
   }
 .foot{text-align:center;padding:34px 20px;border-top:1px solid var(--line);background:#fff;font-size:13px;color:var(--muted)}
   .foot a{color:var(--muted);margin:0 10px}
@@ -837,6 +840,8 @@ ${newsArchiveHtml}
     }
     box.addEventListener('input',render);
     box.addEventListener('keydown',function(e){if(e.key==='Escape'){box.value='';render();box.blur();}});
+    var srchBtn=document.getElementById('guideSrchBtn');
+    if(srchBtn){srchBtn.addEventListener('click',function(){box.focus();render();});}
   })();
   </script>
 </main>
@@ -1121,6 +1126,9 @@ ${more}
 
   <div class="srchbar">
     <input id="guideSearch" type="search" placeholder="搜索游戏名或攻略标题，例如「龙之谷」「打金」" autocomplete="off" aria-label="搜索攻略">
+    <button class="srchbtn" id="guideSrchBtn" type="button" aria-label="搜索">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    </button>
     <span class="hint" id="guideHint">输入即搜</span>
   </div>
   <div class="srch-res" id="guideRes" hidden></div>
@@ -1206,6 +1214,8 @@ ${restCards}
     }
     box.addEventListener('input',render);
     box.addEventListener('keydown',function(e){if(e.key==='Escape'){box.value='';render();box.blur();}});
+    var srchBtn=document.getElementById('guideSrchBtn');
+    if(srchBtn){srchBtn.addEventListener('click',function(){box.focus();render();});}
   })();
   </script>
 </main>
