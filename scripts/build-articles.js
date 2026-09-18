@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 小梦怀旧手游 静态页预渲染构建脚本
  * -------------------------------------------------
  * 目的：解决 SPA + hash 路由导致页面无法被搜索引擎收录的问题。
@@ -328,6 +328,11 @@ const BASE_CSS = `
   .chips a{font-size:13px;padding:6px 13px;border:1px solid var(--line);border-radius:99px;color:var(--ink2);background:var(--card)}
   .chips a:hover{border-color:var(--brand);color:var(--brand)}
   .chips a b{font-weight:600;color:var(--muted);margin-left:5px}
+  .more-btn{display:block;width:100%;padding:14px;margin:8px 0 28px;border:1px dashed var(--line);
+    border-radius:12px;background:var(--card);color:var(--ink2);font-size:14px;font-weight:600;
+    text-align:center;cursor:pointer;transition:border-color .18s,color .18s;font-family:inherit}
+  .more-btn:hover{border-color:var(--brand);color:var(--brand)}
+  .gsec.collapsed{display:none}
   @media (max-width:640px){
     .srchbar{flex-direction:column;align-items:stretch;gap:8px}
     .srchbar .hint{text-align:right}
@@ -1027,6 +1032,9 @@ ${moreHtml}
 // ===== 7. 生成攻略索引页 guides.html =====
 const byGame = articlesByGame;
 const gameGroups = [...byGame.entries()].sort((x, y) => y[1].length - x[1].length);
+const HOT_COUNT = 4;
+const hotGroups = gameGroups.slice(0, HOT_COUNT);
+const restGroups = gameGroups.slice(HOT_COUNT);
 
 const guidesIndexHtml = head(
   '全部游戏攻略索引 - 小梦怀旧手游',
@@ -1034,13 +1042,14 @@ const guidesIndexHtml = head(
   SITE + '/guides',
   { prefix: '', ld: [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: '全部游戏攻略索引', url: SITE + '/guides' }] }
 ) + (() => {
-  /* 按游戏分组：每组一个 <section class="gsec">，搜索时整组一起隐藏；每条链接带 data-s 供前端过滤 */
-  const chips = gameGroups.map(([gid, list]) => {
+  /* 按游戏分组：每组一个 <section class="gsec">，搜索时整组一起隐藏；每条链接带 data-s 供前端过滤。
+     只展示热门游戏（攻略数最多的前 HOT_COUNT 个），其余折叠，点击「展开全部」后显示。 */
+  const chips = hotGroups.map(([gid, list]) => {
     const g = gameById[gid];
     return `    <a href="#game-${gid}">${esc(g ? g.name : '其他攻略')}<b>${list.length}</b></a>`;
   }).join('\n');
 
-  const sections = gameGroups.map(([gid, list]) => {
+  const buildSection = (gid, list, collapsed) => {
     const g = gameById[gid];
     const gname = g ? g.name : '其他攻略';
     const gLink = g ? `<a href="/game/${g.id}" style="font-size:13px;font-weight:400">查看游戏 →</a>` : '';
@@ -1049,13 +1058,17 @@ const guidesIndexHtml = head(
       const hay = esc([gname, a.category || '', a.title, sm].join(' '));
       return `    <a href="/article/${a.id}" data-s="${hay}"><span class="cat">${esc(a.category || '攻略')}</span><span><span class="nm">${esc(a.title)}</span><span class="sm">${esc(sm)}</span></span></a>`;
     }).join('\n');
-    return `  <section class="gsec">
+    const cls = collapsed ? 'gsec collapsed' : 'gsec';
+    return `  <section class="${cls}">
   <h2 class="grp-h" id="game-${gid}">${esc(gname)}<span class="cnt">${list.length} 篇</span>${gLink}</h2>
   <div class="lst">
 ${items}
   </div>
   </section>`;
-  }).join('\n');
+  };
+
+  const hotSections = hotGroups.map(([gid, list]) => buildSection(gid, list, false)).join('\n');
+  const restSections = restGroups.map(([gid, list]) => buildSection(gid, list, true)).join('\n');
 
   return `<main class="wrap wide">
   <nav class="crumb"><a href="/">首页</a><i>/</i><span>攻略中心</span></nav>
@@ -1072,7 +1085,9 @@ ${items}
 ${chips}
   </div>
 
-${sections}
+${hotSections}
+${restGroups.length ? '\n  <button class="more-btn" id="moreBtn" type="button">展开全部游戏攻略 ↓</button>\n' : ''}
+${restSections}
 
   <div class="cta">
     <p>想找更多经典 IP 正版复刻的怀旧手游？回到首页一次看全。</p>
@@ -1082,22 +1097,43 @@ ${sections}
   <script>
   (function(){
     var box=document.getElementById('guideSearch'),chips=document.getElementById('guideChips'),
-        res=document.getElementById('guideRes'),hint=document.getElementById('guideHint');
+        res=document.getElementById('guideRes'),hint=document.getElementById('guideHint'),
+        moreBtn=document.getElementById('moreBtn');
     if(!box)return;
     var secs=[].slice.call(document.querySelectorAll('section.gsec'));
     var all=[].slice.call(document.querySelectorAll('section.gsec .lst a'));
+    var collapsedSecs=secs.filter(function(s){return s.classList.contains('collapsed')});
     var IDLE_HINT='输入即搜';
+    var expanded=false;
+
+    function applyCollapse(){
+      collapsedSecs.forEach(function(s){s.classList.toggle('collapsed',!expanded)});
+      if(moreBtn){moreBtn.hidden=expanded;}
+    }
+
+    if(moreBtn){
+      moreBtn.addEventListener('click',function(){
+        expanded=!expanded;
+        applyCollapse();
+        if(!expanded){
+          moreBtn.scrollIntoView({behavior:'smooth',block:'center'});
+        }
+      });
+    }
+
     function render(){
       var q=String(box.value||'').trim().toLowerCase();
       var i,j;
       if(!q){
         for(i=0;i<secs.length;i++)secs[i].hidden=false;
         for(i=0;i<all.length;i++)all[i].hidden=false;
+        applyCollapse();
         if(chips)chips.hidden=false;
         res.hidden=true;res.innerHTML='';
         hint.textContent=IDLE_HINT;
         return;
       }
+      collapsedSecs.forEach(function(s){s.classList.remove('collapsed')});
       if(chips)chips.hidden=true;
       var n=0;
       for(i=0;i<secs.length;i++){
