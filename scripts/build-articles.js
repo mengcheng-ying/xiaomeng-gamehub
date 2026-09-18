@@ -357,7 +357,8 @@ const BASE_CSS = `
   }
   @media (max-width:640px){
     .srchbar{flex-direction:column;align-items:stretch;gap:8px}
-    .srchbar .hint{text-align:right}
+    .srchbar input{height:56px;font-size:17px;padding:0 18px;border-radius:14px}
+    .srchbar .hint{text-align:right;font-size:14px}
   }
 .foot{text-align:center;padding:34px 20px;border-top:1px solid var(--line);background:#fff;font-size:13px;color:var(--muted)}
   .foot a{color:var(--muted);margin:0 10px}
