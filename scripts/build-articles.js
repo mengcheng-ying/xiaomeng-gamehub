@@ -344,6 +344,7 @@ const BASE_CSS = `
   .gcard .alist a{display:block;font-size:14px;color:var(--ink2);padding:6px 10px;border-radius:7px;
     transition:background .15s,color .15s;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .gcard .alist a:hover{background:var(--brand-soft);color:var(--brand)}
+  .gcard .alist a.hit{background:var(--brand-soft);color:var(--brand);font-weight:600}
   .gcard .alist .cat{display:inline-block;font-size:10px;font-weight:600;color:#fff;
     background:var(--brand);border-radius:4px;padding:1px 6px;margin-right:6px;vertical-align:middle}
   .gcard .alist .cat.info{background:var(--accent)}
@@ -360,8 +361,8 @@ const BASE_CSS = `
   }
   @media (max-width:640px){
     .srchbar{position:relative;flex-direction:row;align-items:center;gap:10px;margin-bottom:28px}
-    .srchbar input{flex:1;height:70px;font-size:17px;padding:0 18px;border-radius:16px;background-image:none}
-    .srchbar .srchbtn{display:flex;width:70px;height:70px;border-radius:16px}
+    .srchbar input{flex:1;height:65px;font-size:17px;padding:0 18px;border-radius:16px;background-image:none}
+    .srchbar .srchbtn{display:flex;width:65px;height:65px;border-radius:16px}
     .srchbar .srchbtn svg{width:26px;height:26px}
     .srchbar .hint{display:block;position:absolute;top:100%;left:0;right:0;text-align:center;font-size:12px;margin-top:6px}
   }
@@ -1182,31 +1183,62 @@ ${restCards}
       });
     }
 
+    // 保存原始顺序，清空搜索时恢复
+    var allContainer=document.getElementById('guideCards');
+    var restContainer=document.getElementById('guideCardsRest');
+    var cardOrder=[];
+    cards.forEach(function(c){cardOrder.push(c);});
+
     function render(){
       var q=String(box.value||'').trim().toLowerCase();
       var i,j;
       if(!q){
-        for(i=0;i<cards.length;i++)cards[i].hidden=false;
-        for(i=0;i<links.length;i++)links[i].hidden=false;
+        // 恢复原始顺序
+        for(i=0;i<cardOrder.length;i++){
+          var c=cardOrder[i];
+          c.hidden=false;
+          var items=c.querySelectorAll('.alist a');
+          for(var k=0;k<items.length;k++){items[k].hidden=false;items[k].classList.remove('hit');}
+          if(c.classList.contains('collapsed')){
+            if(restContainer)restContainer.appendChild(c);
+          }else{
+            if(allContainer)allContainer.appendChild(c);
+          }
+        }
         applyCollapse();
         res.hidden=true;res.innerHTML='';
         hint.textContent=IDLE_HINT;
         return;
       }
+      // 搜索时展开所有折叠卡片
       collapsedCards.forEach(function(c){c.classList.remove('collapsed')});
       var n=0;
+      var hitCards=[],missCards=[];
       for(i=0;i<cards.length;i++){
         var items=[].slice.call(cards[i].querySelectorAll('.alist a')),hit=0;
         for(j=0;j<items.length;j++){
           var ok=(items[j].getAttribute('data-s')||'').toLowerCase().indexOf(q)>=0;
           items[j].hidden=!ok;
-          if(ok)hit++;
+          if(ok){hit++;items[j].classList.add('hit');}else{items[j].classList.remove('hit');}
         }
         cards[i].hidden=(hit===0);
+        if(hit>0)hitCards.push(cards[i]);else missCards.push(cards[i]);
         n+=hit;
       }
+      // 匹配的卡片移到最前面
+      var container=allContainer || cards[0].parentElement;
+      for(i=0;i<hitCards.length;i++){
+        container.appendChild(hitCards[i]);
+      }
       hint.textContent=(n?('命中 '+n+' 篇'):'0 篇');
-      if(n){res.hidden=true;res.innerHTML='';return;}
+      if(n){
+        res.hidden=true;res.innerHTML='';
+        // 滚动到结果区域
+        if(container && container.getBoundingClientRect().top < 0){
+          container.scrollIntoView({behavior:'smooth',block:'start'});
+        }
+        return;
+      }
       var d=document.createElement('div');
       d.textContent=box.value.trim();
       res.innerHTML='<p class="empty">没有找到与「'+d.innerHTML+'」相关的攻略。换个关键词试试，比如游戏名或「打金」「职业」。</p>';
