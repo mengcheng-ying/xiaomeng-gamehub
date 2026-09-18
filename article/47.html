@@ -192,36 +192,40 @@
   .srch-res{margin:0 0 26px}
   .srch-res .hd{font-size:13px;color:var(--muted);margin:0 0 10px}
   .srch-res .empty{font-size:14px;color:var(--muted);padding:18px 0;margin:0}
+  /* 2026-09-18 修：html hidden 属性会被作者样式 display:grid/block 覆盖（UA 样式优先度最低），
+     导致搜索过滤、结果区切换全部失效。这条 !important 是让 hidden 真正生效的唯一办法。 */
+  [hidden]{display:none!important}
   .gcards{display:flex;flex-direction:column;gap:16px;margin:0 0 16px}
-  .gcard{display:grid;grid-template-columns:180px 1fr;gap:18px;padding:18px;border:1px solid var(--line);border-radius:14px;
+  .gcard{display:grid;grid-template-columns:120px 1fr;gap:14px;padding:14px;border:1px solid var(--line);border-radius:12px;
     background:var(--card);transition:box-shadow .2s,border-color .2s;cursor:pointer;color:inherit}
   .gcard:hover{border-color:#cfdcf7;box-shadow:0 8px 24px rgba(20,40,80,.08)}
-  .gcard .cover{border-radius:10px;overflow:hidden;background:#e9eef7;height:100%;min-height:0}
+  .gcard .cover{border-radius:8px;overflow:hidden;background:#e9eef7;height:100%;min-height:0}
   .gcard .cover img{display:block;width:100%;height:100%;object-fit:cover}
-  .gcard .info{min-width:0;display:flex;flex-direction:column;gap:10px}
-  .gcard .top{display:flex;align-items:center;justify-content:space-between;gap:12px}
-  .gcard .gname{font-size:17px;font-weight:700;color:var(--ink);margin:0}
+  .gcard .info{min-width:0;display:flex;flex-direction:column;gap:8px}
+  .gcard .top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .gcard .gname{font-size:15px;font-weight:700;color:var(--ink);margin:0}
   .gcard .gname a{color:inherit;text-decoration:none}
-  .gcard .gcat{font-size:12px;color:var(--muted);font-weight:500}
-  .gcard .cnt{font-size:12px;font-weight:600;color:var(--brand);background:var(--brand-soft);
-    padding:3px 10px;border-radius:99px;white-space:nowrap}
-  .gcard .alist{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
+  .gcard .gcat{font-size:11.5px;color:var(--muted);font-weight:500}
+  .gcard .cnt{font-size:11px;font-weight:600;color:var(--brand);background:var(--brand-soft);
+    padding:2px 8px;border-radius:99px;white-space:nowrap}
+  .gcard .alist{display:flex;flex-direction:column;gap:5px;margin:0;padding:0;list-style:none}
   .gcard .alist li{margin:0;padding:0}
-  .gcard .alist a{display:block;font-size:14px;color:var(--ink2);padding:6px 10px;border-radius:7px;
+  .gcard .alist a{display:block;font-size:13px;color:var(--ink2);padding:5px 8px;border-radius:6px;
     transition:background .15s,color .15s;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .gcard .alist a:hover{background:var(--brand-soft);color:var(--brand)}
   .gcard .alist a.hit{background:var(--brand-soft);color:var(--brand);font-weight:600}
-  .gcard .alist .cat{display:inline-block;font-size:10px;font-weight:600;color:#fff;
-    background:var(--brand);border-radius:4px;padding:1px 6px;margin-right:6px;vertical-align:middle}
+  .gcard .alist .cat{display:inline-block;font-size:9.5px;font-weight:600;color:#fff;
+    background:var(--brand);border-radius:4px;padding:1px 5px;margin-right:5px;vertical-align:middle}
   .gcard .alist .cat.info{background:var(--accent)}
-  .gcard .more{font-size:12px;color:var(--muted);margin-top:2px}
+  .gcard .more{font-size:11.5px;color:var(--muted);margin-top:2px;align-self:flex-start;text-decoration:none;display:inline-block}
+  .gcard .more:hover{color:var(--brand)}
   .gcard.collapsed{display:none}
   .more-btn{display:block;width:100%;padding:14px;margin:8px 0 28px;border:1px dashed var(--line);
     border-radius:12px;background:var(--card);color:var(--ink2);font-size:14px;font-weight:600;
     text-align:center;cursor:pointer;transition:border-color .18s,color .18s;font-family:inherit}
   .more-btn:hover{border-color:var(--brand);color:var(--brand)}
   @media (max-width:640px){
-    .gcard{grid-template-columns:1fr;gap:14px;padding:14px}
+    .gcard{grid-template-columns:96px 1fr;gap:12px;padding:12px}
     .gcard .cover{height:auto;min-height:auto}
     .gcard .cover img{height:auto;aspect-ratio:16/9}
   }
