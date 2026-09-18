@@ -326,7 +326,7 @@ const BASE_CSS = `
   .srch-res .empty{font-size:14px;color:var(--muted);padding:18px 0;margin:0}
   .gcards{display:flex;flex-direction:column;gap:16px;margin:0 0 16px}
   .gcard{display:flex;gap:18px;padding:18px;border:1px solid var(--line);border-radius:14px;
-    background:var(--card);transition:box-shadow .2s,border-color .2s;text-decoration:none;color:inherit}
+    background:var(--card);transition:box-shadow .2s,border-color .2s;cursor:pointer;color:inherit}
   .gcard:hover{border-color:#cfdcf7;box-shadow:0 8px 24px rgba(20,40,80,.08)}
   .gcard .cover{flex:none;width:180px;border-radius:10px;overflow:hidden;background:#e9eef7}
   .gcard .cover img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
@@ -1086,7 +1086,7 @@ const guidesIndexHtml = head(
     const more = extraCount > 0 ? `  <div class="more">还有 ${extraCount} 篇 →</div>` : '';
     const cls = collapsed ? 'gcard collapsed' : 'gcard';
 
-    return `<a class="${cls}" href="/game/${gid}">
+    return `<div class="${cls}" data-href="/game/${gid}">
   <div class="cover">
     <img src="${esc(cover)}" alt="${esc(gname)}" loading="lazy">
   </div>
@@ -1103,7 +1103,7 @@ ${items}
     </ul>
 ${more}
   </div>
-</a>`;
+</div>`;
   };
 
   const hotCards = hotGroups.map(([gid, list]) => buildCard(gid, list, false)).join('\n');
@@ -1149,6 +1149,15 @@ ${restCards}
       collapsedCards.forEach(function(c){c.classList.toggle('collapsed',!expanded)});
       if(moreBtn){moreBtn.hidden=expanded;}
     }
+
+    // 卡片点击跳转（点击内部链接时不触发）
+    cards.forEach(function(card){
+      card.addEventListener('click',function(e){
+        if(e.target.closest('a'))return;
+        var href=card.getAttribute('data-href');
+        if(href)window.location.href=href;
+      });
+    });
 
     if(moreBtn){
       moreBtn.addEventListener('click',function(e){
