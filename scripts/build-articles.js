@@ -336,6 +336,7 @@ const BASE_CSS = `
   .gcard .info{min-width:0;display:flex;flex-direction:column;gap:10px}
   .gcard .top{display:flex;align-items:center;justify-content:space-between;gap:12px}
   .gcard .gname{font-size:17px;font-weight:700;color:var(--ink);margin:0}
+  .gcard .gname a{color:inherit;text-decoration:none}
   .gcard .gcat{font-size:12px;color:var(--muted);font-weight:500}
   .gcard .cnt{font-size:12px;font-weight:600;color:var(--brand);background:var(--brand-soft);
     padding:3px 10px;border-radius:99px;white-space:nowrap}
@@ -1101,12 +1102,12 @@ const guidesIndexHtml = head(
 
     return `<div class="${cls}" data-href="/game/${gid}">
   <div class="cover">
-    <img src="${esc(cover)}" alt="${esc(gname)}" loading="lazy">
+    <a href="/game/${gid}"><img src="${esc(cover)}" alt="${esc(gname)}" loading="lazy"></a>
   </div>
   <div class="info">
     <div class="top">
       <div>
-        <h3 class="gname">${esc(gname)}</h3>
+        <h3 class="gname"><a href="/game/${gid}">${esc(gname)}</a></h3>
         <div class="gcat">${esc(gcat)}</div>
       </div>
       <span class="cnt">${list.length} 篇攻略</span>
