@@ -195,7 +195,7 @@
      导致搜索过滤、结果区切换全部失效。这条 !important 是让 hidden 真正生效的唯一办法。 */
   [hidden]{display:none!important}
   .gcards{display:flex;flex-direction:column;gap:16px;margin:0 0 16px}
-  .gcard{display:grid;grid-template-columns:120px 1fr;gap:14px;padding:14px;border:1px solid var(--line);border-radius:12px;
+  .gcard{display:grid;grid-template-columns:100px 1fr;gap:14px;padding:14px;border:1px solid var(--line);border-radius:12px;
     background:var(--card);transition:box-shadow .2s,border-color .2s;cursor:pointer;color:inherit}
   .gcard:hover{border-color:#cfdcf7;box-shadow:0 8px 24px rgba(20,40,80,.08)}
   .gcard .cover{border-radius:8px;overflow:hidden;background:#e9eef7;align-self:start}
@@ -227,7 +227,7 @@
     text-align:center;cursor:pointer;transition:border-color .18s,color .18s;font-family:inherit}
   .more-btn:hover{border-color:var(--brand);color:var(--brand)}
   @media (max-width:640px){
-    .gcard{grid-template-columns:96px 1fr;gap:12px;padding:12px}
+    .gcard{grid-template-columns:84px 1fr;gap:12px;padding:12px}
   }
   @media (max-width:640px){
     .srchbar{position:relative;flex-direction:row;align-items:center;gap:10px;margin-bottom:28px}
