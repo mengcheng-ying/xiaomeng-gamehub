@@ -324,15 +324,36 @@ const BASE_CSS = `
   .srch-res{margin:0 0 26px}
   .srch-res .hd{font-size:13px;color:var(--muted);margin:0 0 10px}
   .srch-res .empty{font-size:14px;color:var(--muted);padding:18px 0;margin:0}
-  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 26px}
-  .chips a{font-size:13px;padding:6px 13px;border:1px solid var(--line);border-radius:99px;color:var(--ink2);background:var(--card)}
-  .chips a:hover{border-color:var(--brand);color:var(--brand)}
-  .chips a b{font-weight:600;color:var(--muted);margin-left:5px}
+  .gcards{display:flex;flex-direction:column;gap:16px;margin:0 0 16px}
+  .gcard{display:flex;gap:18px;padding:18px;border:1px solid var(--line);border-radius:14px;
+    background:var(--card);transition:box-shadow .2s,border-color .2s;text-decoration:none;color:inherit}
+  .gcard:hover{border-color:#cfdcf7;box-shadow:0 8px 24px rgba(20,40,80,.08)}
+  .gcard .cover{flex:none;width:180px;border-radius:10px;overflow:hidden;background:#e9eef7}
+  .gcard .cover img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
+  .gcard .info{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px}
+  .gcard .top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .gcard .gname{font-size:17px;font-weight:700;color:var(--ink);margin:0}
+  .gcard .gcat{font-size:12px;color:var(--muted);font-weight:500}
+  .gcard .cnt{font-size:12px;font-weight:600;color:var(--brand);background:var(--brand-soft);
+    padding:3px 10px;border-radius:99px;white-space:nowrap}
+  .gcard .alist{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
+  .gcard .alist li{margin:0;padding:0}
+  .gcard .alist a{display:block;font-size:14px;color:var(--ink2);padding:6px 10px;border-radius:7px;
+    transition:background .15s,color .15s;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .gcard .alist a:hover{background:var(--brand-soft);color:var(--brand)}
+  .gcard .alist .cat{display:inline-block;font-size:10px;font-weight:600;color:#fff;
+    background:var(--brand);border-radius:4px;padding:1px 6px;margin-right:6px;vertical-align:middle}
+  .gcard .alist .cat.info{background:var(--accent)}
+  .gcard .more{font-size:12px;color:var(--muted);margin-top:2px}
+  .gcard.collapsed{display:none}
   .more-btn{display:block;width:100%;padding:14px;margin:8px 0 28px;border:1px dashed var(--line);
     border-radius:12px;background:var(--card);color:var(--ink2);font-size:14px;font-weight:600;
     text-align:center;cursor:pointer;transition:border-color .18s,color .18s;font-family:inherit}
   .more-btn:hover{border-color:var(--brand);color:var(--brand)}
-  .gsec.collapsed{display:none}
+  @media (max-width:640px){
+    .gcard{flex-direction:column;gap:14px;padding:14px}
+    .gcard .cover{width:100%}
+  }
   @media (max-width:640px){
     .srchbar{flex-direction:column;align-items:stretch;gap:8px}
     .srchbar .hint{text-align:right}
@@ -1042,38 +1063,57 @@ const guidesIndexHtml = head(
   SITE + '/guides',
   { prefix: '', ld: [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: '全部游戏攻略索引', url: SITE + '/guides' }] }
 ) + (() => {
-  /* 按游戏分组：每组一个 <section class="gsec">，搜索时整组一起隐藏；每条链接带 data-s 供前端过滤。
+  /* 游戏卡片式布局：每张卡片左边是游戏封面+名称，右边是攻略标题列表。
+     点击卡片整体 → 进入游戏详情页；点击单篇攻略 → 进入文章页。
      只展示热门游戏（攻略数最多的前 HOT_COUNT 个），其余折叠，点击「展开全部」后显示。 */
-  const chips = hotGroups.map(([gid, list]) => {
+  const buildCard = (gid, list, collapsed) => {
     const g = gameById[gid];
-    return `    <a href="#game-${gid}">${esc(g ? g.name : '其他攻略')}<b>${list.length}</b></a>`;
-  }).join('\n');
+    if (!g) return '';
+    const gname = g.name;
+    const gcat = g.category || '';
+    const cover = g.cover || '';
+    const showCount = Math.min(4, list.length);
+    const shown = list.slice(0, showCount);
+    const extraCount = list.length - showCount;
 
-  const buildSection = (gid, list, collapsed) => {
-    const g = gameById[gid];
-    const gname = g ? g.name : '其他攻略';
-    const gLink = g ? `<a href="/game/${g.id}" style="font-size:13px;font-weight:400">查看游戏 →</a>` : '';
-    const items = list.map(a => {
-      const sm = (a.summary || '').slice(0, 80);
-      const hay = esc([gname, a.category || '', a.title, sm].join(' '));
-      return `    <a href="/article/${a.id}" data-s="${hay}"><span class="cat">${esc(a.category || '攻略')}</span><span><span class="nm">${esc(a.title)}</span><span class="sm">${esc(sm)}</span></span></a>`;
+    const items = shown.map(a => {
+      const catClass = (a.category === '资讯') ? 'cat info' : 'cat';
+      const catLabel = a.category || '攻略';
+      const hay = esc([gname, catLabel, a.title, (a.summary || '')].join(' '));
+      return `    <li><a href="/article/${a.id}" data-s="${hay}"><span class="${catClass}">${esc(catLabel)}</span>${esc(a.title)}</a></li>`;
     }).join('\n');
-    const cls = collapsed ? 'gsec collapsed' : 'gsec';
-    return `  <section class="${cls}">
-  <h2 class="grp-h" id="game-${gid}">${esc(gname)}<span class="cnt">${list.length} 篇</span>${gLink}</h2>
-  <div class="lst">
-${items}
+
+    const more = extraCount > 0 ? `  <div class="more">还有 ${extraCount} 篇 →</div>` : '';
+    const cls = collapsed ? 'gcard collapsed' : 'gcard';
+
+    return `<a class="${cls}" href="/game/${gid}">
+  <div class="cover">
+    <img src="${esc(cover)}" alt="${esc(gname)}" loading="lazy">
   </div>
-  </section>`;
+  <div class="info">
+    <div class="top">
+      <div>
+        <h3 class="gname">${esc(gname)}</h3>
+        <div class="gcat">${esc(gcat)}</div>
+      </div>
+      <span class="cnt">${list.length} 篇攻略</span>
+    </div>
+    <ul class="alist">
+${items}
+    </ul>
+${more}
+  </div>
+</a>`;
   };
 
-  const hotSections = hotGroups.map(([gid, list]) => buildSection(gid, list, false)).join('\n');
-  const restSections = restGroups.map(([gid, list]) => buildSection(gid, list, true)).join('\n');
+  const hotCards = hotGroups.map(([gid, list]) => buildCard(gid, list, false)).join('\n');
+  const restCards = restGroups.map(([gid, list]) => buildCard(gid, list, true)).join('\n');
+  const moreBtn = restGroups.length ? `  <button class="more-btn" id="moreBtn" type="button">展开全部 ${restGroups.length} 个游戏攻略 ↓</button>` : '';
 
   return `<main class="wrap wide">
   <nav class="crumb"><a href="/">首页</a><i>/</i><span>攻略中心</span></nav>
   <h1 class="ttl">全部游戏攻略索引</h1>
-  <p class="lead"><strong>按游戏分组</strong>整理，点击标题直接阅读；也可以在下方搜索框里直接搜游戏名或攻略标题。</p>
+  <p class="lead"><strong>按游戏分组</strong>整理，点击卡片查看全部攻略，也可以直接搜索游戏名或攻略标题。</p>
 
   <div class="srchbar">
     <input id="guideSearch" type="search" placeholder="搜索游戏名或攻略标题，例如「龙之谷」「打金」" autocomplete="off" aria-label="搜索攻略">
@@ -1081,13 +1121,13 @@ ${items}
   </div>
   <div class="srch-res" id="guideRes" hidden></div>
 
-  <div class="chips" id="guideChips">
-${chips}
+  <div class="gcards" id="guideCards">
+${hotCards}
   </div>
-
-${hotSections}
-${restGroups.length ? '\n  <button class="more-btn" id="moreBtn" type="button">展开全部游戏攻略 ↓</button>\n' : ''}
-${restSections}
+${moreBtn}
+  <div class="gcards" id="guideCardsRest">
+${restCards}
+  </div>
 
   <div class="cta">
     <p>想找更多经典 IP 正版复刻的怀旧手游？回到首页一次看全。</p>
@@ -1096,26 +1136,26 @@ ${restSections}
 
   <script>
   (function(){
-    var box=document.getElementById('guideSearch'),chips=document.getElementById('guideChips'),
-        res=document.getElementById('guideRes'),hint=document.getElementById('guideHint'),
-        moreBtn=document.getElementById('moreBtn');
+    var box=document.getElementById('guideSearch'),res=document.getElementById('guideRes'),
+        hint=document.getElementById('guideHint'),moreBtn=document.getElementById('moreBtn');
     if(!box)return;
-    var secs=[].slice.call(document.querySelectorAll('section.gsec'));
-    var all=[].slice.call(document.querySelectorAll('section.gsec .lst a'));
-    var collapsedSecs=secs.filter(function(s){return s.classList.contains('collapsed')});
+    var cards=[].slice.call(document.querySelectorAll('.gcard'));
+    var links=[].slice.call(document.querySelectorAll('.gcard .alist a'));
+    var collapsedCards=cards.filter(function(c){return c.classList.contains('collapsed')});
     var IDLE_HINT='输入即搜';
     var expanded=false;
 
     function applyCollapse(){
-      collapsedSecs.forEach(function(s){s.classList.toggle('collapsed',!expanded)});
+      collapsedCards.forEach(function(c){c.classList.toggle('collapsed',!expanded)});
       if(moreBtn){moreBtn.hidden=expanded;}
     }
 
     if(moreBtn){
-      moreBtn.addEventListener('click',function(){
+      moreBtn.addEventListener('click',function(e){
+        e.preventDefault();
         expanded=!expanded;
         applyCollapse();
-        if(!expanded){
+        if(!expanded && moreBtn){
           moreBtn.scrollIntoView({behavior:'smooth',block:'center'});
         }
       });
@@ -1125,25 +1165,23 @@ ${restSections}
       var q=String(box.value||'').trim().toLowerCase();
       var i,j;
       if(!q){
-        for(i=0;i<secs.length;i++)secs[i].hidden=false;
-        for(i=0;i<all.length;i++)all[i].hidden=false;
+        for(i=0;i<cards.length;i++)cards[i].hidden=false;
+        for(i=0;i<links.length;i++)links[i].hidden=false;
         applyCollapse();
-        if(chips)chips.hidden=false;
         res.hidden=true;res.innerHTML='';
         hint.textContent=IDLE_HINT;
         return;
       }
-      collapsedSecs.forEach(function(s){s.classList.remove('collapsed')});
-      if(chips)chips.hidden=true;
+      collapsedCards.forEach(function(c){c.classList.remove('collapsed')});
       var n=0;
-      for(i=0;i<secs.length;i++){
-        var items=[].slice.call(secs[i].querySelectorAll('.lst a')),hit=0;
+      for(i=0;i<cards.length;i++){
+        var items=[].slice.call(cards[i].querySelectorAll('.alist a')),hit=0;
         for(j=0;j<items.length;j++){
           var ok=(items[j].getAttribute('data-s')||'').toLowerCase().indexOf(q)>=0;
           items[j].hidden=!ok;
           if(ok)hit++;
         }
-        secs[i].hidden=(hit===0);
+        cards[i].hidden=(hit===0);
         n+=hit;
       }
       hint.textContent=(n?('命中 '+n+' 篇'):'0 篇');
