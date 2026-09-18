@@ -148,10 +148,28 @@
     .srch-panel{width:308px}
   }
   @media(max-width:760px){
-    .nav-srch{order:98;margin-left:auto}
-    .nav-srch input{width:132px}
-    .nav-srch input:focus{width:150px}
-    .srch-panel{right:-46px;width:min(322px,88vw)}
+    .nav-srch{order:2;width:100%;margin-left:0}
+    .nav-srch input{width:100%;height:65px;font-size:1rem;padding-left:20px;padding-right:70px;border-radius:16px}
+    .nav-srch input:focus{width:100%}
+    .nav-srch .ic{font-size:1rem;left:18px}
+    .srch-panel{right:0;left:0;width:auto;top:calc(100% + 8px);max-height:60vh;padding:8px}
+    /* 手机端搜索结果：游戏卡片在左，文章列表在右 */
+    .srch-group-title{display:none}
+    .srch-panel{display:grid;grid-template-columns:42% 58%;gap:8px;align-items:start}
+    .srch-panel .srch-group-title{display:none}
+    .srch-game-card{grid-column:1;padding:8px;grid-template-columns:1fr;gap:8px;margin-bottom:0}
+    .srch-game-card .cover{width:100%;height:auto;aspect-ratio:16/10;border-radius:8px}
+    .srch-game-card .info{display:none}
+    .srch-game-card .gn{font-size:.78rem;margin-bottom:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.3}
+    .srch-game-card .gm{display:none}
+    .srch-game-card .enter{display:none}
+    /* 文章列表在右侧 */
+    .srch-item{grid-column:2;padding:7px 10px}
+    .srch-item .t{font-size:.78rem;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .srch-item .m{font-size:.66rem;margin-top:2px}
+    /* 游戏卡片带游戏名在封面下面 */
+    .srch-game-card{display:flex;flex-direction:column;gap:6px}
+    .srch-game-card .gn{display:block;font-size:.76rem;font-weight:700;line-height:1.3}
   }
 
   .faq{max-width:760px;margin:0 auto}
@@ -661,6 +679,9 @@ buildTabs();renderGames();
     /* 分组：游戏卡片 + 文章列表 */
     var games=hits.filter(function(h){return h.k==='g';});
     var arts=hits.filter(function(h){return h.k!=='g';});
+    /* 手机端限制数量：游戏 1 个，文章 2 篇 */
+    var isMobile=window.innerWidth<=760;
+    if(isMobile){games=games.slice(0,1);arts=arts.slice(0,2);}
     var html='';
     if(games.length){
       html+='<div class="srch-group-title">游戏</div>';
