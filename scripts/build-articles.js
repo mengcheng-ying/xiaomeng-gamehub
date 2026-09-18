@@ -328,8 +328,8 @@ const BASE_CSS = `
   .gcard{display:flex;gap:18px;padding:18px;border:1px solid var(--line);border-radius:14px;
     background:var(--card);transition:box-shadow .2s,border-color .2s;cursor:pointer;color:inherit}
   .gcard:hover{border-color:#cfdcf7;box-shadow:0 8px 24px rgba(20,40,80,.08)}
-  .gcard .cover{flex:none;width:180px;border-radius:10px;overflow:hidden;background:#e9eef7}
-  .gcard .cover img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
+  .gcard .cover{flex:none;width:180px;align-self:stretch;border-radius:10px;overflow:hidden;background:#e9eef7}
+  .gcard .cover img{display:block;width:100%;height:100%;object-fit:cover}
   .gcard .info{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px}
   .gcard .top{display:flex;align-items:center;justify-content:space-between;gap:12px}
   .gcard .gname{font-size:17px;font-weight:700;color:var(--ink);margin:0}
@@ -352,7 +352,8 @@ const BASE_CSS = `
   .more-btn:hover{border-color:var(--brand);color:var(--brand)}
   @media (max-width:640px){
     .gcard{flex-direction:column;gap:14px;padding:14px}
-    .gcard .cover{width:100%}
+    .gcard .cover{width:100%;align-self:auto}
+    .gcard .cover img{height:auto;aspect-ratio:16/9}
   }
   @media (max-width:640px){
     .srchbar{flex-direction:column;align-items:stretch;gap:8px}
