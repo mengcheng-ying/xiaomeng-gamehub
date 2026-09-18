@@ -840,9 +840,12 @@ ${newsArchiveHtml}
       res.hidden=false;
     }
     box.addEventListener('input',render);
+    box.addEventListener('keyup',render);
+    box.addEventListener('change',render);
+    box.addEventListener('search',render);
     box.addEventListener('keydown',function(e){if(e.key==='Escape'){box.value='';render();box.blur();}});
     var srchBtn=document.getElementById('guideSrchBtn');
-    if(srchBtn){srchBtn.addEventListener('click',function(){box.focus();render();});}
+    if(srchBtn){srchBtn.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();render();box.blur();});}
   })();
   </script>
 </main>
@@ -1239,10 +1242,12 @@ ${restCards}
       hint.textContent=(n?('命中 '+n+' 篇'):'0 篇');
       if(n){
         res.hidden=true;res.innerHTML='';
-        // 滚动到结果区域
-        if(container && container.getBoundingClientRect().top < 0){
-          container.scrollIntoView({behavior:'smooth',block:'start'});
-        }
+        // 滚动到结果区域顶部
+        setTimeout(function(){
+          if(container){
+            container.scrollIntoView({behavior:'smooth',block:'start'});
+          }
+        },50);
         return;
       }
       var d=document.createElement('div');
@@ -1251,9 +1256,12 @@ ${restCards}
       res.hidden=false;
     }
     box.addEventListener('input',render);
+    box.addEventListener('keyup',render);
+    box.addEventListener('change',render);
+    box.addEventListener('search',render);
     box.addEventListener('keydown',function(e){if(e.key==='Escape'){box.value='';render();box.blur();}});
     var srchBtn=document.getElementById('guideSrchBtn');
-    if(srchBtn){srchBtn.addEventListener('click',function(){box.focus();render();});}
+    if(srchBtn){srchBtn.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();render();box.blur();});}
   })();
   </script>
 </main>
