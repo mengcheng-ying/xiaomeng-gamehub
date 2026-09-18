@@ -216,7 +216,8 @@
   .gcard .alist .cat{display:inline-block;font-size:9.5px;font-weight:600;color:#fff;
     background:var(--brand);border-radius:4px;padding:1px 5px;margin-right:5px;vertical-align:middle}
   .gcard .alist .cat.info{background:var(--accent)}
-  /* 右侧默认只展示前 2 篇攻略，剩余需点击「还有 N 篇」进入对应游戏页查看；搜索命中时全部展示 */
+  /* 2026-09-18 合并自线上：卡片右侧默认只展示前 2 篇，其余靠「还有 N 篇」进游戏页看；
+     搜索命中时给卡片加 .srch，把命中的条目全部展开。 */
   .gcard .alist li:nth-child(n+3){display:none}
   .gcard.srch .alist li{display:list-item}
   .gcard .more{font-size:11.5px;color:var(--muted);margin-top:2px;align-self:flex-start;text-decoration:none;display:inline-block}
@@ -292,7 +293,7 @@
     <li><a href="/article/49" data-s="武林外传：十年之约 攻略 武林外传十年之约：新服首日冲级，稳上30级攻略 主线+武林之路双线推进，17级切武林之路、20级拿BT锄头、限时活动全吃，首日稳上30级。"><span class="cat">攻略</span>武林外传十年之约：新服首日冲级，稳上30级攻略</a></li>
     <li><a href="/article/50" data-s="武林外传：十年之约 攻略 武林外传十年之约：装备获取全路径，从零到毕业不迷茫 过渡精良装、BT武器、声望装、传说毕业装四条路径全梳理，平民也能稳步毕业。"><span class="cat">攻略</span>武林外传十年之约：装备获取全路径，从零到毕业不迷茫</a></li>
     </ul>
-  <a class="more" href="/game/21">还有 7 篇 →</a>
+  <a class="more" href="/game/21">还有 9 篇 →</a>
   </div>
 </div>
 <div class="gcard" data-href="/game/46">
@@ -313,7 +314,7 @@
     <li><a href="/article/60" data-s="机战：钢铁巨舰 攻略 机战百科 | Vol.3 近战格斗机甲推荐 钢铁战神、影刃、狂战士、重锤四大近战机甲详解，操作技巧与连招推荐。"><span class="cat">攻略</span>机战百科 | Vol.3 近战格斗机甲推荐</a></li>
     <li><a href="/article/61" data-s="机战：钢铁巨舰 攻略 机战百科 | Vol.4 远程武器详解 光束步枪、导弹发射器、电磁炮、粒子束四大远程武器全解析，搭配建议与操作要点。"><span class="cat">攻略</span>机战百科 | Vol.4 远程武器详解</a></li>
     </ul>
-  <a class="more" href="/game/46">还有 2 篇 →</a>
+  <a class="more" href="/game/46">还有 4 篇 →</a>
   </div>
 </div>
 <div class="gcard" data-href="/game/1">
@@ -333,7 +334,7 @@
     <li><a href="/article/45" data-s="龙之谷启程 攻略 龙之谷启程：零氪玩家每日必做任务清单与资源规划 上线不知道干什么？这份每日任务清单帮你高效规划资源，少走弯路快速变强。"><span class="cat">攻略</span>龙之谷启程：零氪玩家每日必做任务清单与资源规划</a></li>
     <li><a href="/article/64" data-s="龙之谷启程 资讯 《龙之谷启程》2026年9月最新官方公告｜版本更新、新服开服、限时活动汇总（官方可查） 《龙之谷启程》2026年9月官方公告汇总：9月全月停机维护与版本更新、S48–S50新服开服时间、常驻活动福利、狮蝎巢穴简单模式与竞技场体系调整，附官方通用礼包码。"><span class="cat info">资讯</span>《龙之谷启程》2026年9月最新官方公告｜版本更新、新服开服、限时活动汇总（官方可查）</a></li>
     </ul>
-
+  <a class="more" href="/game/1">还有 1 篇 →</a>
   </div>
 </div>
 <div class="gcard" data-href="/game/2">
@@ -353,7 +354,7 @@
     <li><a href="/article/46" data-s="墨香情 资讯 墨香情八月新版本「星徽耀世 跨服争锋」爆料：四大全新系统抢先看 徽章系统、降妖塔、跨服副本、原石副本四大新玩法同步上线，角色深度养成与跨服社交竞技两大核心内容全面解析。"><span class="cat info">资讯</span>墨香情八月新版本「星徽耀世 跨服争锋」爆料：四大全新系统抢先看</a></li>
     <li><a href="/article/47" data-s="墨香情 资讯 墨香情：当年藏在网吧里的水墨江湖，终于又能握在手心 从2004年《墨香OL》的全3D水墨武侠到正版IP《墨香情》复刻归来，兰州城、六大兵器、人幽两界，写给80、90后老玩家的一篇情怀长文。"><span class="cat info">资讯</span>墨香情：当年藏在网吧里的水墨江湖，终于又能握在手心</a></li>
     </ul>
-
+  <a class="more" href="/game/2">还有 1 篇 →</a>
   </div>
 </div>
   </div>
@@ -1024,24 +1025,6 @@
     var collapsedCards=cards.filter(function(c){return c.classList.contains('collapsed')});
     var IDLE_HINT='输入即搜';
     var expanded=false;
-
-    // 右侧默认只展示前 2 篇：根据计数徽章同步「还有 N 篇」入口（缺少则补上），其余需点击进入对应游戏页查看
-    cards.forEach(function(card){
-      var cntEl=card.querySelector('.cnt'),href=card.getAttribute('data-href');
-      if(!cntEl||!href)return;
-      var m=String(cntEl.textContent||'').match(/\d+/);
-      var total=m?parseInt(m[0],10):0;
-      var more=card.querySelector('.more');
-      if(total>2){
-        if(more){more.href=href;more.textContent='还有 '+(total-2)+' 篇 →';}
-        else{
-          var a=document.createElement('a');
-          a.className='more';a.href=href;a.textContent='还有 '+(total-2)+' 篇 →';
-          var info=card.querySelector('.info');
-          if(info)info.appendChild(a);
-        }
-      }else if(more){more.parentNode.removeChild(more);}
-    });
 
     function applyCollapse(){
       collapsedCards.forEach(function(c){c.classList.toggle('collapsed',!expanded)});

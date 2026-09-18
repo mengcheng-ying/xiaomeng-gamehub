@@ -331,11 +331,11 @@ const BASE_CSS = `
      导致搜索过滤、结果区切换全部失效。这条 !important 是让 hidden 真正生效的唯一办法。 */
   [hidden]{display:none!important}
   .gcards{display:flex;flex-direction:column;gap:16px;margin:0 0 16px}
-  .gcard{display:grid;grid-template-columns:120px 1fr;gap:14px;padding:14px;border:1px solid var(--line);border-radius:12px;
+  .gcard{display:grid;grid-template-columns:100px 1fr;gap:14px;padding:14px;border:1px solid var(--line);border-radius:12px;
     background:var(--card);transition:box-shadow .2s,border-color .2s;cursor:pointer;color:inherit}
   .gcard:hover{border-color:#cfdcf7;box-shadow:0 8px 24px rgba(20,40,80,.08)}
-  .gcard .cover{border-radius:8px;overflow:hidden;background:#e9eef7;height:100%;min-height:0}
-  .gcard .cover img{display:block;width:100%;height:100%;object-fit:cover}
+  .gcard .cover{border-radius:8px;overflow:hidden;background:#e9eef7;align-self:start}
+  .gcard .cover img{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:cover}
   .gcard .info{min-width:0;display:flex;flex-direction:column;gap:8px}
   .gcard .top{display:flex;align-items:center;justify-content:space-between;gap:10px}
   .gcard .gname{font-size:15px;font-weight:700;color:var(--ink);margin:0}
@@ -352,6 +352,10 @@ const BASE_CSS = `
   .gcard .alist .cat{display:inline-block;font-size:9.5px;font-weight:600;color:#fff;
     background:var(--brand);border-radius:4px;padding:1px 5px;margin-right:5px;vertical-align:middle}
   .gcard .alist .cat.info{background:var(--accent)}
+  /* 2026-09-18 合并自线上：卡片右侧默认只展示前 2 篇，其余靠「还有 N 篇」进游戏页看；
+     搜索命中时给卡片加 .srch，把命中的条目全部展开。 */
+  .gcard .alist li:nth-child(n+3){display:none}
+  .gcard.srch .alist li{display:list-item}
   .gcard .more{font-size:11.5px;color:var(--muted);margin-top:2px;align-self:flex-start;text-decoration:none;display:inline-block}
   .gcard .more:hover{color:var(--brand)}
   .gcard.collapsed{display:none}
@@ -360,9 +364,7 @@ const BASE_CSS = `
     text-align:center;cursor:pointer;transition:border-color .18s,color .18s;font-family:inherit}
   .more-btn:hover{border-color:var(--brand);color:var(--brand)}
   @media (max-width:640px){
-    .gcard{grid-template-columns:96px 1fr;gap:12px;padding:12px}
-    .gcard .cover{height:auto;min-height:auto}
-    .gcard .cover img{height:auto;aspect-ratio:16/9}
+    .gcard{grid-template-columns:84px 1fr;gap:12px;padding:12px}
   }
   @media (max-width:640px){
     .srchbar{position:relative;flex-direction:row;align-items:center;gap:10px;margin-bottom:28px}
@@ -1092,7 +1094,10 @@ const guidesIndexHtml = head(
     const cover = g.cover || '';
     const showCount = Math.min(4, list.length);
     const shown = list.slice(0, showCount);
-    const extraCount = list.length - showCount;
+    /* 视觉上每张卡只露前 2 篇（CSS nth-child(n+3) 隐藏），所以「还有 N 篇」按 2 计算，
+       这样文案与用户实际看到的一致；DOM 里仍保留 4 篇链接供爬虫跟随。 */
+    const VISIBLE_ON_CARD = 2;
+    const extraCount = Math.max(0, list.length - VISIBLE_ON_CARD);
 
     const items = shown.map(a => {
       const catClass = (a.category === '资讯') ? 'cat info' : 'cat';
@@ -1205,6 +1210,7 @@ ${restCards}
         for(i=0;i<cardOrder.length;i++){
           var c=cardOrder[i];
           c.hidden=false;
+          c.classList.remove('srch');
           var items=c.querySelectorAll('.alist a');
           for(var k=0;k<items.length;k++){items[k].hidden=false;items[k].classList.remove('hit');}
           if(c.classList.contains('collapsed')){
@@ -1236,6 +1242,7 @@ ${restCards}
           if(ok){hit++;items[j].classList.add('hit');}else{items[j].classList.remove('hit');}
         }
         cards[i].hidden=(hit===0);
+        cards[i].classList.toggle('srch',hit>0);
         if(hit>0)hitCards.push(cards[i]);else missCards.push(cards[i]);
         n+=hit;
       }
@@ -1507,6 +1514,25 @@ if (indexSrc.includes(HUB_START) && indexSrc.includes(HUB_END)) {
     (hubNews ? '资讯 ' + hubNews.total + ' 条 / ' + hubNews.archives + ' 专区' : '资讯暂无内容') + '）');
 } else {
   console.log('⚠️  跳过：index.html 里找不到 ' + HUB_START + ' 标记，入口区未生成');
+}
+
+/* ===== 10c. 首页数量文案：构建时按真实数量注入 =====
+   2026-09-18：原文案写死「39+ 款 / 44+ 篇」，而实际已是 42 款 / 59 篇，
+   且每次增删内容都会再错一次。改为读 <!--CNT:games--> / <!--CNT:articles--> 标记，
+   在这次构建里替换成真实数字，之后永不再过期。 */
+const injectCount = (src, key, text) => src.replace(
+  new RegExp("(<!--CNT:" + key + "-->)[\\s\\S]*?(<!--/CNT-->)", "g"),
+  (m, a, b) => a + text + b);
+/* 判定用「有没有找到标记」，而不是「内容有没有变」——
+   数字本来就没变时（例如连跑两次构建），内容也不会变，用后者会误报"未找到标记"。 */
+const hasGamesMark = indexSrc.indexOf("<!--CNT:games-->") >= 0;
+const hasArticlesMark = indexSrc.indexOf("<!--CNT:articles-->") >= 0;
+indexSrc = injectCount(indexSrc, "games", games.length + " 款");
+indexSrc = injectCount(indexSrc, "articles", articles.length + " 篇");
+if (!hasGamesMark && !hasArticlesMark) {
+  console.log("⚠️  首页未找到 <!--CNT:games--> / <!--CNT:articles--> 标记，数量文案未注入");
+} else {
+  console.log("✅ index.html 数量文案已同步（游戏 " + games.length + " 款 / 攻略 " + articles.length + " 篇）");
 }
 
 fs.writeFileSync(path.join(ROOT, indexRel), indexSrc);
