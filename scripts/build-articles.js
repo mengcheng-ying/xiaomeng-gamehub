@@ -1210,6 +1210,8 @@ ${restCards}
         hint.textContent=IDLE_HINT;
         return;
       }
+      // 多关键词搜索：空格分隔，全部匹配才算命中（AND 逻辑）
+      var keywords=q.split(/\s+/).filter(function(k){return k.length>0;});
       // 搜索时展开所有折叠卡片
       collapsedCards.forEach(function(c){c.classList.remove('collapsed')});
       var n=0;
@@ -1217,7 +1219,11 @@ ${restCards}
       for(i=0;i<cards.length;i++){
         var items=[].slice.call(cards[i].querySelectorAll('.alist a')),hit=0;
         for(j=0;j<items.length;j++){
-          var ok=(items[j].getAttribute('data-s')||'').toLowerCase().indexOf(q)>=0;
+          var hay=(items[j].getAttribute('data-s')||'').toLowerCase();
+          var ok=true;
+          for(var ki=0;ki<keywords.length;ki++){
+            if(hay.indexOf(keywords[ki])<0){ok=false;break;}
+          }
           items[j].hidden=!ok;
           if(ok){hit++;items[j].classList.add('hit');}else{items[j].classList.remove('hit');}
         }
