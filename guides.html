@@ -219,9 +219,19 @@
     text-align:center;cursor:pointer;transition:border-color .18s,color .18s;font-family:inherit}
   .more-btn:hover{border-color:var(--brand);color:var(--brand)}
   @media (max-width:640px){
-    .gcard{grid-template-columns:1fr;gap:14px;padding:14px}
-    .gcard .cover{height:auto;min-height:auto}
-    .gcard .cover img{height:auto;aspect-ratio:16/9}
+    .gcard{grid-template-columns:96px 1fr;gap:12px;padding:12px;border-radius:12px}
+    .gcard .cover{border-radius:8px;height:auto;min-height:auto}
+    .gcard .cover img{height:100%;aspect-ratio:auto;min-height:72px}
+    .gcard .info{gap:6px}
+    .gcard .top{gap:8px}
+    .gcard .gname{font-size:14.5px}
+    .gcard .gcat{font-size:11px}
+    .gcard .cnt{font-size:11px;padding:2px 8px}
+    .gcard .alist{gap:4px}
+    .gcard .alist li:nth-child(n+3){display:none}
+    .gcard .alist a{font-size:13px;padding:4px 8px;line-height:1.4;border-radius:6px}
+    .gcard .alist .cat{font-size:9px;padding:1px 5px;margin-right:4px}
+    .gcard .more{font-size:11px;margin-top:0}
   }
   @media (max-width:640px){
     .srchbar{position:relative;flex-direction:row;align-items:center;gap:0;margin-bottom:20px}
