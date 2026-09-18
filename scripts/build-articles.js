@@ -357,8 +357,10 @@ const BASE_CSS = `
   }
   @media (max-width:640px){
     .srchbar{flex-direction:column;align-items:stretch;gap:8px}
-    .srchbar input{height:56px;font-size:17px;padding:0 18px;border-radius:14px}
-    .srchbar .hint{text-align:right;font-size:14px}
+    .srchbar input{height:60px;font-size:17px;padding:0 56px 0 18px;border-radius:16px;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%232456c8' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E");
+      background-repeat:no-repeat;background-position:right 18px center;background-size:22px}
+    .srchbar .hint{display:none}
   }
 .foot{text-align:center;padding:34px 20px;border-top:1px solid var(--line);background:#fff;font-size:13px;color:var(--muted)}
   .foot a{color:var(--muted);margin:0 10px}
