@@ -321,9 +321,12 @@
       res.hidden=false;
     }
     box.addEventListener('input',render);
+    box.addEventListener('keyup',render);
+    box.addEventListener('change',render);
+    box.addEventListener('search',render);
     box.addEventListener('keydown',function(e){if(e.key==='Escape'){box.value='';render();box.blur();}});
     var srchBtn=document.getElementById('guideSrchBtn');
-    if(srchBtn){srchBtn.addEventListener('click',function(){box.focus();render();});}
+    if(srchBtn){srchBtn.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();render();box.blur();});}
   })();
   </script>
 </main>
