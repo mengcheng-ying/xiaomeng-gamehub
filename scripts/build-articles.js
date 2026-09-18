@@ -241,10 +241,6 @@ const BASE_CSS = `
   .dl a:hover{transform:translateY(-2px)}
   .dl .and{background:#2456c8;box-shadow:0 6px 16px rgba(36,86,200,.25)}
   .dl .ios{background:#2c3550;box-shadow:0 6px 16px rgba(44,53,80,.22)}
-  .facts{width:100%;border-collapse:collapse;margin:4px 0 30px;font-size:15px}
-  .facts th,.facts td{border:1px solid var(--line);padding:11px 14px;text-align:left}
-  .facts th{background:#f2f5fb;width:118px;font-weight:600;color:var(--ink)}
-  .facts td{color:var(--ink2)}
   .prose{font-size:16px;line-height:1.95;color:#26314c;margin-bottom:30px}
   .prose p{margin:0 0 16px}
   .hl{margin:0 0 30px;padding:0;list-style:none}
@@ -590,21 +586,6 @@ games.forEach((g) => {
   const androidHref = (g.androidUrl && g.androidUrl !== '') ? g.androidUrl : g.url;
   const iosHref = (g.iosUrl && g.iosUrl !== '') ? g.iosUrl : g.url;
 
-  // 结构化参数表
-  const baseFacts = [
-    ['开发商', g.developer || '—'],
-    ['发行年份', g.year ? String(g.year) : '—'],
-    ['游戏平台', g.platform || '手游'],
-    ['游戏分类', g.category || '角色扮演'],
-    ['安装大小', g.sizeText || (g.size ? (g.size / 1024).toFixed(1) + 'GB' : '—')],
-    ['玩家评分', g.rating ? '★ ' + g.rating + '.0' : '—']
-  ];
-  const facts = baseFacts.concat(Array.isArray(ext.facts) ? ext.facts : []);
-
-  const factsHtml = facts
-    .filter(f => f && f[1] != null && String(f[1]).trim() !== '' && String(f[1]) !== '—')
-    .map(f => `    <tr><th>${esc(f[0])}</th><td>${esc(f[1])}</td></tr>`).join('\n');
-
   const hlHtml = Array.isArray(ext.highlights) && ext.highlights.length
     ? `<h2 class="sec-h">游戏特色</h2>\n<ul class="hl">\n${ext.highlights.map(h => `  <li>${esc(h)}</li>`).join('\n')}\n</ul>`
     : '';
@@ -703,11 +684,6 @@ ${nzArc.items.slice(0, 8).map(it => `  <li>
       </div>
     </div>
   </div>
-
-  <h2 class="sec-h">官方信息</h2>
-  <table class="facts">
-${factsHtml}
-  </table>
 
 ${introHtml}
 
@@ -848,9 +824,6 @@ ${newsArchiveHtml}
       res.hidden=false;
     }
     box.addEventListener('input',render);
-    box.addEventListener('keyup',render);
-    box.addEventListener('change',render);
-    box.addEventListener('search',render);
     box.addEventListener('keydown',function(e){if(e.key==='Escape'){box.value='';render();box.blur();}});
     var srchBtn=document.getElementById('guideSrchBtn');
     if(srchBtn){srchBtn.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();render();box.blur();});}
@@ -1255,12 +1228,6 @@ ${restCards}
       hint.textContent=(n?('命中 '+n+' 篇'):'0 篇');
       if(n){
         res.hidden=true;res.innerHTML='';
-        // 滚动到结果区域顶部
-        setTimeout(function(){
-          if(container){
-            container.scrollIntoView({behavior:'smooth',block:'start'});
-          }
-        },50);
         return;
       }
       var d=document.createElement('div');
@@ -1269,9 +1236,6 @@ ${restCards}
       res.hidden=false;
     }
     box.addEventListener('input',render);
-    box.addEventListener('keyup',render);
-    box.addEventListener('change',render);
-    box.addEventListener('search',render);
     box.addEventListener('keydown',function(e){if(e.key==='Escape'){box.value='';render();box.blur();}});
     var srchBtn=document.getElementById('guideSrchBtn');
     if(srchBtn){srchBtn.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();render();box.blur();});}
