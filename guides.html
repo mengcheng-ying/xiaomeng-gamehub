@@ -225,7 +225,7 @@
     .gcard .cover img{height:auto;aspect-ratio:16/9}
   }
   @media (max-width:640px){
-    .srchbar{position:relative;flex-direction:row;align-items:center;gap:0;margin-bottom:28px}
+    .srchbar{position:relative;flex-direction:row;align-items:center;gap:0;margin-bottom:20px}
     .srchbar input{flex:1;height:62px;font-size:17px;padding:0 18px;border-radius:16px 0 0 16px;background-image:none;border-right:none}
     .srchbar .srchbtn{display:flex;width:62px;height:62px;border-radius:0 16px 16px 0}
     .srchbar .srchbtn svg{width:24px;height:24px}
@@ -264,7 +264,6 @@
     <button class="srchbtn" id="guideSrchBtn" type="button" aria-label="搜索">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
     </button>
-    <span class="hint" id="guideHint">输入即搜</span>
   </div>
   <div class="srch-res" id="guideRes" hidden></div>
 
@@ -1011,12 +1010,11 @@
   <script>
   (function(){
     var box=document.getElementById('guideSearch'),res=document.getElementById('guideRes'),
-        hint=document.getElementById('guideHint'),moreBtn=document.getElementById('moreBtn');
+        moreBtn=document.getElementById('moreBtn');
     if(!box)return;
     var cards=[].slice.call(document.querySelectorAll('.gcard'));
     var links=[].slice.call(document.querySelectorAll('.gcard .alist a'));
     var collapsedCards=cards.filter(function(c){return c.classList.contains('collapsed')});
-    var IDLE_HINT='输入即搜';
     var expanded=false;
 
     function applyCollapse(){
@@ -1068,7 +1066,6 @@
         }
         applyCollapse();
         res.hidden=true;res.innerHTML='';
-        hint.textContent=IDLE_HINT;
         return;
       }
       // 多关键词搜索：空格分隔，全部匹配才算命中（AND 逻辑）
@@ -1097,7 +1094,6 @@
       for(i=0;i<hitCards.length;i++){
         container.appendChild(hitCards[i]);
       }
-      hint.textContent=(n?('命中 '+n+' 篇'):'0 篇');
       if(n){
         res.hidden=true;res.innerHTML='';
         // 滚动到结果区域顶部
