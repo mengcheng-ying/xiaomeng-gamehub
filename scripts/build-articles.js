@@ -415,6 +415,7 @@ function head(title, desc, canonical, opts) {
 <meta name="description" content="${esc(desc)}">
 <meta name="robots" content="${o.robots || 'index, follow'}">
 <meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="applicable-device" content="pc,mobile">
 <link rel="canonical" href="${esc(canonical)}">
 <meta property="og:type" content="${o.ogType || 'website'}">
 <meta property="og:title" content="${esc(title)}">

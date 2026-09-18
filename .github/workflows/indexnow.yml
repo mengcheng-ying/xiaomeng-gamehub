@@ -1,0 +1,38 @@
+name: IndexNow 即时提交（Bing / Naver / Seznam / Yandex）
+
+# 作用：站点内容更新并推送后，主动告诉这些搜索引擎「URL 变了」，
+#       让它们立刻来抓取，加快收录速度。
+# 触发：只在「可被索引的内容页」变化时触发，避免每次无关提交都空跑。
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'games.html'
+      - 'guides.html'
+      - 'news.html'
+      - '404.html'
+      - 'article/**'
+      - 'game/**'
+      - 'news/**'
+      - 'sitemap.xml'
+  workflow_dispatch:
+
+jobs:
+  indexnow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # 站点由 Cloudflare Pages 在 push 后自动构建部署，
+      # 稍等片刻确保本轮内容已上线，再提交 URL 给搜索引擎。
+      - name: 等待 Cloudflare Pages 部署完成
+        run: sleep 90
+
+      - name: 提交 sitemap 全部 URL 到 IndexNow
+        run: node scripts/indexnow-ping.js
