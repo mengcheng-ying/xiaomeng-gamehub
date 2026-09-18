@@ -198,8 +198,8 @@
   .gcard{display:grid;grid-template-columns:120px 1fr;gap:14px;padding:14px;border:1px solid var(--line);border-radius:12px;
     background:var(--card);transition:box-shadow .2s,border-color .2s;cursor:pointer;color:inherit}
   .gcard:hover{border-color:#cfdcf7;box-shadow:0 8px 24px rgba(20,40,80,.08)}
-  .gcard .cover{border-radius:8px;overflow:hidden;background:#e9eef7;height:100%;min-height:0}
-  .gcard .cover img{display:block;width:100%;height:100%;object-fit:cover}
+  .gcard .cover{border-radius:8px;overflow:hidden;background:#e9eef7;align-self:start}
+  .gcard .cover img{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:cover}
   .gcard .info{min-width:0;display:flex;flex-direction:column;gap:8px}
   .gcard .top{display:flex;align-items:center;justify-content:space-between;gap:10px}
   .gcard .gname{font-size:15px;font-weight:700;color:var(--ink);margin:0}
@@ -216,6 +216,9 @@
   .gcard .alist .cat{display:inline-block;font-size:9.5px;font-weight:600;color:#fff;
     background:var(--brand);border-radius:4px;padding:1px 5px;margin-right:5px;vertical-align:middle}
   .gcard .alist .cat.info{background:var(--accent)}
+  /* 右侧默认只展示前 2 篇攻略，剩余需点击「还有 N 篇」进入对应游戏页查看；搜索命中时全部展示 */
+  .gcard .alist li:nth-child(n+3){display:none}
+  .gcard.srch .alist li{display:list-item}
   .gcard .more{font-size:11.5px;color:var(--muted);margin-top:2px;align-self:flex-start;text-decoration:none;display:inline-block}
   .gcard .more:hover{color:var(--brand)}
   .gcard.collapsed{display:none}
@@ -225,8 +228,6 @@
   .more-btn:hover{border-color:var(--brand);color:var(--brand)}
   @media (max-width:640px){
     .gcard{grid-template-columns:96px 1fr;gap:12px;padding:12px}
-    .gcard .cover{height:auto;min-height:auto}
-    .gcard .cover img{height:auto;aspect-ratio:16/9}
   }
   @media (max-width:640px){
     .srchbar{position:relative;flex-direction:row;align-items:center;gap:10px;margin-bottom:28px}
@@ -1024,6 +1025,24 @@
     var IDLE_HINT='输入即搜';
     var expanded=false;
 
+    // 右侧默认只展示前 2 篇：根据计数徽章同步「还有 N 篇」入口（缺少则补上），其余需点击进入对应游戏页查看
+    cards.forEach(function(card){
+      var cntEl=card.querySelector('.cnt'),href=card.getAttribute('data-href');
+      if(!cntEl||!href)return;
+      var m=String(cntEl.textContent||'').match(/\d+/);
+      var total=m?parseInt(m[0],10):0;
+      var more=card.querySelector('.more');
+      if(total>2){
+        if(more){more.href=href;more.textContent='还有 '+(total-2)+' 篇 →';}
+        else{
+          var a=document.createElement('a');
+          a.className='more';a.href=href;a.textContent='还有 '+(total-2)+' 篇 →';
+          var info=card.querySelector('.info');
+          if(info)info.appendChild(a);
+        }
+      }else if(more){more.parentNode.removeChild(more);}
+    });
+
     function applyCollapse(){
       collapsedCards.forEach(function(c){c.classList.toggle('collapsed',!expanded)});
       if(moreBtn){moreBtn.hidden=expanded;}
@@ -1063,6 +1082,7 @@
         for(i=0;i<cardOrder.length;i++){
           var c=cardOrder[i];
           c.hidden=false;
+          c.classList.remove('srch');
           var items=c.querySelectorAll('.alist a');
           for(var k=0;k<items.length;k++){items[k].hidden=false;items[k].classList.remove('hit');}
           if(c.classList.contains('collapsed')){
@@ -1094,6 +1114,7 @@
           if(ok){hit++;items[j].classList.add('hit');}else{items[j].classList.remove('hit');}
         }
         cards[i].hidden=(hit===0);
+        cards[i].classList.toggle('srch',hit>0);
         if(hit>0)hitCards.push(cards[i]);else missCards.push(cards[i]);
         n+=hit;
       }
