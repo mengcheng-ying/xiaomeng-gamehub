@@ -411,9 +411,6 @@ const BASE_CSS = `
   .newshub h1{font-size:1.42rem;font-weight:900;color:#fff;margin:0 0 10px;letter-spacing:.02em}
   .newshub .lead{font-size:.85rem;margin:0 0 18px;line-height:1.75}
   .newshub .sec-h{font-size:1rem;margin:24px 0 12px}
-  .newshub .srchbar{margin-bottom:14px;gap:10px}
-  .newshub .srchbar input{height:40px;font-size:13.5px;padding:0 14px;border-radius:10px}
-  .newshub .srchbar .hint{font-size:.72rem}
   .newshub .ncards{gap:12px;margin-bottom:18px}
   .newshub .ncard{grid-template-columns:96px 1fr;gap:12px;padding:12px;border-radius:14px}
   .newshub .ncard .ncv{width:96px;height:96px;border-radius:10px}
@@ -433,7 +430,6 @@ const BASE_CSS = `
   .newshub .cta-btn{font-size:.85rem;padding:10px 26px}
   @media (max-width:640px){
     .newshub h1{font-size:1.28rem}
-    .newshub .srchbar input{height:44px;font-size:15px;border-radius:11px}
     .newshub .ncards{grid-template-columns:1fr;gap:10px}
     .newshub .ncard{grid-template-columns:88px 1fr;gap:10px;padding:11px}
     .newshub .ncard .ncv{width:88px;height:88px}
@@ -487,16 +483,17 @@ const BASE_CSS = `
   .lst .cat{flex:none;font-size:.68rem;font-weight:700;color:#fff;background:linear-gradient(135deg,#3d7bff,#2f6ef0);border-radius:6px;padding:2px 9px;margin-top:2px}
   .lst .nm{font-size:.92rem;font-weight:700;color:#e6ecf6;line-height:1.6;display:block}
   .lst .sm{font-size:.78rem;color:var(--muted);margin-top:4px;line-height:1.6;display:block}
-  /* ===== 站内搜索 / 分类芯片（攻略中心 · 资讯中心） ===== */
-  .srchbar{display:flex;gap:12px;align-items:center;margin:0 0 20px}
-  .srchbar input{flex:1;min-width:0;height:48px;padding:0 16px;border-radius:12px;border:1px solid var(--line2);
-    background:var(--card);color:var(--ink);font-size:15px;font-family:inherit;outline:none;transition:border-color .18s,box-shadow .18s}
+  /* ===== 站内搜索 / 分类芯片（攻略中心 · 资讯中心）=====
+     2026-09-19 用户反馈搜索框太大 → 全站统一紧凑版：桌面 40px / 移动 44px */
+  .srchbar{display:flex;gap:10px;align-items:center;margin:0 0 16px}
+  .srchbar input{flex:1;min-width:0;height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--line2);
+    background:var(--card);color:var(--ink);font-size:13.5px;font-family:inherit;outline:none;transition:border-color .18s,box-shadow .18s}
   .srchbar input::placeholder{color:var(--dim)}
   .srchbar input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(61,123,255,.16)}
-  .srchbar .srchbtn{display:none;flex:none;width:48px;height:48px;border:none;border-radius:12px;
+  .srchbar .srchbtn{display:none;flex:none;width:40px;height:40px;border:none;border-radius:10px;
     background:var(--grad);color:#fff;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(61,123,255,.3)}
   .srchbar .srchbtn:hover{opacity:.9}
-  .srchbar .hint{flex:none;font-size:.8rem;color:var(--dim);white-space:nowrap}
+  .srchbar .hint{flex:none;font-size:.75rem;color:var(--dim);white-space:nowrap}
   .srch-res{margin:0 0 26px}
   .srch-res .hd{font-size:.8rem;color:var(--dim);margin:0 0 10px}
   .srch-res .empty{font-size:.88rem;color:var(--muted);padding:18px 0;margin:0}
@@ -555,10 +552,10 @@ const BASE_CSS = `
     .glist .gcard .alist a{font-size:11.5px;padding:1px 5px}
   }
   @media (max-width:640px){
-    .srchbar{position:relative;flex-direction:row;align-items:center;gap:10px;margin-bottom:28px}
-    .srchbar input{flex:1;height:65px;font-size:17px;padding:0 18px;border-radius:16px;background-image:none}
-    .srchbar .srchbtn{display:flex;width:65px;height:65px;border-radius:16px}
-    .srchbar .srchbtn svg{width:26px;height:26px}
+    .srchbar{position:relative;flex-direction:row;align-items:center;gap:10px;margin-bottom:24px}
+    .srchbar input{flex:1;height:44px;font-size:15px;padding:0 14px;border-radius:11px;background-image:none}
+    .srchbar .srchbtn{display:flex;width:44px;height:44px;border-radius:11px}
+    .srchbar .srchbtn svg{width:22px;height:22px}
     .srchbar .hint{display:block;position:absolute;top:100%;left:0;right:0;text-align:center;font-size:12px;margin-top:6px}
   }
 .foot{text-align:center;padding:34px 20px;border-top:1px solid var(--line);background:#0d1422;font-size:13px;color:var(--muted)}
