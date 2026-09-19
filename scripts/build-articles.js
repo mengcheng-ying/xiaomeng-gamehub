@@ -290,6 +290,38 @@ const BASE_CSS = `
   .news .nh a:hover{color:var(--brand)}
   .news .ns{margin:7px 0 0;font-size:14px;line-height:1.75;color:var(--ink2)}
   .news .nt{font-weight:600;color:var(--ink);font-size:15px;line-height:1.6}
+
+  /* ===== 资讯中心：游戏资讯卡片（2026-09-19 重设计） ===== */
+  .ncards{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:16px;margin:0 0 26px}
+  .ncard{display:grid;grid-template-columns:118px 1fr;gap:15px;padding:15px;border:1px solid var(--line);border-radius:14px;
+    background:var(--card);transition:transform .2s,box-shadow .2s,border-color .2s}
+  .ncard:hover{transform:translateY(-3px);border-color:#c3d4f6;box-shadow:0 10px 28px rgba(20,40,80,.1)}
+  .ncard .ncv{width:118px;height:118px;border-radius:10px;overflow:hidden;background:#e9eef7;align-self:start}
+  .ncard .ncv img{width:100%;height:100%;object-fit:cover;display:block}
+  .ncard .ninfo{min-width:0;display:flex;flex-direction:column}
+  .ncard .nhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+  .ncard .ngname{font-size:16px;font-weight:800;color:var(--ink);min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ncard .ncnt{flex:none;font-size:11px;font-weight:600;color:var(--brand);background:var(--brand-soft);
+    padding:2px 9px;border-radius:99px;white-space:nowrap}
+  .ncard .nlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;flex:1}
+  .ncard .nlist li{display:flex;align-items:center;gap:8px;min-width:0}
+  .ncard .nlist .nd{flex:none;font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .ncard .nlist .nlk{min-width:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    font-size:13.5px;color:#33405f;font-weight:500}
+  .ncard .nlist .nlk:hover{color:var(--brand)}
+  .ncard .nmore{margin-top:9px;font-size:12px;color:var(--brand);font-weight:600;align-self:flex-start}
+  .ncard .nmore:hover{opacity:.8}
+  /* 彩色分类标签：开服=绿 合服=青 维护=橙 版本更新=蓝 活动=紫 赛事=红 攻略=青绿 其他=灰蓝 */
+  .ncat{flex:none;display:inline-block;font-size:10.5px;font-weight:700;color:#fff;border-radius:5px;padding:1.5px 7px;line-height:1.6;white-space:nowrap}
+  .ncat.cat-kf{background:#16a34a}
+  .ncat.cat-hf{background:#0891b2}
+  .ncat.cat-wh{background:#d97706}
+  .ncat.cat-bb{background:#2456c8}
+  .ncat.cat-hd{background:#9333ea}
+  .ncat.cat-ss{background:#dc2626}
+  .ncat.cat-gl{background:#0d9488}
+  .ncat.cat-zx{background:#64748b}
+
   /* ===== 公告正文页 ===== */
   .nitem .nmeta{font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px 18px;padding-bottom:18px;margin-bottom:24px;border-bottom:1px solid var(--line)}
   .nitem .body{font-size:16px;line-height:1.9}
@@ -469,6 +501,11 @@ const BASE_CSS = `
     .card .ds{min-height:0}
     .popgrid{grid-template-columns:repeat(3,1fr);gap:10px}
     .sortbar .sb-count{display:none}
+    .ncards{grid-template-columns:1fr;gap:12px}
+    .ncard{grid-template-columns:96px 1fr;gap:12px;padding:12px}
+    .ncard .ncv{width:96px;height:96px}
+    .ncard .ngname{font-size:15px}
+    .ncard .nlist .nlk{font-size:12.8px}
   }
 `;
 
@@ -825,6 +862,10 @@ const archiveList = newsArchives
   : [];
 
 let hubNews = null;
+/* 彩色分类标签映射（开服=绿 合服=青 维护=橙 版本更新=蓝 活动=紫 赛事=红 攻略=青绿 其他=灰蓝） */
+const CAT_CLS = { '开服公告': 'cat-kf', '合服公告': 'cat-hf', '维护公告': 'cat-wh', '版本更新': 'cat-bb', '活动': 'cat-hd', '赛事': 'cat-ss', '攻略': 'cat-gl', '官方资讯': 'cat-zx' };
+const catCls = (c) => CAT_CLS[c] || 'cat-zx';
+const shortD = (d) => { const m = String(d || '').match(/^\d{4}-(\d{2}-\d{2})/); return m ? m[1] : String(d || ''); };
 if (archiveList.length) {
   const synced = String(officialNews.generatedAt || '').slice(0, 10);
   const nameOfSlug = {};
@@ -853,18 +894,31 @@ if (archiveList.length) {
     latestDate: latestNewsItem ? latestNewsItem.d : ''
   };
 
-  // 每个专区一个区块（标题 + 最近 5 条），外加顶部「按游戏分类」的锚点芯片
-  const newsArchiveHtml = archiveList.map(a => {
-    const list = a.items.slice(0, 5).map(it => {
-      const hd = `<div class="nh"><span class="nd">${esc(it.date || '')}</span><span class="nc">${esc(it.category || '公告')}</span>${newsTitleHtml(a.slug, it)}</div>`;
-      const sm = it.summary ? `\n      <p class="ns">${esc(it.summary)}</p>` : '';
-      return `    <li>\n      ${hd}${sm}\n    </li>`;
+  // 每个专区一张资讯卡片：左封面 + 游戏名/公告数 + 最新 3 条（彩色分类标签）+ 查看全部
+  const newsCardsHtml = archiveList.map(a => {
+    const gid = (a.gameIds || []).find(id => gameById[id] && gameById[id].cover) || (a.gameIds || [])[0];
+    const g = gid ? gameById[gid] : null;
+    const coverHtml = g && g.cover
+      ? `<img src="${esc(g.cover)}" alt="${esc(titleOf(a))}" loading="lazy">`
+      : `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:2rem">🎮</div>`;
+    const items = a.items.slice(0, 3).map(it => {
+      const href = newsHref(a.slug, it);
+      const titleHtml = href
+        ? `<a class="nlk" href="${esc(href)}">${esc(it.title)}</a>`
+        : `<span class="nlk">${esc(it.title)}</span>`;
+      return `      <li><span class="nd">${esc(shortD(it.date))}</span><span class="ncat ${catCls(it.category)}">${esc(it.category || '官方资讯')}</span>${titleHtml}</li>`;
     }).join('\n');
-    return `  <section class="nsec">\n  <h3 class="cathd" id="s-${esc(a.slug)}">${esc(titleOf(a))}<span class="cn">共 ${a.items.length} 条 · <a href="/news/${esc(a.slug)}">查看全部</a></span></h3>\n  <ul class="news">\n${list}\n  </ul>\n  </section>`;
+    return `    <div class="ncard">
+    <div class="ncv">${coverHtml}</div>
+    <div class="ninfo">
+      <div class="nhead"><a class="ngname" href="/news/${esc(a.slug)}">${esc(titleOf(a))}</a><span class="ncnt">${a.items.length} 条公告</span></div>
+      <ul class="nlist">
+${items}
+      </ul>
+      <a class="nmore" href="/news/${esc(a.slug)}">查看全部公告 →</a>
+    </div>
+  </div>`;
   }).join('\n');
-
-  const newsChipsHtml = archiveList
-    .map(a => `    <a href="#s-${esc(a.slug)}">${esc(titleOf(a))}<b>${a.items.length}</b></a>`).join('\n');
 
   // 可点开的公告条数（无正文的条目只在归档页显示标题，不进搜索索引）
   const newsSearchable = archiveList.reduce(
@@ -873,8 +927,8 @@ if (archiveList.length) {
   const newsBody = `<main class="wrap wide">
   <nav class="crumb"><a href="/">首页</a><i>/</i><span>官方公告</span></nav>
   <h1>手游官方公告合集</h1>
-  <p class="lead">本页汇总本站收录的怀旧手游官方专区公开公告，<strong>按游戏分类</strong>整理，包含开服、合服、维护、版本更新与活动等。
-  每条公告均已收录到本站独立页面，点击即可直接阅读全文，无需跳转任何外部站点。</p>
+  <p class="lead">本站收录的怀旧手游官方公告，<strong>按游戏分类</strong>整理，包含开服、合服、维护、版本更新与活动等。
+  每条公告均为站内独立页面，点击即可直接阅读全文，无需跳转任何外部站点。</p>
 
   <div class="srchbar">
     <input id="newsSearch" type="search" placeholder="搜索游戏名或公告标题，例如「龙之谷」「维护」" autocomplete="off" aria-label="搜索官方资讯">
@@ -883,13 +937,10 @@ if (archiveList.length) {
   <div class="srch-res" id="newsRes" hidden></div>
 
   <div id="newsBrowse">
-  <h2 class="sec-h">按游戏分类</h2>
-  <div class="chips">
-${newsChipsHtml}
+  <h2 class="sec-h">全部游戏公告</h2>
+  <div class="ncards">
+${newsCardsHtml}
   </div>
-
-  <h2 class="sec-h">各游戏最新公告</h2>
-${newsArchiveHtml}
   </div>
 
   <div class="cta">
@@ -995,7 +1046,7 @@ ${catNav}
 ${cats.map((c, i) => `  <h2 class="cathd" id="c${i + 1}">${esc(c)}<span class="cn">${groups[c].length} 条</span></h2>
   <ul class="news">
 ${groups[c].map(it => `    <li>
-      <div class="nh"><span class="nd">${esc(it.date || '')}</span>${newsTitleHtml(a.slug, it)}</div>${it.summary ? `\n      <p class="ns">${esc(it.summary)}</p>` : ''}
+      <div class="nh"><span class="nd">${esc(it.date || '')}</span><span class="ncat ${catCls(it.category)}">${esc(it.category || '官方资讯')}</span>${newsTitleHtml(a.slug, it)}</div>${it.summary ? `\n      <p class="ns">${esc(it.summary)}</p>` : ''}
     </li>`).join('\n')}
   </ul>`).join('\n')}
 
@@ -1129,6 +1180,7 @@ ${moreHtml}
      导致「扫描下方二维码」这类文字后面是空的）。这里仍重新生成一个干净的资讯中心空态页，
      避免旧的 news.html 继续对外服务。将来要恢复抓取，把 data 文件填回去即可。 */
   console.log('⏭ 无官方公告数据 → 生成资讯中心空态页');
+  const emptyHotGames = [...games].sort((a, b) => (b.heat || 0) - (a.heat || 0)).slice(0, 8);
   writeFile('news.html', head(
     '官网资讯中心 - 开服/合服/维护/活动公告 - 小梦怀旧手游',
     '小梦怀旧手游官网资讯中心：按游戏分类整理手游开服、合服、维护、版本更新与活动公告，支持站内搜索。',
@@ -1139,6 +1191,10 @@ ${moreHtml}
   <h1 class="ttl">官网资讯中心</h1>
   <p class="lead">这里按游戏分类汇总各款怀旧手游的官方公告：开服、合服、维护、版本更新与活动。</p>
   <p class="lead">内容正在重新整理，整理好会一款一款放上来。</p>
+  <h2 class="sec-h">先去逛逛热门游戏</h2>
+  <div class="popgrid">
+${emptyHotGames.map(g => `    <a href="/game/${g.id}"><img src="/${esc(g.cover)}" alt="${esc(g.name)}" loading="lazy"><span class="pn2">${esc(g.name)}</span></a>`).join('\n')}
+  </div>
   <div class="cta">
     <p>想先看看有哪些游戏？游戏大厅里有全部怀旧手游的下载入口和攻略。</p>
     <a class="cta-btn" href="/games">← 去游戏大厅</a>

@@ -156,6 +156,38 @@
   .news .nh a:hover{color:var(--brand)}
   .news .ns{margin:7px 0 0;font-size:14px;line-height:1.75;color:var(--ink2)}
   .news .nt{font-weight:600;color:var(--ink);font-size:15px;line-height:1.6}
+
+  /* ===== 资讯中心：游戏资讯卡片（2026-09-19 重设计） ===== */
+  .ncards{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:16px;margin:0 0 26px}
+  .ncard{display:grid;grid-template-columns:118px 1fr;gap:15px;padding:15px;border:1px solid var(--line);border-radius:14px;
+    background:var(--card);transition:transform .2s,box-shadow .2s,border-color .2s}
+  .ncard:hover{transform:translateY(-3px);border-color:#c3d4f6;box-shadow:0 10px 28px rgba(20,40,80,.1)}
+  .ncard .ncv{width:118px;height:118px;border-radius:10px;overflow:hidden;background:#e9eef7;align-self:start}
+  .ncard .ncv img{width:100%;height:100%;object-fit:cover;display:block}
+  .ncard .ninfo{min-width:0;display:flex;flex-direction:column}
+  .ncard .nhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+  .ncard .ngname{font-size:16px;font-weight:800;color:var(--ink);min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ncard .ncnt{flex:none;font-size:11px;font-weight:600;color:var(--brand);background:var(--brand-soft);
+    padding:2px 9px;border-radius:99px;white-space:nowrap}
+  .ncard .nlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;flex:1}
+  .ncard .nlist li{display:flex;align-items:center;gap:8px;min-width:0}
+  .ncard .nlist .nd{flex:none;font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .ncard .nlist .nlk{min-width:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    font-size:13.5px;color:#33405f;font-weight:500}
+  .ncard .nlist .nlk:hover{color:var(--brand)}
+  .ncard .nmore{margin-top:9px;font-size:12px;color:var(--brand);font-weight:600;align-self:flex-start}
+  .ncard .nmore:hover{opacity:.8}
+  /* 彩色分类标签：开服=绿 合服=青 维护=橙 版本更新=蓝 活动=紫 赛事=红 攻略=青绿 其他=灰蓝 */
+  .ncat{flex:none;display:inline-block;font-size:10.5px;font-weight:700;color:#fff;border-radius:5px;padding:1.5px 7px;line-height:1.6;white-space:nowrap}
+  .ncat.cat-kf{background:#16a34a}
+  .ncat.cat-hf{background:#0891b2}
+  .ncat.cat-wh{background:#d97706}
+  .ncat.cat-bb{background:#2456c8}
+  .ncat.cat-hd{background:#9333ea}
+  .ncat.cat-ss{background:#dc2626}
+  .ncat.cat-gl{background:#0d9488}
+  .ncat.cat-zx{background:#64748b}
+
   /* ===== 公告正文页 ===== */
   .nitem .nmeta{font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px 18px;padding-bottom:18px;margin-bottom:24px;border-bottom:1px solid var(--line)}
   .nitem .body{font-size:16px;line-height:1.9}
@@ -335,6 +367,11 @@
     .card .ds{min-height:0}
     .popgrid{grid-template-columns:repeat(3,1fr);gap:10px}
     .sortbar .sb-count{display:none}
+    .ncards{grid-template-columns:1fr;gap:12px}
+    .ncard{grid-template-columns:96px 1fr;gap:12px;padding:12px}
+    .ncard .ncv{width:96px;height:96px}
+    .ncard .ngname{font-size:15px}
+    .ncard .nlist .nlk{font-size:12.8px}
   }
 </style>
 </head>
