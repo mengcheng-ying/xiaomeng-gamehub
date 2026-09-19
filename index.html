@@ -10,7 +10,6 @@
 <meta name="sogou_site_verification" content="28czmWDAa2">
 <meta name="robots" content="index, follow">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<meta name="applicable-device" content="pc,mobile">
 <link rel="canonical" href="https://fmbly.com/">
 <link rel="preload" as="image" href="assets/images/jizhan_cover.jpg" type="image/jpeg" fetchpriority="high">
 <meta property="og:title" content="小梦怀旧手游 - 经典端游正版怀旧手游下载导航 · 攻略中心">
@@ -45,27 +44,23 @@
   a{color:inherit;text-decoration:none}
   ul{list-style:none}
 
-  .nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(11,16,26,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line);height:76px}
+  .nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(11,16,26,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line);height:64px}
   .nav-in{max-width:1200px;margin:0 auto;padding:0 20px;height:100%;display:flex;align-items:center;gap:28px}
   .nav-logo{display:flex;align-items:center;gap:10px;font-size:1.15rem;font-weight:800;letter-spacing:.5px}
   .nav-logo .logo-name{margin:0;font-size:inherit;font-weight:inherit;letter-spacing:inherit;line-height:1;color:#fff;text-shadow:0 0 20px rgba(61,123,255,.5)}
   .nav-logo .ic{width:30px;height:30px;border-radius:8px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:1rem;box-shadow:0 4px 14px rgba(61,123,255,.4)}
   .nav-links{display:flex;gap:4px;margin-left:auto}
-  .nav-links a{padding:8px 16px;font-size:.9rem;color:var(--nc,#5b8cff);border-radius:8px;transition:.2s}
-  .nav-links a:nth-child(1){--nc:#5b8cff;--nc-bg:rgba(91,140,255,.18)}
-  .nav-links a:nth-child(2){--nc:#22d3ee;--nc-bg:rgba(34,211,238,.18)}
-  .nav-links a:nth-child(3){--nc:#ffb454;--nc-bg:rgba(255,180,84,.18)}
-  .nav-links a:nth-child(4){--nc:#c084fc;--nc-bg:rgba(192,132,252,.18)}
-  .nav-links a:hover{background:rgba(255,255,255,.08)}
-  .nav-links a.active{background:var(--nc-bg);font-weight:700;box-shadow:inset 0 0 0 1px var(--nc)}
+  .nav-links a{padding:8px 16px;font-size:.9rem;color:var(--muted);border-radius:8px;transition:.2s}
+  .nav-links a:hover{color:var(--ink);background:rgba(255,255,255,.06)}
+  .nav-links a.active{color:var(--ink);background:rgba(61,123,255,.14)}
   .nav-cta{padding:8px 18px;border-radius:999px;background:var(--grad);font-size:.85rem;font-weight:600;box-shadow:0 4px 16px rgba(61,123,255,.35);white-space:nowrap}
   .nav-toggle{display:none}
 
-  .hero{position:relative;margin-top:76px;height:520px;overflow:hidden;background:radial-gradient(900px 420px at 12% 0%,rgba(61,123,255,.08),transparent 60%),radial-gradient(800px 400px at 88% 100%,rgba(0,212,255,.06),transparent 60%),var(--bg)}
+  .hero{position:relative;margin-top:64px;height:560px;overflow:hidden;background:radial-gradient(900px 420px at 12% 0%,rgba(61,123,255,.20),transparent 60%),radial-gradient(800px 400px at 88% 100%,rgba(0,212,255,.16),transparent 60%),var(--bg2)}
   .hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1px);background-size:26px 26px;pointer-events:none}
   .carousel{position:relative;height:100%;max-width:1200px;margin:0 auto}
-  .card{position:absolute;top:50%;left:calc(50% - 280px);width:560px;background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.55);transform:translateY(-50%);transition:transform .7s cubic-bezier(.4,0,.2,1),opacity .7s ease;isolation:isolate;cursor:pointer}
-  .card-img{position:relative;aspect-ratio:16/9;overflow:hidden;border-radius:20px 20px 0 0}
+  .card{position:absolute;top:50%;left:calc(50% - 230px);width:460px;background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.55);transform:translateY(-50%);transition:transform .7s cubic-bezier(.4,0,.2,1),opacity .7s ease;backface-visibility:hidden;cursor:pointer}
+  .card-img{background:var(--bg3);position:relative;aspect-ratio:16/9;overflow:hidden}
   .card-img img{width:100%;height:100%;object-fit:cover}
   .card-img .badge{position:absolute;top:12px;left:12px;padding:4px 12px;border-radius:99px;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);font-size:.8rem;color:#ffc940;font-weight:700;border:1px solid rgba(255,201,64,.4)}
   .card-bd{padding:20px 22px 22px;text-align:center;background:linear-gradient(180deg,var(--card),#141f30)}
@@ -77,25 +72,25 @@
   .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(61,123,255,.55)}
   .btn-ghost{background:rgba(255,255,255,.1);color:var(--ink);border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(6px)}
   .btn-ghost:hover{background:rgba(255,255,255,.18)}
-  .hero-arrow{position:absolute;top:260px;transform:translateY(-50%);z-index:10;width:46px;height:46px;border-radius:50%;background:rgba(16,24,40,.7);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);transition:.2s}
+  .hero-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:10;width:46px;height:46px;border-radius:50%;background:rgba(16,24,40,.7);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);transition:.2s}
   .hero-arrow:hover{background:rgba(61,123,255,.55)}
   .hero-arrow.prev{left:16px}
   .hero-arrow.next{right:16px}
 
   .wrap{max-width:1200px;margin:0 auto;padding:0 20px}
-  .sec{padding:46px 0}
-  .sec-head{text-align:center;margin-bottom:26px}
+  .sec{padding:64px 0}
+  .sec-head{text-align:center;margin-bottom:40px}
   .sec-head .kick{display:inline-block;padding:4px 14px;border-radius:999px;background:rgba(61,123,255,.12);border:1px solid rgba(61,123,255,.3);color:var(--accent2);font-size:.75rem;font-weight:700;letter-spacing:2px;margin-bottom:14px}
   .sec-head h2{font-size:1.9rem;font-weight:900}
   .sec-head p{color:var(--muted);margin-top:8px;font-size:.95rem}
 
-  .feat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-  .feat{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px 16px;transition:.25s;position:relative;overflow:hidden}
+  .feat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .feat{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:26px 22px;transition:.25s;position:relative;overflow:hidden}
   .feat:hover{transform:translateY(-4px);border-color:rgba(61,123,255,.4);box-shadow:var(--shadow)}
-  .feat .num{position:absolute;right:12px;top:4px;font-size:2.4rem;font-weight:900;color:rgba(255,255,255,.05)}
-  .feat .ico{width:36px;height:36px;border-radius:10px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:1.15rem;margin-bottom:12px;box-shadow:0 6px 18px rgba(61,123,255,.35)}
-  .feat h3{font-size:.92rem;font-weight:800;margin-bottom:6px}
-  .feat p{font-size:.8rem;color:var(--muted)}
+  .feat .num{position:absolute;right:14px;top:6px;font-size:3.4rem;font-weight:900;color:rgba(255,255,255,.05)}
+  .feat .ico{width:46px;height:46px;border-radius:12px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:16px;box-shadow:0 6px 18px rgba(61,123,255,.35)}
+  .feat h3{font-size:1.05rem;font-weight:800;margin-bottom:8px}
+  .feat p{font-size:.85rem;color:var(--muted)}
 
   .tabs{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-bottom:32px}
   .tab{padding:9px 22px;border-radius:999px;font-size:.88rem;color:var(--muted);background:var(--card);border:1px solid var(--line);cursor:pointer;transition:.2s}
@@ -124,9 +119,9 @@
 
   .nav-srch{position:relative;flex:0 0 auto}
   .nav-srch .ic{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:.8rem;opacity:.55;pointer-events:none}
-  .nav-srch input{width:182px;height:36px;padding:0 14px 0 33px;border-radius:999px;border:1.5px solid rgba(91,140,255,.55);background:rgba(255,255,255,.06);color:var(--ink);font-size:.85rem;font-family:inherit;outline:none;transition:.22s}
+  .nav-srch input{width:182px;height:36px;padding:0 14px 0 33px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--ink);font-size:.85rem;font-family:inherit;outline:none;transition:.22s}
   .nav-srch input::placeholder{color:var(--dim)}
-  .nav-srch input:focus{width:222px;border-color:#5b8cff;background:rgba(61,123,255,.1);box-shadow:0 0 0 3px rgba(61,123,255,.18)}
+  .nav-srch input:focus{width:222px;border-color:rgba(61,123,255,.6);background:rgba(61,123,255,.1)}
   .srch-panel{position:absolute;top:calc(100% + 10px);right:0;width:372px;max-height:392px;overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:var(--radius-sm);box-shadow:var(--shadow);padding:6px;z-index:120}
   .srch-panel[hidden]{display:none}
   .srch-item{display:block;padding:9px 12px;border-radius:8px;transition:.15s}
@@ -173,20 +168,19 @@
     .srch-item .m{font-size:.66rem;margin-top:2px}
   }
 
-  .faq{max-width:620px;margin:0 auto}
-  #faq .sec-head{margin-bottom:14px}
-  .faq-item{border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--card);margin-bottom:9px;overflow:hidden}
-  .faq-item summary{padding:11px 16px;font-weight:700;font-size:.88rem;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}
-  .faq-item summary::after{content:'\25BC';font-size:.75rem;color:var(--accent2);transition:transform .25s;flex:none;margin-left:12px}
-  .faq-item[open] summary::after{transform:rotate(180deg)}
-  .faq-item .body{padding:0 16px 13px;color:var(--muted);font-size:.82rem}
+  .faq{max-width:760px;margin:0 auto}
+  .faq-item{border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--card);margin-bottom:12px;overflow:hidden}
+  .faq-item summary{padding:16px 20px;font-weight:700;font-size:.95rem;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}
+  .faq-item summary::after{content:'+';font-size:1.3rem;color:var(--accent2);transition:.25s}
+  .faq-item[open] summary::after{transform:rotate(45deg)}
+  .faq-item .body{padding:0 20px 18px;color:var(--muted);font-size:.88rem}
 
-  .cta{position:relative;border-radius:18px;overflow:hidden;background:linear-gradient(120deg,#12233f,#0e1a30);border:1px solid rgba(61,123,255,.3);padding:19px 24px;text-align:center}
+  .cta{position:relative;border-radius:22px;overflow:hidden;background:linear-gradient(120deg,#12233f,#0e1a30);border:1px solid rgba(61,123,255,.3);padding:56px 40px;text-align:center}
   .cta::before{content:'';position:absolute;inset:0;background:radial-gradient(600px 300px at 20% 0%,rgba(61,123,255,.25),transparent 60%),radial-gradient(600px 300px at 80% 100%,rgba(0,212,255,.18),transparent 60%)}
   .cta>*{position:relative}
-  .cta h2{font-size:1.08rem;font-weight:900;margin-bottom:6px}
-  .cta p{color:var(--muted);margin-bottom:12px;font-size:.86rem}
-  .cta .btn{font-size:.88rem;padding:10px 26px}
+  .cta h2{font-size:1.7rem;font-weight:900;margin-bottom:10px}
+  .cta p{color:var(--muted);margin-bottom:24px}
+  .cta .btn{font-size:1rem;padding:15px 40px}
 
   footer{border-top:1px solid var(--line);padding:34px 0 40px;margin-top:40px}
   .foot{max-width:1200px;margin:0 auto;padding:0 20px;display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center}
@@ -215,16 +209,17 @@
       background:transparent;border:none;padding:0;margin-left:0;
       transform:none;opacity:1;pointer-events:auto;box-shadow:none;
     }
-    .nav-links a{padding:9px 8px;font-size:.78rem;border-radius:10px;text-align:center;white-space:nowrap;flex:1;background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--nc,#5b8cff)}
-    .nav-links a.active{background:var(--nc-bg);border-color:var(--nc);font-weight:700}
+    .nav-links a{padding:9px 8px;font-size:.78rem;border-radius:10px;text-align:center;white-space:nowrap;flex:1;background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--muted)}
+    .nav-links a.active{color:var(--ink);background:rgba(61,123,255,.14);border-color:rgba(61,123,255,.3)}
     .nav-cta{display:none}
-    .hero{margin-top:0;padding-top:186px;height:452px}
+    .hero{margin-top:0;padding-top:150px;height:auto;min-height:420px}
     .feat-grid{grid-template-columns:repeat(4,1fr);gap:8px;max-width:560px;margin:0 auto}
     .feat{padding:13px 6px;text-align:center}
     .feat .ico{width:30px;height:30px;font-size:.95rem;margin:0 auto 8px;border-radius:9px}
     .feat h3{font-size:.78rem}
     .feat p,.feat .num{display:none}
-    .card{width:min(58%,300px);left:calc(50% - min(29%,150px))}
+    .hero{height:270px}
+    .card{width:62%;left:19%}
     .card .badge{top:8px;left:8px;font-size:.7rem;padding:3px 9px}
     .card-bd{padding:10px 14px 14px}
     .card-bd h3{font-size:1.05rem}
@@ -244,9 +239,8 @@
     .guide-grid{grid-template-columns:1fr}
     .sec{padding:44px 0}
     .sec-head h2{font-size:1.5rem}
-    .cta{padding:15px 16px}
-    .cta h2{font-size:1rem}
-    .hero-arrow{top:319px;width:34px;height:34px;font-size:1.1rem}
+    .cta{padding:40px 22px}
+    .hero-arrow{width:34px;height:34px;font-size:1.1rem}
     .hero-arrow.prev{left:4px}
     .hero-arrow.next{right:4px}
   }
@@ -255,6 +249,7 @@
     .feat-grid{grid-template-columns:repeat(4,1fr);gap:6px}
     .feat .ico{width:28px;height:28px;font-size:.9rem}
     .feat h3{font-size:.72rem}
+    .hero{height:240px}
     .card-bd h3{font-size:.95rem}
     .card-bd .sl{font-size:.74rem;margin:2px 0 8px}
     .card-bd .btns{flex-wrap:nowrap}
@@ -267,6 +262,9 @@
 @keyframes gmFadeIn{from{opacity:0}to{opacity:1}}
 .gm-card{background:linear-gradient(180deg,#1a2440 0%,#0e1525 100%);border:1px solid rgba(99,102,241,.25);border-radius:18px;width:100%;max-width:560px;max-height:90vh;overflow:auto;padding:24px;position:relative;box-shadow:0 25px 60px rgba(0,0,0,.5);animation:gmSlideIn .25s cubic-bezier(.2,.8,.2,1)}
 @keyframes gmSlideIn{from{transform:translateY(20px) scale(.97);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+/* 2026-09-19 补：首页此前是本项目唯一缺 prefers-reduced-motion 的页面（其余五页均有）。
+   规则原样复用子页面版本，保证全站一致。 */
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 .gm-close{position:absolute;top:12px;right:14px;width:32px;height:32px;border:none;background:rgba(255,255,255,.08);color:#fff;font-size:20px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s}
 .gm-close:hover{background:rgba(255,255,255,.18)}
 .gm-head{display:flex;gap:16px;margin-bottom:14px}
@@ -289,26 +287,26 @@
   }
 
 /* ===== 资讯 / 攻略 入口（内容已独立成页，样式配套 #hub 区块） ===== */
-.hub-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;max-width:560px;margin:0 auto}
-.hub-card{position:relative;display:flex;flex-direction:column;gap:6px;padding:13px 16px;border-radius:var(--radius);background:var(--card);border:1px solid var(--line);color:inherit;text-decoration:none;transition:.25s;overflow:hidden}
+.hub-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.hub-card{position:relative;display:flex;flex-direction:column;gap:10px;padding:24px;border-radius:var(--radius);background:var(--card);border:1px solid var(--line);color:inherit;text-decoration:none;transition:.25s;overflow:hidden}
 .hub-card::before{content:"";position:absolute;top:0;bottom:0;left:0;width:3px;background:var(--grad)}
-.hub-card:hover{transform:translateY(-3px);border-color:rgba(0,212,255,.4);box-shadow:var(--shadow)}
-.hub-kick{font-size:.62rem;letter-spacing:2px;color:var(--accent2);font-weight:800}
-.hub-ic{font-size:.92rem;line-height:1;margin-right:6px}
-.hub-t{font-size:.98rem;font-weight:800;color:var(--ink);margin:0}
-.hub-p{font-size:.8rem;color:var(--muted);line-height:1.65;margin:0;flex:1}
+.hub-card:hover{transform:translateY(-4px);border-color:rgba(0,212,255,.4);box-shadow:var(--shadow)}
+.hub-kick{font-size:.68rem;letter-spacing:2px;color:var(--accent2);font-weight:800}
+.hub-ic{font-size:1.35rem;line-height:1;margin-right:7px}
+.hub-t{font-size:1.24rem;font-weight:800;color:var(--ink);margin:0}
+.hub-p{font-size:.85rem;color:var(--muted);line-height:1.7;margin:0;flex:1}
 .hub-p b{color:var(--ink);font-weight:700}
-.hub-go{font-size:.8rem;color:var(--accent2);font-weight:700;margin-top:2px}
-.hub-latest{display:flex;flex-direction:column;gap:8px;margin-top:12px}
-.hub-line{display:flex;align-items:center;gap:10px;min-width:0;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,.035);border:1px solid var(--line);color:var(--muted);text-decoration:none;font-size:.84rem;transition:.2s}
+.hub-go{font-size:.85rem;color:var(--accent2);font-weight:700;margin-top:2px}
+.hub-latest{display:flex;flex-direction:column;gap:9px;margin-top:16px}
+.hub-line{display:flex;align-items:center;gap:10px;min-width:0;padding:12px 16px;border-radius:12px;background:rgba(255,255,255,.035);border:1px solid var(--line);color:var(--muted);text-decoration:none;font-size:.86rem;transition:.2s}
 .hub-line:hover{border-color:rgba(61,123,255,.45);color:var(--ink)}
 .hub-line .lb{flex:none;font-size:.7rem;font-weight:800;color:#fff;background:var(--grad);border-radius:6px;padding:2px 9px}
 .hub-line .tx{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hub-line .dt2{flex:none;font-size:.75rem;color:var(--dim)}
 @media(max-width:760px){
-  .hub-grid{grid-template-columns:1fr;gap:10px}
-  .hub-card{padding:12px 14px}
-  .hub-line{padding:10px 12px;font-size:.8rem}
+  .hub-grid{grid-template-columns:1fr;gap:14px}
+  .hub-card{padding:20px}
+  .hub-line{padding:11px 13px;font-size:.82rem}
   .hub-line .dt2{display:none}
 }
 
@@ -323,8 +321,7 @@
   .seo-noscript a{color:#9aa3bd}
   .seo-noscript a:hover{color:#fff}
 </style>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "小梦怀旧手游", "alternateName": "小梦怀旧手游下载导航", "url": "https://fmbly.com/", "description": "经典端游正版怀旧手游下载导航与攻略聚合站", "inLanguage": "zh-CN", "publisher": {"@type": "Organization", "name": "小梦怀旧手游", "logo": "https://fmbly.com/assets/images/logo_xiaomeng.png"}}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "小梦怀旧手游", "alternateName": "小梦怀旧手游下载导航", "url": "https://fmbly.com/", "description": "经典端游正版怀旧手游下载导航与攻略聚合站", "logo": "https://fmbly.com/assets/images/logo_xiaomeng.png"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "小梦怀旧手游", "alternateName": "小梦怀旧手游下载导航", "url": "https://fmbly.com/", "description": "经典端游正版怀旧手游下载导航与攻略聚合站", "inLanguage": "zh-CN"}</script>
 </head>
 <body>
 
@@ -333,7 +330,7 @@
     <a class="nav-logo" href="#hero"><img src="assets/images/logo_xiaomeng.png" alt="小梦怀旧手游" class="nav-logo-img"><h1 class="logo-name">小梦怀旧手游</h1></a>
     <div class="nav-links" id="navLinks">
       <a href="#hero" class="active">首页</a>
-      <a href="/games">游戏大厅</a>
+      <a href="#games">游戏大厅</a>
       <a href="/news">官网资讯</a>
       <a href="/guides">游戏攻略</a>
     </div>
@@ -342,29 +339,29 @@
       <input id="siteSearch" type="text" placeholder="搜索攻略 / 游戏" autocomplete="off" aria-label="站内搜索">
       <div class="srch-panel" id="srchPanel" hidden></div>
     </div>
-    <a class="nav-cta" href="/games">全部游戏</a>
+    <a class="nav-cta" href="#games">全部游戏</a>
     <button class="nav-toggle" id="navToggle" aria-label="展开菜单" aria-expanded="false">☰</button>
   </div>
 </nav>
 
 <div class="hero" id="hero">
-  <div class="carousel" id="carousel"><div class="card" data-i="0" onclick="window.open('https://apps.bytesfield.com/download/extend/cur/42dbeb0e42bcb0e1321fd4e74239400cddd88404/1778','_blank')" style="z-index: 3; pointer-events: auto; opacity: 1; transform: translateY(-50%) translateX(0px) scale(0.86);"><div class="card-img"><img src="assets/images/hero/hero_wulin.webp" alt="武林外传：十年之约" draggable="false"><span class="badge">🔥 热度 915000</span></div><div class="card-bd"><h3>武林外传：十年之约</h3><div class="sl">七侠镇 · 同福再聚</div><div class="btns"><a class="btn btn-primary" href="https://apps.bytesfield.com/download/extend/cur/42dbeb0e42bcb0e1321fd4e74239400cddd88404/1778" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">🎮 进入游戏</a><a class="btn btn-ghost" href="/games" onclick="event.stopPropagation()">浏览全部</a></div></div></div><div class="card" data-i="1" onclick="window.open('https://sdkn-ldy.zhangyu39.com/?app_id=7259&amp;promote_id=1778','_blank')" style="z-index: 2; pointer-events: none; opacity: 0.5; transform: translateY(-50%) translateX(300px) scale(0.86);"><div class="card-img"><img src="assets/images/hero/hero_longzhigu_hd.webp" alt="龙之谷启程" draggable="false"><span class="badge">🔥 热度 920000</span></div><div class="card-bd"><h3>龙之谷启程</h3><div class="sl">重返阿尔特里亚大陆</div><div class="btns"><a class="btn btn-primary" href="https://sdkn-ldy.zhangyu39.com/?app_id=7259&amp;promote_id=1778" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">🎮 进入游戏</a><a class="btn btn-ghost" href="/games" onclick="event.stopPropagation()">浏览全部</a></div></div></div><div class="card" data-i="2" onclick="window.open('https://sdkn-ldy.zhangyu39.com/?app_id=7032&amp;promote_id=1778','_blank')" style="z-index: 0; pointer-events: none; opacity: 0; transform: translateY(-50%) translateX(600px) scale(0.8);"><div class="card-img"><img src="assets/images/hero/hero_moxiangqing.webp" alt="墨香情" draggable="false"><span class="badge">🔥 热度 880000</span></div><div class="card-bd"><h3>墨香情</h3><div class="sl">水墨江湖 · 自由兵器</div><div class="btns"><a class="btn btn-primary" href="https://sdkn-ldy.zhangyu39.com/?app_id=7032&amp;promote_id=1778" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">🎮 进入游戏</a><a class="btn btn-ghost" href="/games" onclick="event.stopPropagation()">浏览全部</a></div></div></div><div class="card" data-i="3" onclick="window.open('https://229663.youxin75.com/qudao.php?s=/Download/f/WzUwODgsNTA4NywyMjk2NjNd','_blank')" style="z-index: 0; pointer-events: none; opacity: 0; transform: translateY(-50%) translateX(900px) scale(0.8);"><div class="card-img"><img src="assets/images/hero/hero_rongyao.webp" alt="荣耀出征卡点服" draggable="false"><span class="badge">🔥 热度 860000</span></div><div class="card-bd"><h3>荣耀出征卡点服</h3><div class="sl">经典奇迹MU 1.03H 点卡服</div><div class="btns"><a class="btn btn-primary" href="https://229663.youxin75.com/qudao.php?s=/Download/f/WzUwODgsNTA4NywyMjk2NjNd" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">🎮 进入游戏</a><a class="btn btn-ghost" href="/games" onclick="event.stopPropagation()">浏览全部</a></div></div></div><div class="card" data-i="4" onclick="window.open('https://sdkn-ldy.zhangyu39.com/?app_id=7205&amp;promote_id=1778','_blank')" style="z-index: 0; pointer-events: none; opacity: 0; transform: translateY(-50%) translateX(-600px) scale(0.8);"><div class="card-img"><img src="assets/images/hero/hero_xingchenbian.webp" alt="星辰变：归来" draggable="false"><span class="badge">🔥 热度 850000</span></div><div class="card-bd"><h3>星辰变：归来</h3><div class="sl">阅文正版 · 修真MMO</div><div class="btns"><a class="btn btn-primary" href="https://sdkn-ldy.zhangyu39.com/?app_id=7205&amp;promote_id=1778" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">🎮 进入游戏</a><a class="btn btn-ghost" href="/games" onclick="event.stopPropagation()">浏览全部</a></div></div></div><div class="card" data-i="5" onclick="window.open('https://229663.youxin75.com/qudao.php?s=/Download/f/WzUwNzQsNTA3MywyMjk2NjNd','_blank')" style="z-index: 2; pointer-events: none; opacity: 0.5; transform: translateY(-50%) translateX(-300px) scale(0.86);"><div class="card-img"><img src="assets/images/hero/hero_qiannian.webp" alt="千年盛世" draggable="false"><span class="badge">🔥 热度 840000</span></div><div class="card-bd"><h3>千年盛世</h3><div class="sl">二十年前的那片江湖</div><div class="btns"><a class="btn btn-primary" href="https://229663.youxin75.com/qudao.php?s=/Download/f/WzUwNzQsNTA3MywyMjk2NjNd" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">🎮 进入游戏</a><a class="btn btn-ghost" href="/games" onclick="event.stopPropagation()">浏览全部</a></div></div></div></div>
-  <button class="hero-arrow prev" onclick="moveSlide(-1)">‹</button>
-  <button class="hero-arrow next" onclick="moveSlide(1)">›</button>
+  <div class="carousel" id="carousel"><div class="card" data-i="0" onclick="window.open('https://apps.bytesfield.com/download/extend/cur/42dbeb0e42bcb0e1321fd4e74239400cddd88404/1778','_blank')" style="z-index: 3; pointer-events: auto; opacity: 1; transform: translateY(-50%) translateX(0px) scale(0.86);"><div class="card-img"><img src="assets/images/hero/hero_wulin.webp" alt="武林外传：十年之约" draggable="false"><span class="badge">🔥 热度 915000</span></div><div class="card-bd"><h3>武林外传：十年之约</h3><div class="sl">七侠镇 · 同福再聚</div><div class="btns"><a class="btn btn-primary" href="https://apps.bytesfield.com/download/extend/cur/42dbeb0e42bcb0e1321fd4e74239400cddd88404/1778" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">🎮 进入游戏</a><a class="btn btn-ghost" href="#games" onclick="event.stopPropagation()">浏览全部</a></div></div></div><div class="card" data-i="1" onclick="window.open('https://sdkn-ldy.zhangyu39.com/?app_id=7259&amp;promote_id=1778','_blank')" style="z-index: 2; pointer-events: none; opacity: 0.5; transform: translateY(-50%) translateX(300px) scale(0.86);"><div class="card-img"><img src="assets/images/hero/hero_longzhigu_hd.webp" alt="龙之谷启程" draggable="false"><span class="badge">🔥 热度 920000</span></div><div class="card-bd"><h3>龙之谷启程</h3><div class="sl">重返阿尔特里亚大陆</div><div class="btns"><a class="btn btn-primary" href="https://sdkn-ldy.zhangyu39.com/?app_id=7259&amp;promote_id=1778" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">🎮 进入游戏</a><a class="btn btn-ghost" href="#games" onclick="event.stopPropagation()">浏览全部</a></div></div></div><div class="card" data-i="2" onclick="window.open('https://sdkn-ldy.zhangyu39.com/?app_id=7032&amp;promote_id=1778','_blank')" style="z-index: 0; pointer-events: none; opacity: 0; transform: translateY(-50%) translateX(600px) scale(0.8);"><div class="card-img"><img src="assets/images/hero/hero_moxiangqing.webp" alt="墨香情" draggable="false"><span class="badge">🔥 热度 880000</span></div><div class="card-bd"><h3>墨香情</h3><div class="sl">水墨江湖 · 自由兵器</div><div class="btns"><a class="btn btn-primary" href="https://sdkn-ldy.zhangyu39.com/?app_id=7032&amp;promote_id=1778" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">🎮 进入游戏</a><a class="btn btn-ghost" href="#games" onclick="event.stopPropagation()">浏览全部</a></div></div></div><div class="card" data-i="3" onclick="window.open('https://229663.youxin75.com/qudao.php?s=/Download/f/WzUwODgsNTA4NywyMjk2NjNd','_blank')" style="z-index: 0; pointer-events: none; opacity: 0; transform: translateY(-50%) translateX(900px) scale(0.8);"><div class="card-img"><img src="assets/images/hero/hero_rongyao.webp" alt="荣耀出征卡点服" draggable="false"><span class="badge">🔥 热度 860000</span></div><div class="card-bd"><h3>荣耀出征卡点服</h3><div class="sl">经典奇迹MU 1.03H 点卡服</div><div class="btns"><a class="btn btn-primary" href="https://229663.youxin75.com/qudao.php?s=/Download/f/WzUwODgsNTA4NywyMjk2NjNd" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">🎮 进入游戏</a><a class="btn btn-ghost" href="#games" onclick="event.stopPropagation()">浏览全部</a></div></div></div><div class="card" data-i="4" onclick="window.open('https://sdkn-ldy.zhangyu39.com/?app_id=7205&amp;promote_id=1778','_blank')" style="z-index: 0; pointer-events: none; opacity: 0; transform: translateY(-50%) translateX(-600px) scale(0.8);"><div class="card-img"><img src="assets/images/hero/hero_xingchenbian.webp" alt="星辰变：归来" draggable="false"><span class="badge">🔥 热度 850000</span></div><div class="card-bd"><h3>星辰变：归来</h3><div class="sl">阅文正版 · 修真MMO</div><div class="btns"><a class="btn btn-primary" href="https://sdkn-ldy.zhangyu39.com/?app_id=7205&amp;promote_id=1778" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">🎮 进入游戏</a><a class="btn btn-ghost" href="#games" onclick="event.stopPropagation()">浏览全部</a></div></div></div><div class="card" data-i="5" onclick="window.open('https://229663.youxin75.com/qudao.php?s=/Download/f/WzUwNzQsNTA3MywyMjk2NjNd','_blank')" style="z-index: 2; pointer-events: none; opacity: 0.5; transform: translateY(-50%) translateX(-300px) scale(0.86);"><div class="card-img"><img src="assets/images/hero/hero_qiannian.webp" alt="千年盛世" draggable="false"><span class="badge">🔥 热度 840000</span></div><div class="card-bd"><h3>千年盛世</h3><div class="sl">二十年前的那片江湖</div><div class="btns"><a class="btn btn-primary" href="https://229663.youxin75.com/qudao.php?s=/Download/f/WzUwNzQsNTA3MywyMjk2NjNd" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">🎮 进入游戏</a><a class="btn btn-ghost" href="#games" onclick="event.stopPropagation()">浏览全部</a></div></div></div></div>
+  <button class="hero-arrow prev" onclick="moveSlide(-1)" aria-label="上一张">‹</button>
+  <button class="hero-arrow next" onclick="moveSlide(1)" aria-label="下一张">›</button>
 </div>
 
-<section class="sec" id="features" style="padding-top:18px">
+<section class="sec" id="features">
   <div class="wrap">
     <div class="feat-grid">
       <div class="feat"><span class="num">01</span><div class="ico">🎯</div><h3>经典 IP 正版授权</h3><p>龙之谷、墨香、奇迹MU、永恒岛等经典端游正版复刻，重温纯正情怀。</p></div>
       <div class="feat"><span class="num">02</span><div class="ico">🕹️</div><h3>海量游戏 一站畅玩</h3><p><!--CNT:games-->42 款<!--/CNT-->怀旧经典手游聚合，热门、传奇、仙境传说全都有，无需到处找。</p></div>
-      <div class="feat"><span class="num">03</span><div class="ico">📖</div><h3>专业攻略 持续更新</h3><p><!--CNT:articles-->59 篇<!--/CNT-->原创攻略，职业加点、开荒路线、打金搬砖，助你少走弯路。</p></div>
+      <div class="feat"><span class="num">03</span><div class="ico">📖</div><h3>专业攻略 持续更新</h3><p><!--CNT:articles-->60 篇<!--/CNT-->原创攻略，职业加点、开荒路线、打金搬砖，助你少走弯路。</p></div>
       <div class="feat"><span class="num">04</span><div class="ico">⚡</div><h3>快速上手 纯净体验</h3><p>一站式下载导航，直达官方下载入口，三端互通，开箱即玩。</p></div>
     </div>
   </div>
 </section>
 
-<section class="sec" id="games" style="padding-top:0;padding-bottom:12px">
+<section class="sec" id="games" style="padding-top:0">
   <div class="wrap">
     <div class="sec-head">
       <span class="kick">GAME LIBRARY</span>
@@ -372,12 +369,12 @@
       <p><!--CNT:games-->42 款<!--/CNT-->经典正版手游，点击卡片进入官网下载</p>
     </div>
     <div class="tabs" id="tabs"><span class="tab on" data-k="all" onclick="setTab('all')">全部游戏</span><span class="tab" data-k="三九正版" onclick="setTab('三九正版')">三九互娱正版</span><span class="tab" data-k="传奇怀旧" onclick="setTab('传奇怀旧')">传奇怀旧</span><span class="tab" data-k="奇迹MU" onclick="setTab('奇迹MU')">奇迹MU / RO</span><span class="tab" data-k="永恒岛" onclick="setTab('永恒岛')">永恒岛系列</span><span class="tab" data-k="小小屠龙" onclick="setTab('小小屠龙')">小小屠龙</span><span class="tab" data-k="游昕经典" onclick="setTab('游昕经典')">游昕经典</span></div>
-    <div class="game-grid" id="gameGrid"><!-- GAME-GRID:START --><a class="gcard" href="/game/46"><div class="cv"><img src="assets/images/jizhan_cover.jpg" alt="机战：钢铁巨舰" loading="lazy"></div><div class="bd"><div class="nm">机战：钢铁巨舰</div><div class="meta"><span class="score">★ 9.5</span><span class="plat" title="支持安卓/iOS分版本下载">📱 双端</span></div><div class="ft"><span class="heat">🔥 95万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/45"><div class="cv"><img src="assets/images/rxjianghu2_cover.jpg" alt="热血江湖2.0" loading="lazy"></div><div class="bd"><div class="nm">热血江湖2.0</div><div class="meta"><span class="score">★ 9.3</span><span class="plat" title="支持安卓/iOS分版本下载">📱 双端</span></div><div class="ft"><span class="heat">🔥 92.5万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/1"><div class="cv"><img src="assets/images/longzhigu_cover.jpg" alt="龙之谷启程" loading="lazy"></div><div class="bd"><div class="nm">龙之谷启程</div><div class="meta"><span class="score">★ 9.0</span><span class="plat" title="支持安卓/iOS分版本下载">📱 双端</span></div><div class="ft"><span class="heat">🔥 92万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/47"><div class="cv"><img src="assets/images/tulongshijie_cover.jpg" alt="屠龙世界：再战沙巴克" loading="lazy"></div><div class="bd"><div class="nm">屠龙世界：再战沙巴克</div><div class="meta"><span class="score">★ 8.6</span></div><div class="ft"><span class="heat">🔥 91.8万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/21"><div class="cv"><img src="assets/images/wulin_cover.jpg" alt="武林外传：十年之约" loading="lazy"></div><div class="bd"><div class="nm">武林外传：十年之约</div><div class="meta"><span class="score">★ 9.2</span><span class="plat" title="支持安卓/iOS分版本下载">📱 双端</span></div><div class="ft"><span class="heat">🔥 91.5万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/2"><div class="cv"><img src="assets/images/moxiangqing_cover.jpg" alt="墨香情" loading="lazy"></div><div class="bd"><div class="nm">墨香情</div><div class="meta"><span class="score">★ 9.2</span><span class="plat" title="支持安卓/iOS分版本下载">📱 双端</span></div><div class="ft"><span class="heat">🔥 88万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/6"><div class="cv"><img src="assets/images/rongyao_cover.jpg" alt="荣耀出征卡点服" loading="lazy"></div><div class="bd"><div class="nm">荣耀出征卡点服</div><div class="meta"><span class="score">★ 8.1</span></div><div class="ft"><span class="heat">🔥 86万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/3"><div class="cv"><img src="assets/images/xingchenbian_cover.jpg" alt="星辰变：归来" loading="lazy"></div><div class="bd"><div class="nm">星辰变：归来</div><div class="meta"><span class="score">★ 8.4</span></div><div class="ft"><span class="heat">🔥 85万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/7"><div class="cv"><img src="assets/images/qiannian_cover.jpg" alt="千年盛世：千年传奇版" loading="lazy"></div><div class="bd"><div class="nm">千年盛世：千年传奇版</div><div class="meta"><span class="score">★ 8.2</span></div><div class="ft"><span class="heat">🔥 84万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/8"><div class="cv"><img src="assets/images/longcheng_cover.jpg" alt="龙城秘境：凤凰沉默" loading="lazy"></div><div class="bd"><div class="nm">龙城秘境：凤凰沉默</div><div class="meta"><span class="score">★ 7.6</span></div><div class="ft"><span class="heat">🔥 83万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/4"><div class="cv"><img src="assets/images/feifei_cover.jpg" alt="飞飞：重逢" loading="lazy"></div><div class="bd"><div class="nm">飞飞：重逢</div><div class="meta"><span class="score">★ 8.3</span></div><div class="ft"><span class="heat">🔥 82万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/9"><div class="cv"><img src="assets/images/jianyu_cover.jpg" alt="剑与翼—经典复刻" loading="lazy"></div><div class="bd"><div class="nm">剑与翼—经典复刻</div><div class="meta"><span class="score">★ 7.8</span></div><div class="ft"><span class="heat">🔥 81万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/10"><div class="cv"><img src="assets/images/juexingheji_cover.jpg" alt="龙城秘境：觉醒合击" loading="lazy"></div><div class="bd"><div class="nm">龙城秘境：觉醒合击</div><div class="meta"><span class="score">★ 7.5</span></div><div class="ft"><span class="heat">🔥 80万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/5"><div class="cv"><img src="assets/images/shenqi_cover.jpg" alt="神泣：纷争" loading="lazy"></div><div class="bd"><div class="nm">神泣：纷争</div><div class="meta"><span class="score">★ 8.6</span></div><div class="ft"><span class="heat">🔥 79万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/11"><div class="cv"><img src="assets/images/xiaoxiaotulong_cover.jpg" alt="小小屠龙：原始火龙" loading="lazy"></div><div class="bd"><div class="nm">小小屠龙：原始火龙</div><div class="meta"><span class="score">★ 7.4</span></div><div class="ft"><span class="heat">🔥 78万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/12"><div class="cv"><img src="assets/images/rongyao_cover.jpg" alt="荣耀出征" loading="lazy"></div><div class="bd"><div class="nm">荣耀出征</div><div class="meta"><span class="score">★ 8.0</span></div><div class="ft"><span class="heat">🔥 77万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/13"><div class="cv"><img src="assets/images/longcheng_bingxue_cover.jpg" alt="龙城秘境：重返冰雪" loading="lazy"></div><div class="bd"><div class="nm">龙城秘境：重返冰雪</div><div class="meta"><span class="score">★ 7.7</span></div><div class="ft"><span class="heat">🔥 76万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/14"><div class="cv"><img src="assets/images/juezhan_cover.jpg" alt="决战破晓" loading="lazy"></div><div class="bd"><div class="nm">决战破晓</div><div class="meta"><span class="score">★ 7.9</span></div><div class="ft"><span class="heat">🔥 75万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/15"><div class="cv"><img src="assets/images/xxtl_huanbian_cover.jpg" alt="小小屠龙：幻变三职业" loading="lazy"></div><div class="bd"><div class="nm">小小屠龙：幻变三职业</div><div class="meta"><span class="score">★ 7.4</span></div><div class="ft"><span class="heat">🔥 74万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/16"><div class="cv"><img src="assets/images/xxtl_lingfu_cover.jpg" alt="小小屠龙：灵符自由版" loading="lazy"></div><div class="bd"><div class="nm">小小屠龙：灵符自由版</div><div class="meta"><span class="score">★ 7.3</span></div><div class="ft"><span class="heat">🔥 73万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/17"><div class="cv"><img src="assets/images/xxtl_3dheji_cover.jpg" alt="小小屠龙：3D合击版" loading="lazy"></div><div class="bd"><div class="nm">小小屠龙：3D合击版</div><div class="meta"><span class="score">★ 7.5</span></div><div class="ft"><span class="heat">🔥 72万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/18"><div class="cv"><img src="assets/images/fengbao_cover.jpg" alt="风暴远征：英雄年代联动版" loading="lazy"></div><div class="bd"><div class="nm">风暴远征：英雄年代联动版</div><div class="meta"><span class="score">★ 7.8</span></div><div class="ft"><span class="heat">🔥 71万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/19"><div class="cv"><img src="assets/images/yonghengdao_cover.jpg" alt="永恒岛：高清重制版" loading="lazy"></div><div class="bd"><div class="nm">永恒岛：高清重制版</div><div class="meta"><span class="score">★ 8.3</span></div><div class="ft"><span class="heat">🔥 70万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/20"><div class="cv"><img src="assets/images/molibaobei_cover.jpg" alt="魔力宝贝回忆十宠版" loading="lazy"></div><div class="bd"><div class="nm">魔力宝贝回忆十宠版</div><div class="meta"><span class="score">★ 8.1</span></div><div class="ft"><span class="heat">🔥 69万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/22"><div class="cv"><img src="assets/images/rejiang_cover.jpg" alt="热江：武林版" loading="lazy"></div><div class="bd"><div class="nm">热江：武林版</div><div class="meta"><span class="score">★ 7.6</span></div><div class="ft"><span class="heat">🔥 67万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/23"><div class="cv"><img src="assets/images/feifei2_cover.jpg" alt="飞飞：重逢" loading="lazy"></div><div class="bd"><div class="nm">飞飞：重逢</div><div class="meta"><span class="score">★ 8.0</span></div><div class="ft"><span class="heat">🔥 66万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/24"><div class="cv"><img src="assets/images/xxtl_kadian_cover.jpg" alt="小小屠龙：卡点重置版" loading="lazy"></div><div class="bd"><div class="nm">小小屠龙：卡点重置版</div><div class="meta"><span class="score">★ 7.4</span></div><div class="ft"><span class="heat">🔥 65万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/25"><div class="cv"><img src="assets/images/qijishijie_cover.jpg" alt="奇迹世界：起源" loading="lazy"></div><div class="bd"><div class="nm">奇迹世界：起源</div><div class="meta"><span class="score">★ 8.4</span></div><div class="ft"><span class="heat">🔥 64万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/31"><div class="cv"><img src="assets/images/tiantianlongzu_cover.jpg" alt="天天龙族怀旧服" loading="lazy"></div><div class="bd"><div class="nm">天天龙族怀旧服</div><div class="meta"><span class="score">★ 7.7</span></div><div class="ft"><span class="heat">🔥 63万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/32"><div class="cv"><img src="assets/images/xunmengsilu_cover.jpg" alt="寻梦丝路" loading="lazy"></div><div class="bd"><div class="nm">寻梦丝路</div><div class="meta"><span class="score">★ 7.8</span></div><div class="ft"><span class="heat">🔥 62万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/33"><div class="cv"><img src="assets/images/xxtl_bingxueqizhan_cover.jpg" alt="小小屠龙：冰雪骑战" loading="lazy"></div><div class="bd"><div class="nm">小小屠龙：冰雪骑战</div><div class="meta"><span class="score">★ 7.5</span></div><div class="ft"><span class="heat">🔥 61万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/34"><div class="cv"><img src="assets/images/liehuotulong_cover.jpg" alt="烈火屠龙：美杜莎卡点服" loading="lazy"></div><div class="bd"><div class="nm">烈火屠龙：美杜莎卡点服</div><div class="meta"><span class="score">★ 7.6</span></div><div class="ft"><span class="heat">🔥 60万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/35"><div class="cv"><img src="assets/images/yonghengdao_huaijiu_cover.jpg" alt="永恒岛：怀旧版" loading="lazy"></div><div class="bd"><div class="nm">永恒岛：怀旧版</div><div class="meta"><span class="score">★ 8.0</span></div><div class="ft"><span class="heat">🔥 59万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/36"><div class="cv"><img src="assets/images/xiuxianjiazu2_cover.jpg" alt="修仙家族模拟器2" loading="lazy"></div><div class="bd"><div class="nm">修仙家族模拟器2</div><div class="meta"><span class="score">★ 8.2</span></div><div class="ft"><span class="heat">🔥 58万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/37"><div class="cv"><img src="assets/images/yizhanlongcheng_cover.jpg" alt="义战龙城：3D纯净服" loading="lazy"></div><div class="bd"><div class="nm">义战龙城：3D纯净服</div><div class="meta"><span class="score">★ 7.7</span></div><div class="ft"><span class="heat">🔥 57万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/38"><div class="cv"><img src="assets/images/rejiang_xinwanfa_cover.jpg" alt="热江：全新玩法" loading="lazy"></div><div class="bd"><div class="nm">热江：全新玩法</div><div class="meta"><span class="score">★ 7.5</span></div><div class="ft"><span class="heat">🔥 56万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/39"><div class="cv"><img src="assets/images/bafengte_cover.jpg" alt="巴风特之怒：RO怀旧" loading="lazy"></div><div class="bd"><div class="nm">巴风特之怒：RO怀旧</div><div class="meta"><span class="score">★ 8.5</span></div><div class="ft"><span class="heat">🔥 55万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/40"><div class="cv"><img src="assets/images/qiannian_yuanshi_cover.jpg" alt="千年盛世：原始千年" loading="lazy"></div><div class="bd"><div class="nm">千年盛世：原始千年</div><div class="meta"><span class="score">★ 8.1</span></div><div class="ft"><span class="heat">🔥 54万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/41"><div class="cv"><img src="assets/images/yonghengdao_caihong_cover.jpg" alt="永恒岛：彩虹回忆" loading="lazy"></div><div class="bd"><div class="nm">永恒岛：彩虹回忆</div><div class="meta"><span class="score">★ 8.0</span></div><div class="ft"><span class="heat">🔥 53万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/42"><div class="cv"><img src="assets/images/jinzhuangcaijue_cover.jpg" alt="金装裁决" loading="lazy"></div><div class="bd"><div class="nm">金装裁决</div><div class="meta"><span class="score">★ 7.6</span></div><div class="ft"><span class="heat">🔥 52万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/43"><div class="cv"><img src="assets/images/tulongjuezhan_cover.jpg" alt="屠龙决战沙城：传奇三光通版" loading="lazy"></div><div class="bd"><div class="nm">屠龙决战沙城：传奇三光通版</div><div class="meta"><span class="score">★ 7.5</span></div><div class="ft"><span class="heat">🔥 51万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/44"><div class="cv"><img src="assets/images/rexuechuanshuo_cover.jpg" alt="热血传说：复古传奇" loading="lazy"></div><div class="bd"><div class="nm">热血传说：复古传奇</div><div class="meta"><span class="score">★ 7.4</span></div><div class="ft"><span class="heat">🔥 50万</span><span class="go">查看详情 ↗</span></div></div></a><!-- GAME-GRID:END --></div>
+    <div class="game-grid" id="gameGrid"><!-- GAME-GRID:START --><a class="gcard" href="/game/46"><div class="cv"><img src="assets/images/jizhan_cover.jpg" alt="机战：钢铁巨舰" loading="lazy"></div><div class="bd"><div class="nm">机战：钢铁巨舰</div><div class="meta"><span class="score">★ 9.5</span><span class="plat" title="支持安卓/iOS分版本下载">📱 双端</span></div><div class="ft"><span class="heat">🔥 95.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/45"><div class="cv"><img src="assets/images/rxjianghu2_cover.jpg" alt="热血江湖2.0" loading="lazy"></div><div class="bd"><div class="nm">热血江湖2.0</div><div class="meta"><span class="score">★ 9.3</span><span class="plat" title="支持安卓/iOS分版本下载">📱 双端</span></div><div class="ft"><span class="heat">🔥 92.5万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/1"><div class="cv"><img src="assets/images/longzhigu_cover.jpg" alt="龙之谷启程" loading="lazy"></div><div class="bd"><div class="nm">龙之谷启程</div><div class="meta"><span class="score">★ 9.0</span><span class="plat" title="支持安卓/iOS分版本下载">📱 双端</span></div><div class="ft"><span class="heat">🔥 92.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/47"><div class="cv"><img src="assets/images/tulongshijie_cover.jpg" alt="屠龙世界：再战沙巴克" loading="lazy"></div><div class="bd"><div class="nm">屠龙世界：再战沙巴克</div><div class="meta"><span class="score">★ 8.6</span></div><div class="ft"><span class="heat">🔥 91.8万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/21"><div class="cv"><img src="assets/images/wulin_cover.jpg" alt="武林外传：十年之约" loading="lazy"></div><div class="bd"><div class="nm">武林外传：十年之约</div><div class="meta"><span class="score">★ 9.2</span><span class="plat" title="支持安卓/iOS分版本下载">📱 双端</span></div><div class="ft"><span class="heat">🔥 91.5万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/2"><div class="cv"><img src="assets/images/moxiangqing_cover.jpg" alt="墨香情" loading="lazy"></div><div class="bd"><div class="nm">墨香情</div><div class="meta"><span class="score">★ 9.2</span><span class="plat" title="支持安卓/iOS分版本下载">📱 双端</span></div><div class="ft"><span class="heat">🔥 88.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/6"><div class="cv"><img src="assets/images/rongyao_cover.jpg" alt="荣耀出征卡点服" loading="lazy"></div><div class="bd"><div class="nm">荣耀出征卡点服</div><div class="meta"><span class="score">★ 8.1</span></div><div class="ft"><span class="heat">🔥 86.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/3"><div class="cv"><img src="assets/images/xingchenbian_cover.jpg" alt="星辰变：归来" loading="lazy"></div><div class="bd"><div class="nm">星辰变：归来</div><div class="meta"><span class="score">★ 8.4</span></div><div class="ft"><span class="heat">🔥 85.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/7"><div class="cv"><img src="assets/images/qiannian_cover.jpg" alt="千年盛世：千年传奇版" loading="lazy"></div><div class="bd"><div class="nm">千年盛世：千年传奇版</div><div class="meta"><span class="score">★ 8.2</span></div><div class="ft"><span class="heat">🔥 84.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/8"><div class="cv"><img src="assets/images/longcheng_cover.jpg" alt="龙城秘境：凤凰沉默" loading="lazy"></div><div class="bd"><div class="nm">龙城秘境：凤凰沉默</div><div class="meta"><span class="score">★ 7.6</span></div><div class="ft"><span class="heat">🔥 83.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/4"><div class="cv"><img src="assets/images/feifei_cover.jpg" alt="飞飞：重逢" loading="lazy"></div><div class="bd"><div class="nm">飞飞：重逢</div><div class="meta"><span class="score">★ 8.3</span></div><div class="ft"><span class="heat">🔥 82.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/9"><div class="cv"><img src="assets/images/jianyu_cover.jpg" alt="剑与翼—经典复刻" loading="lazy"></div><div class="bd"><div class="nm">剑与翼—经典复刻</div><div class="meta"><span class="score">★ 7.8</span></div><div class="ft"><span class="heat">🔥 81.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/10"><div class="cv"><img src="assets/images/juexingheji_cover.jpg" alt="龙城秘境：觉醒合击" loading="lazy"></div><div class="bd"><div class="nm">龙城秘境：觉醒合击</div><div class="meta"><span class="score">★ 7.5</span></div><div class="ft"><span class="heat">🔥 80.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/5"><div class="cv"><img src="assets/images/shenqi_cover.jpg" alt="神泣：纷争" loading="lazy"></div><div class="bd"><div class="nm">神泣：纷争</div><div class="meta"><span class="score">★ 8.6</span></div><div class="ft"><span class="heat">🔥 79.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/11"><div class="cv"><img src="assets/images/xiaoxiaotulong_cover.jpg" alt="小小屠龙：原始火龙" loading="lazy"></div><div class="bd"><div class="nm">小小屠龙：原始火龙</div><div class="meta"><span class="score">★ 7.4</span></div><div class="ft"><span class="heat">🔥 78.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/12"><div class="cv"><img src="assets/images/rongyao_cover.jpg" alt="荣耀出征" loading="lazy"></div><div class="bd"><div class="nm">荣耀出征</div><div class="meta"><span class="score">★ 8.0</span></div><div class="ft"><span class="heat">🔥 77.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/13"><div class="cv"><img src="assets/images/longcheng_bingxue_cover.jpg" alt="龙城秘境：重返冰雪" loading="lazy"></div><div class="bd"><div class="nm">龙城秘境：重返冰雪</div><div class="meta"><span class="score">★ 7.7</span></div><div class="ft"><span class="heat">🔥 76.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/14"><div class="cv"><img src="assets/images/juezhan_cover.jpg" alt="决战破晓" loading="lazy"></div><div class="bd"><div class="nm">决战破晓</div><div class="meta"><span class="score">★ 7.9</span></div><div class="ft"><span class="heat">🔥 75.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/15"><div class="cv"><img src="assets/images/xxtl_huanbian_cover.jpg" alt="小小屠龙：幻变三职业" loading="lazy"></div><div class="bd"><div class="nm">小小屠龙：幻变三职业</div><div class="meta"><span class="score">★ 7.4</span></div><div class="ft"><span class="heat">🔥 74.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/16"><div class="cv"><img src="assets/images/xxtl_lingfu_cover.jpg" alt="小小屠龙：灵符自由版" loading="lazy"></div><div class="bd"><div class="nm">小小屠龙：灵符自由版</div><div class="meta"><span class="score">★ 7.3</span></div><div class="ft"><span class="heat">🔥 73.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/17"><div class="cv"><img src="assets/images/xxtl_3dheji_cover.jpg" alt="小小屠龙：3D合击版" loading="lazy"></div><div class="bd"><div class="nm">小小屠龙：3D合击版</div><div class="meta"><span class="score">★ 7.5</span></div><div class="ft"><span class="heat">🔥 72.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/18"><div class="cv"><img src="assets/images/fengbao_cover.jpg" alt="风暴远征：英雄年代联动版" loading="lazy"></div><div class="bd"><div class="nm">风暴远征：英雄年代联动版</div><div class="meta"><span class="score">★ 7.8</span></div><div class="ft"><span class="heat">🔥 71.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/19"><div class="cv"><img src="assets/images/yonghengdao_cover.jpg" alt="永恒岛：高清重制版" loading="lazy"></div><div class="bd"><div class="nm">永恒岛：高清重制版</div><div class="meta"><span class="score">★ 8.3</span></div><div class="ft"><span class="heat">🔥 70.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/20"><div class="cv"><img src="assets/images/molibaobei_cover.jpg" alt="魔力宝贝回忆十宠版" loading="lazy"></div><div class="bd"><div class="nm">魔力宝贝回忆十宠版</div><div class="meta"><span class="score">★ 8.1</span></div><div class="ft"><span class="heat">🔥 69.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/22"><div class="cv"><img src="assets/images/rejiang_cover.jpg" alt="热江：武林版" loading="lazy"></div><div class="bd"><div class="nm">热江：武林版</div><div class="meta"><span class="score">★ 7.6</span></div><div class="ft"><span class="heat">🔥 67.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/23"><div class="cv"><img src="assets/images/feifei2_cover.jpg" alt="飞飞：重逢" loading="lazy"></div><div class="bd"><div class="nm">飞飞：重逢</div><div class="meta"><span class="score">★ 8.0</span></div><div class="ft"><span class="heat">🔥 66.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/24"><div class="cv"><img src="assets/images/xxtl_kadian_cover.jpg" alt="小小屠龙：卡点重置版" loading="lazy"></div><div class="bd"><div class="nm">小小屠龙：卡点重置版</div><div class="meta"><span class="score">★ 7.4</span></div><div class="ft"><span class="heat">🔥 65.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/25"><div class="cv"><img src="assets/images/qijishijie_cover.jpg" alt="奇迹世界：起源" loading="lazy"></div><div class="bd"><div class="nm">奇迹世界：起源</div><div class="meta"><span class="score">★ 8.4</span></div><div class="ft"><span class="heat">🔥 64.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/31"><div class="cv"><img src="assets/images/tiantianlongzu_cover.jpg" alt="天天龙族怀旧服" loading="lazy"></div><div class="bd"><div class="nm">天天龙族怀旧服</div><div class="meta"><span class="score">★ 7.7</span></div><div class="ft"><span class="heat">🔥 63.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/32"><div class="cv"><img src="assets/images/xunmengsilu_cover.jpg" alt="寻梦丝路" loading="lazy"></div><div class="bd"><div class="nm">寻梦丝路</div><div class="meta"><span class="score">★ 7.8</span></div><div class="ft"><span class="heat">🔥 62.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/33"><div class="cv"><img src="assets/images/xxtl_bingxueqizhan_cover.jpg" alt="小小屠龙：冰雪骑战" loading="lazy"></div><div class="bd"><div class="nm">小小屠龙：冰雪骑战</div><div class="meta"><span class="score">★ 7.5</span></div><div class="ft"><span class="heat">🔥 61.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/34"><div class="cv"><img src="assets/images/liehuotulong_cover.jpg" alt="烈火屠龙：美杜莎卡点服" loading="lazy"></div><div class="bd"><div class="nm">烈火屠龙：美杜莎卡点服</div><div class="meta"><span class="score">★ 7.6</span></div><div class="ft"><span class="heat">🔥 60.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/35"><div class="cv"><img src="assets/images/yonghengdao_huaijiu_cover.jpg" alt="永恒岛：怀旧版" loading="lazy"></div><div class="bd"><div class="nm">永恒岛：怀旧版</div><div class="meta"><span class="score">★ 8.0</span></div><div class="ft"><span class="heat">🔥 59.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/36"><div class="cv"><img src="assets/images/xiuxianjiazu2_cover.jpg" alt="修仙家族模拟器2" loading="lazy"></div><div class="bd"><div class="nm">修仙家族模拟器2</div><div class="meta"><span class="score">★ 8.2</span></div><div class="ft"><span class="heat">🔥 58.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/37"><div class="cv"><img src="assets/images/yizhanlongcheng_cover.jpg" alt="义战龙城：3D纯净服" loading="lazy"></div><div class="bd"><div class="nm">义战龙城：3D纯净服</div><div class="meta"><span class="score">★ 7.7</span></div><div class="ft"><span class="heat">🔥 57.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/38"><div class="cv"><img src="assets/images/rejiang_xinwanfa_cover.jpg" alt="热江：全新玩法" loading="lazy"></div><div class="bd"><div class="nm">热江：全新玩法</div><div class="meta"><span class="score">★ 7.5</span></div><div class="ft"><span class="heat">🔥 56.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/39"><div class="cv"><img src="assets/images/bafengte_cover.jpg" alt="巴风特之怒：RO怀旧" loading="lazy"></div><div class="bd"><div class="nm">巴风特之怒：RO怀旧</div><div class="meta"><span class="score">★ 8.5</span></div><div class="ft"><span class="heat">🔥 55.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/40"><div class="cv"><img src="assets/images/qiannian_yuanshi_cover.jpg" alt="千年盛世：原始千年" loading="lazy"></div><div class="bd"><div class="nm">千年盛世：原始千年</div><div class="meta"><span class="score">★ 8.1</span></div><div class="ft"><span class="heat">🔥 54.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/41"><div class="cv"><img src="assets/images/yonghengdao_caihong_cover.jpg" alt="永恒岛：彩虹回忆" loading="lazy"></div><div class="bd"><div class="nm">永恒岛：彩虹回忆</div><div class="meta"><span class="score">★ 8.0</span></div><div class="ft"><span class="heat">🔥 53.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/42"><div class="cv"><img src="assets/images/jinzhuangcaijue_cover.jpg" alt="金装裁决" loading="lazy"></div><div class="bd"><div class="nm">金装裁决</div><div class="meta"><span class="score">★ 7.6</span></div><div class="ft"><span class="heat">🔥 52.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/43"><div class="cv"><img src="assets/images/tulongjuezhan_cover.jpg" alt="屠龙决战沙城：传奇三光通版" loading="lazy"></div><div class="bd"><div class="nm">屠龙决战沙城：传奇三光通版</div><div class="meta"><span class="score">★ 7.5</span></div><div class="ft"><span class="heat">🔥 51.0万</span><span class="go">查看详情 ↗</span></div></div></a><a class="gcard" href="/game/44"><div class="cv"><img src="assets/images/rexuechuanshuo_cover.jpg" alt="热血传说：复古传奇" loading="lazy"></div><div class="bd"><div class="nm">热血传说：复古传奇</div><div class="meta"><span class="score">★ 7.4</span></div><div class="ft"><span class="heat">🔥 50.0万</span><span class="go">查看详情 ↗</span></div></div></a><!-- GAME-GRID:END --></div>
   </div>
 </section>
 
 <!-- ===== 资讯 / 攻略 入口（内容已独立成页） ===== -->
-<section class="sec" id="hub" style="background:linear-gradient(180deg,var(--bg1) 0%,var(--bg2) 100%);padding-top:24px;padding-bottom:20px">
+<section class="sec" id="hub" style="background:linear-gradient(180deg,var(--bg1) 0%,var(--bg2) 100%);padding-top:48px;padding-bottom:48px">
   <div class="wrap">
 <!-- HOME-HUB:START -->
     <div class="hub-grid">
@@ -396,7 +393,7 @@
     </div>
     <div class="hub-latest">
       <a class="hub-line" href="/news/dn/50ebf81a39"><span class="lb">最新资讯</span><span class="tx">9月15日更新公告</span><span class="dt2">09-14</span></a>
-      <a class="hub-line" href="/article/64"><span class="lb">最新攻略</span><span class="tx">《龙之谷启程》2026年9月最新官方公告｜版本更新、新服开服、限时活动汇总（官方可查）</span><span class="dt2">09-16</span></a>
+      <a class="hub-line" href="/article/65"><span class="lb">最新攻略</span><span class="tx">怀旧手游近一个月官方动态汇总（42 款）：公测、版本更新、新服开服与限时活动</span><span class="dt2">09-19</span></a>
     </div>
   <!-- HOME-HUB:END -->
   </div>
@@ -404,7 +401,7 @@
 
 
 
-<section class="sec" id="faq" style="padding-top:6px;padding-bottom:14px">
+<section class="sec" id="faq" style="padding-top:0">
   <div class="wrap">
     <div class="sec-head"><span class="kick">FAQ</span><h2>常见问题</h2></div>
     <div class="faq">
@@ -421,7 +418,7 @@
     <div class="cta">
       <h2>开启你的怀旧游戏之旅</h2>
       <p>经典 IP 正版手游，热门攻略一站集齐</p>
-      <a class="btn btn-primary" href="/games">🎮 浏览全部游戏</a>
+      <a class="btn btn-primary" href="#games">🎮 浏览全部游戏</a>
     </div>
   </div>
 </section>
@@ -515,6 +512,8 @@ var SLIDES=[
 {g:"星辰变：归来",slogan:"阅文正版 · 修真MMO",tag:"🔥 热度 850000",img:"assets/images/hero/hero_xingchenbian.webp",url:"https://sdkn-ldy.zhangyu39.com/?app_id=7205&promote_id=1778"}
 ];
 var cur=0,timer;
+/* 2026-09-19 补：尊重系统「减弱动态效果」。该模式下不自动轮播，仅保留点击/滑动切换。 */
+var REDUCE_MOTION=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 /* XSS 防护：对动态文本字段做 HTML 转义（链接/图片路径不参与转义，保证下载链接原样保留） */
 function esc(x){x=x==null?'':String(x);return x.replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 var carEl=document.getElementById('carousel');
@@ -526,7 +525,7 @@ function buildSlides(){
         '<span class="badge">'+esc(s.tag)+'</span></div>'+
       '<div class="card-bd"><h3>'+esc(s.g)+'</h3><div class="sl">'+esc(s.slogan)+'</div>'+
       '<div class="btns"><a class="btn btn-primary" href="'+s.url+'" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">🎮 进入游戏</a>'+
-      '<a class="btn btn-ghost" href="/games" onclick="event.stopPropagation()">浏览全部</a></div></div></div>';
+      '<a class="btn btn-ghost" href="#games" onclick="event.stopPropagation()">浏览全部</a></div></div></div>';
   }).join('');
   position();
 }
@@ -561,7 +560,7 @@ function goSlide(i){
   position();
 }
 function moveSlide(d){goSlide(cur+d);restart()}
-function restart(){clearInterval(timer);timer=setInterval(function(){goSlide(cur+1)},4500)}
+function restart(){clearInterval(timer);if(REDUCE_MOTION)return;timer=setInterval(function(){goSlide(cur+1)},4500)}
 var heroEl=document.getElementById('hero');
 heroEl.addEventListener('mouseenter',function(){clearInterval(timer)});
 heroEl.addEventListener('mouseleave',function(){restart()});
@@ -726,31 +725,13 @@ if(navToggle){
     navToggle.setAttribute('aria-expanded',open?'true':'false');
   });
 }
-var navLinkList=document.querySelectorAll('.nav-links a');
-function setNavActive(link){
-  navLinkList.forEach(function(x){x.classList.remove('active')});
-  if(link)link.classList.add('active');
-}
-navLinkList.forEach(function(a){
+document.querySelectorAll('.nav-links a').forEach(function(a){
   a.addEventListener('click',function(){
-    setNavActive(a);
+    document.querySelectorAll('.nav-links a').forEach(function(x){x.classList.remove('active')});
+    a.classList.add('active');
     if(navLinksEl){navLinksEl.classList.remove('open');if(navToggle){navToggle.setAttribute('aria-expanded','false');}}
   });
 });
-/* 滚动时按页面区块切换导航高亮：进入「游戏大厅」后高亮自动跟随，不再停留在首页 */
-(function(){
-  var gamesSection=document.getElementById('games');
-  var homeLink=document.querySelector('.nav-links a[href="#hero"]');
-  var gamesLink=document.querySelector('.nav-links a[href="/games"]');
-  if(!gamesSection||!homeLink||!gamesLink)return;
-  function onScroll(){
-    var trigger=(gamesSection.offsetTop||0)-96;
-    setNavActive(window.scrollY>=trigger?gamesLink:homeLink);
-  }
-  window.addEventListener('scroll',onScroll,{passive:true});
-  window.addEventListener('resize',onScroll);
-  onScroll();
-})();
 document.addEventListener('click',function(e){
   if(navLinksEl&&navLinksEl.classList.contains('open')&&!navLinksEl.contains(e.target)&&e.target!==navToggle){
     navLinksEl.classList.remove('open');if(navToggle){navToggle.setAttribute('aria-expanded','false');}
@@ -809,6 +790,7 @@ document.addEventListener('click',function(e){
     </ul>
     <h2>全部攻略</h2>
     <ul>
+      <li><a href="/article/65">怀旧手游近一个月官方动态汇总（42 款）：公测、版本更新、新服开服与限时活动</a></li>
       <li><a href="/article/64">《龙之谷启程》2026年9月最新官方公告｜版本更新、新服开服、限时活动汇总（官方可查）</a></li>
       <li><a href="/article/48">武林外传：十年江湖路，七侠镇再相逢</a></li>
       <li><a href="/article/49">武林外传十年之约：新服首日冲级，稳上30级攻略</a></li>
