@@ -119,7 +119,7 @@
   .cta-btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(36,86,200,.3)}
 
   /* ===== 相关阅读 ===== */
-  .sec-h{font-size:19px;font-weight:700;margin:46px 0 16px;color:var(--ink)}
+  .sec-h{font-size:19px;font-weight:700;margin:32px 0 14px;color:var(--ink)}
   .rel{display:grid;grid-template-columns:1fr;gap:10px}
   .rel a{display:flex;align-items:center;gap:11px;padding:13px 16px;border:1px solid var(--line);border-radius:10px;
     background:var(--card);color:var(--ink);transition:box-shadow .18s,border-color .18s}
@@ -128,7 +128,7 @@
   .rel .nm{font-size:15px;font-weight:600;line-height:1.6}
 
   /* ===== 游戏页 ===== */
-  .ghero{display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap;margin-bottom:28px}
+  .ghero{display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap;margin-bottom:22px}
   .ghero .pic{flex:none;width:210px;border-radius:12px;overflow:hidden;background:#e9eef7;box-shadow:0 6px 22px rgba(20,40,80,.08)}
   .ghero .pic img{display:block;width:100%;height:auto}
   .ghero .info{flex:1;min-width:230px}
@@ -249,41 +249,63 @@
   /* 2026-09-18 修：html hidden 属性会被作者样式 display:grid/block 覆盖（UA 样式优先度最低），
      导致搜索过滤、结果区切换全部失效。这条 !important 是让 hidden 真正生效的唯一办法。 */
   [hidden]{display:none!important}
-  .gcards{display:flex;flex-direction:column;gap:16px;margin:0 0 16px}
-  .gcard{display:grid;grid-template-columns:100px 1fr;gap:14px;padding:14px;border:1px solid var(--line);border-radius:12px;
+  /* ===== 攻略中心「按游戏分组」卡片（.glist，仅攻略中心使用）=====
+     2026-09-19 重做 + 2026-09-19 二次修复，修三个问题：
+     1) 旧的 .gcard/.gcards 覆盖规则没有隔离，把游戏详情页「同类推荐」的
+        .gcards 网格也一起改坏（单列 + 128px 左空白）。现在容器改用独立类
+        .glist，游戏页 .gcards 恢复原网格，互不影响。
+     2) 绝对定位封面在不同渲染引擎里 top/bottom 解析基准不一致（内容框 vs
+        内边距框），加上旧 .gcard img 的 aspect-ratio:16/9 残留，封面高度
+        总是算错，文字（资讯条目/还有N篇）掉到图片下面。改用 flex 行布局。
+     3) ⚠️ 真正根因（2026-09-19 实测定位）：通用 .cover 规则带着
+        margin:0 0 28px（文章页封面下方留白用的），特异性低却泄漏进本卡片，
+        把 stretch 拉伸后的封面高度硬生生压短 28px（文字区 91px - 28 =
+        封面 63px），资讯条目贴底、「还有 N 篇」掉到图片下面。
+        修复：.glist .gcard .cover 显式 margin:0 归零，另加
+        align-items:stretch 双保险，封面恒等于文字区高度，底边齐平。
+        同时按用户要求收紧行距、缩小字号，让全部内容落在封面高度内。 */
+  .glist{display:flex;flex-direction:column;gap:14px;margin:0 0 16px}
+  .glist .gcard{display:flex;align-items:stretch;gap:14px;padding:11px 14px;border:1px solid var(--line);border-radius:12px;
     background:var(--card);transition:box-shadow .2s,border-color .2s;cursor:pointer;color:inherit}
-  .gcard:hover{border-color:#cfdcf7;box-shadow:0 8px 24px rgba(20,40,80,.08)}
-  .gcard .cover{border-radius:8px;overflow:hidden;background:#e9eef7;align-self:start}
-  .gcard .cover img{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:cover}
-  .gcard .info{min-width:0;display:flex;flex-direction:column;gap:8px}
-  .gcard .top{display:flex;align-items:center;justify-content:space-between;gap:10px}
-  .gcard .gname{font-size:15px;font-weight:700;color:var(--ink);margin:0}
-  .gcard .gname a{color:inherit;text-decoration:none}
-  .gcard .gcat{font-size:11.5px;color:var(--muted);font-weight:500}
-  .gcard .cnt{font-size:11px;font-weight:600;color:var(--brand);background:var(--brand-soft);
-    padding:2px 8px;border-radius:99px;white-space:nowrap}
-  .gcard .alist{display:flex;flex-direction:column;gap:5px;margin:0;padding:0;list-style:none}
-  .gcard .alist li{margin:0;padding:0}
-  .gcard .alist a{display:block;font-size:13px;color:var(--ink2);padding:5px 8px;border-radius:6px;
+  .glist .gcard:hover{border-color:#cfdcf7;box-shadow:0 8px 24px rgba(20,40,80,.08)}
+  .glist .gcard .cover{flex:none;width:100px;margin:0;border-radius:8px;overflow:hidden;background:#e9eef7}
+  .glist .gcard .cover a{display:block;height:100%}
+  .glist .gcard .cover img{display:block;width:100%;height:100%;aspect-ratio:auto;object-fit:cover}
+  .glist .gcard .info{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+  .glist .gcard .top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .glist .gcard .gname{font-size:13.5px;font-weight:700;color:var(--ink);margin:0;line-height:1.4;
+    min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .glist .gcard .gname a{color:inherit;text-decoration:none}
+  .glist .gcard .cnt{font-size:10px;font-weight:600;color:var(--brand);background:var(--brand-soft);
+    padding:1.5px 7px;border-radius:99px;white-space:nowrap;line-height:1.5}
+  .glist .gcard .alist{display:flex;flex-direction:column;gap:1px;margin:0;padding:0;list-style:none}
+  .glist .gcard .alist li{margin:0;padding:0}
+  .glist .gcard .alist a{display:block;font-size:11.8px;color:var(--ink2);padding:1px 6px;border-radius:6px;
     transition:background .15s,color .15s;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .gcard .alist a:hover{background:var(--brand-soft);color:var(--brand)}
-  .gcard .alist a.hit{background:var(--brand-soft);color:var(--brand);font-weight:600}
-  .gcard .alist .cat{display:inline-block;font-size:9.5px;font-weight:600;color:#fff;
+  .glist .gcard .alist a:hover{background:var(--brand-soft);color:var(--brand)}
+  .glist .gcard .alist a.hit{background:var(--brand-soft);color:var(--brand);font-weight:600}
+  .glist .gcard .alist .cat{display:inline-block;font-size:9.5px;font-weight:600;color:#fff;
     background:var(--brand);border-radius:4px;padding:1px 5px;margin-right:5px;vertical-align:middle}
-  .gcard .alist .cat.info{background:var(--accent)}
+  .glist .gcard .alist .cat.info{background:var(--accent)}
   /* 2026-09-18 合并自线上：卡片右侧默认只展示前 2 篇，其余靠「还有 N 篇」进游戏页看；
      搜索命中时给卡片加 .srch，把命中的条目全部展开。 */
-  .gcard .alist li:nth-child(n+3){display:none}
-  .gcard.srch .alist li{display:list-item}
-  .gcard .more{font-size:11.5px;color:var(--muted);margin-top:2px;align-self:flex-start;text-decoration:none;display:inline-block}
-  .gcard .more:hover{color:var(--brand)}
-  .gcard.collapsed{display:none}
+  .glist .gcard .alist li:nth-child(n+3){display:none}
+  .glist .gcard.srch .alist li{display:list-item}
+  .glist .gcard .more{font-size:10.5px;color:var(--muted);margin-top:0;align-self:flex-start;text-decoration:none;
+    display:inline-block;line-height:1.5}
+  .glist .gcard .more:hover{color:var(--brand)}
+  .glist .gcard.collapsed{display:none}
   .more-btn{display:block;width:100%;padding:14px;margin:8px 0 28px;border:1px dashed var(--line);
     border-radius:12px;background:var(--card);color:var(--ink2);font-size:14px;font-weight:600;
     text-align:center;cursor:pointer;transition:border-color .18s,color .18s;font-family:inherit}
   .more-btn:hover{border-color:var(--brand);color:var(--brand)}
   @media (max-width:640px){
-    .gcard{grid-template-columns:84px 1fr;gap:12px;padding:12px}
+    /* 手机端：封面 84px 宽（2026-09-19 用户反馈图片占位过大），间距收紧，
+       字号同步缩小，保证资讯条目 + 还有N篇 都落在封面拉伸后的高度内 */
+    .glist{gap:12px}
+    .glist .gcard{padding:10px 11px;gap:12px}
+    .glist .gcard .cover{width:84px}
+    .glist .gcard .alist a{font-size:11.5px;padding:1px 5px}
   }
   @media (max-width:640px){
     .srchbar{position:relative;flex-direction:row;align-items:center;gap:10px;margin-bottom:28px}
@@ -400,7 +422,6 @@
   <div class="ghero">
     <div class="pic"><img src="../assets/images/xxtl_huanbian_cover.jpg" alt="小小屠龙：幻变三职业" width="560" height="315" decoding="async" fetchpriority="high"></div>
     <div class="info">
-      <span class="tag">角色扮演</span>
       <h1>小小屠龙：幻变三职业</h1>
       <div class="sub">安徽游昕 · 手游 · 2026 年</div>
       <div class="score">★ 4.0 / 5.0</div>
