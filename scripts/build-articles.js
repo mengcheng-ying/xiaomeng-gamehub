@@ -166,17 +166,50 @@ function sizeAttrs(rootRel) {
 const BASE_CSS = `
   :root{--ink:#16203a;--ink2:#495571;--muted:#8b94a8;--line:#e7ecf5;--brand:#2456c8;--brand-soft:#eef3fe;--accent:#ff9d2e;--bg:#f6f8fc;--card:#fff}
   *{box-sizing:border-box}
-  html{-webkit-text-size-adjust:100%}
+  html{-webkit-text-size-adjust:100%;scroll-padding-top:86px}
   body{margin:0;background:var(--bg);color:var(--ink);
     font:16px/1.9 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",Arial,sans-serif}
   a{text-decoration:none;color:var(--brand)}
   img{max-width:100%}
-  .topbar{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.94);backdrop-filter:saturate(180%) blur(8px);
-    border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:13px 20px}
-  .brand{font-weight:700;color:var(--brand);letter-spacing:.5px;font-size:16px}
-  .nav{display:flex;gap:20px}
-  .nav a{color:var(--ink2);font-size:14px}
-  .nav a:hover{color:var(--brand)}
+
+  /* ===== 顶部深色导航（与首页同款：深色背景 + 彩色导航键 + 搜索框） ===== */
+  .snav{position:sticky;top:0;z-index:120;background:rgba(11,16,26,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.08)}
+  .snav-in{max-width:1200px;margin:0 auto;padding:0 20px;height:68px;display:flex;align-items:center;gap:16px}
+  .snav-logo{display:flex;align-items:center;gap:9px;flex:none}
+  .snav-logo img{width:30px;height:30px;border-radius:8px;object-fit:cover;box-shadow:0 4px 14px rgba(61,123,255,.4)}
+  .snav-logo b{color:#fff;font-size:1.02rem;font-weight:800;letter-spacing:.5px;text-shadow:0 0 20px rgba(61,123,255,.5);white-space:nowrap}
+  .snav-links{display:flex;gap:4px;margin-left:auto}
+  .snav-links a{padding:8px 15px;font-size:.88rem;color:var(--nc,#5b8cff);border-radius:8px;transition:.2s;white-space:nowrap}
+  .snav-links a:nth-child(1){--nc:#5b8cff;--nc-bg:rgba(91,140,255,.18)}
+  .snav-links a:nth-child(2){--nc:#22d3ee;--nc-bg:rgba(34,211,238,.18)}
+  .snav-links a:nth-child(3){--nc:#ffb454;--nc-bg:rgba(255,180,84,.18)}
+  .snav-links a:nth-child(4){--nc:#c084fc;--nc-bg:rgba(192,132,252,.18)}
+  .snav-links a:hover{background:rgba(255,255,255,.08)}
+  .snav-links a.active{background:var(--nc-bg);font-weight:700;box-shadow:inset 0 0 0 1px var(--nc)}
+  .snav-srch{position:relative;flex:0 0 auto}
+  .snav-srch .ic{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#9aa7ba;pointer-events:none;display:flex}
+  .snav-srch input{width:178px;height:36px;padding:0 14px 0 34px;border-radius:999px;border:1.5px solid rgba(91,140,255,.55);background:rgba(255,255,255,.06);color:#eef2f7;font-size:.84rem;font-family:inherit;outline:none;transition:.22s}
+  .snav-srch input::placeholder{color:#6b7a90}
+  .snav-srch input:focus{width:214px;border-color:#5b8cff;background:rgba(61,123,255,.1);box-shadow:0 0 0 3px rgba(61,123,255,.18)}
+  .snav-cta{flex:none;padding:8px 17px;border-radius:999px;background:linear-gradient(135deg,#3d7bff,#00d4ff);font-size:.82rem;font-weight:600;color:#fff;box-shadow:0 4px 16px rgba(61,123,255,.35);white-space:nowrap}
+  .snav-cta:hover{opacity:.92}
+  .srch-panel{position:absolute;top:calc(100% + 10px);right:0;width:360px;max-height:400px;overflow:auto;background:#16202f;border:1px solid rgba(255,255,255,.1);border-radius:10px;box-shadow:0 18px 50px rgba(0,0,0,.5);padding:6px;z-index:130}
+  .srch-panel[hidden]{display:none}
+  .sp-hd{padding:8px 12px 6px;font-size:.72rem;color:#6b7a90;font-weight:600;letter-spacing:.5px}
+  .sp-game{display:grid;grid-template-columns:64px 1fr;gap:12px;padding:9px;border-radius:10px;background:linear-gradient(135deg,rgba(61,123,255,.12),rgba(0,212,255,.06));border:1px solid rgba(61,123,255,.25);margin-bottom:6px;transition:.2s}
+  .sp-game:hover{border-color:rgba(61,123,255,.55)}
+  .sp-cv{width:64px;height:64px;border-radius:8px;overflow:hidden;background:#0b101a}
+  .sp-cv img{width:100%;height:100%;object-fit:cover;display:block}
+  .sp-info{min-width:0;display:flex;flex-direction:column;justify-content:center}
+  .sp-info .gn{font-size:.88rem;font-weight:700;color:#eef2f7;line-height:1.35;margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sp-info .gm{font-size:.72rem;color:#9aa7ba;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sp-info .go{margin-top:5px;font-size:.72rem;color:#5b8cff;font-weight:600}
+  .sp-item{display:block;padding:8px 12px;border-radius:8px;transition:.15s}
+  .sp-item:hover{background:rgba(61,123,255,.14)}
+  .sp-item .t{display:block;font-size:.84rem;font-weight:600;color:#eef2f7;line-height:1.45;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sp-item .m{display:block;font-size:.7rem;color:#6b7a90;margin-top:2px}
+  .srch-empty{padding:18px 12px;text-align:center;font-size:.82rem;color:#9aa7ba}
+
   .wrap{max-width:780px;margin:0 auto;padding:34px 20px 64px}
   .wrap.wide{max-width:1040px}
   .crumb{font-size:13px;color:var(--muted);margin-bottom:20px}
@@ -290,15 +323,7 @@ const BASE_CSS = `
   .gcard .nm{font-size:14.5px;font-weight:600;margin-bottom:5px}
   .gcard .ds{font-size:12px;color:var(--muted);line-height:1.6}
 
-  /* ===== 索引页 ===== */
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px}
-  .card{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card);display:block;color:var(--ink)}
-  .card:hover{box-shadow:0 8px 24px rgba(20,40,80,.09)}
-  .card img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;background:#e9eef7}
-  .card .bd{padding:13px 15px}
-  .card .nm{font-size:15.5px;font-weight:600;margin-bottom:6px}
-  .card .ds{font-size:12.5px;color:var(--muted);line-height:1.65;margin-bottom:11px;min-height:40px}
-  .card .row{display:flex;gap:8px;flex-wrap:wrap}
+  /* ===== 索引页（.grid/.card 见下方「游戏大厅」强化版定义） ===== */
   .btn{display:inline-block;font-size:12.5px;font-weight:600;padding:6px 14px;border-radius:7px;background:var(--brand);color:#fff!important}
   .btn.ghost{background:var(--brand-soft);color:var(--brand)!important}
   .lead{font-size:15px;color:var(--ink2);margin:0 0 32px}
@@ -372,6 +397,67 @@ const BASE_CSS = `
 .foot{text-align:center;padding:34px 20px;border-top:1px solid var(--line);background:#fff;font-size:13px;color:var(--muted)}
   .foot a{color:var(--muted);margin:0 10px}
   .foot a:hover{color:var(--brand)}
+
+  /* ===== 游戏大厅：排序条 + 强化卡片 ===== */
+  .sortbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 20px}
+  .sortbar .sb-label{font-size:13.5px;color:var(--muted);margin-right:2px}
+  .sortbar .sbtn{font-size:13.5px;padding:7px 16px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--ink2);cursor:pointer;font-family:inherit;transition:.18s}
+  .sortbar .sbtn:hover{border-color:#b9cdf3;color:var(--brand)}
+  .sortbar .sbtn.on{background:linear-gradient(135deg,#2456c8,#3d7bff);border-color:transparent;color:#fff;font-weight:600;box-shadow:0 4px 14px rgba(36,86,200,.28)}
+  .sortbar .sb-count{margin-left:auto;font-size:13px;color:var(--muted)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(236px,1fr));gap:18px}
+  .card{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card);display:block;color:var(--ink);position:relative;transition:transform .2s,box-shadow .2s,border-color .2s}
+  .card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(20,40,80,.12);border-color:#cfdcf7}
+  .card .cv{position:relative;overflow:hidden;background:#e9eef7}
+  .card .cv img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;transition:transform .35s}
+  .card:hover .cv img{transform:scale(1.05)}
+  .card .rk{position:absolute;top:10px;left:10px;padding:3px 11px;border-radius:99px;background:rgba(16,24,40,.62);backdrop-filter:blur(4px);font-size:.74rem;color:#ffc940;font-weight:700;border:1px solid rgba(255,201,64,.5);letter-spacing:.5px}
+  .card .bd{padding:13px 15px 15px}
+  .card .nm{font-size:15.5px;font-weight:700;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .card .mrow{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:12.5px}
+  .card .star{color:#e8a13a;font-weight:700;white-space:nowrap}
+  .card .ht{color:var(--muted);white-space:nowrap}
+  .card .ds{font-size:12.5px;color:var(--muted);line-height:1.65;margin-bottom:12px;min-height:40px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .card .row{display:flex;gap:8px;flex-wrap:wrap;min-height:30px;align-items:center}
+
+  /* ===== 攻略中心：游戏快捷筛选芯片 ===== */
+  .gchips{display:flex;gap:8px;flex-wrap:nowrap;overflow-x:auto;margin:0 0 22px;padding:2px 2px 6px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .gchips::-webkit-scrollbar{display:none}
+  .gchip{flex:0 0 auto;font-size:13px;padding:7px 15px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--ink2);cursor:pointer;font-family:inherit;white-space:nowrap;transition:.18s}
+  .gchip b{font-weight:600;font-size:11.5px;color:var(--muted);margin-left:4px}
+  .gchip:hover{border-color:#b9cdf3;color:var(--brand)}
+  .gchip.on{background:linear-gradient(135deg,#2456c8,#3d7bff);border-color:transparent;color:#fff}
+  .gchip.on b{color:rgba(255,255,255,.85)}
+
+  /* ===== 404：热门游戏推荐 ===== */
+  .popgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;margin:0 0 10px}
+  .popgrid a{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card);display:block;color:var(--ink);transition:transform .2s,box-shadow .2s}
+  .popgrid a:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(20,40,80,.1)}
+  .popgrid img{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;background:#e9eef7}
+  .popgrid .pn2{padding:9px 11px;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+  /* ===== 导航响应式 ===== */
+  @media (max-width:960px){
+    .snav-cta{display:none}
+    .snav-srch input{width:130px}
+    .snav-srch input:focus{width:140px}
+    .srch-panel{width:320px}
+  }
+  @media (max-width:760px){
+    .snav-in{flex-wrap:wrap;height:auto;padding:10px 16px;gap:10px}
+    .snav-logo{order:1}
+    .snav-logo b{font-size:.95rem}
+    .snav-srch{order:2;width:100%}
+    .snav-srch input{width:100%;height:46px;font-size:.95rem;padding-left:40px;border-radius:14px}
+    .snav-srch input:focus{width:100%}
+    .snav-srch .ic{left:14px}
+    .snav-links{order:3;width:100%;justify-content:space-between;gap:6px;margin-left:0}
+    .snav-links a{flex:1;text-align:center;padding:9px 6px;font-size:.78rem;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)}
+    .snav-links a.active{background:var(--nc-bg);border-color:var(--nc)}
+    .srch-panel{left:0;right:0;width:auto;max-height:60vh}
+    .sp-game{grid-template-columns:56px 1fr}
+  }
+
   @media (max-width:640px){
     .wrap{padding:24px 16px 52px}
     h1.ttl{font-size:23px}
@@ -379,7 +465,10 @@ const BASE_CSS = `
     .ghero .pic{width:100%}
     .body{font-size:16px}
     .body h2{font-size:19px}
-    .nav{gap:14px}
+    .grid{grid-template-columns:repeat(2,1fr);gap:12px}
+    .card .ds{min-height:0}
+    .popgrid{grid-template-columns:repeat(3,1fr);gap:10px}
+    .sortbar .sb-count{display:none}
   }
 `;
 
@@ -402,6 +491,9 @@ function head(title, desc, canonical, opts) {
   const prefix = o.prefix == null ? '../' : o.prefix;
   const img = o.image ? SITE + '/' + String(o.image).replace(/^\.\.\//, '') : SITE + '/assets/images/logo_xiaomeng.png';
   const lds = (o.ld || []).map(x => `<script type="application/ld+json">${JSON.stringify(x)}</script>`).join('\n');
+  const act = o.active || '';
+  const link = (href, key, label) =>
+    `<a href="${href}"${act === key ? ' class="active" aria-current="page"' : ''}>${label}</a>`;
   return `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -435,14 +527,25 @@ ${o.extraHead || ''}
 <style>${BASE_CSS}</style>
 </head>
 <body>
-<header class="topbar">
-  <a class="brand" href="/">🎮 小梦怀旧手游</a>
-  <nav class="nav">
-    <a href="/games">游戏大厅</a>
-    <a href="/guides">攻略中心</a>
-    <a href="/">首页</a>
-  </nav>
+<header class="snav">
+  <div class="snav-in">
+    <a class="snav-logo" href="/"><img src="${prefix}assets/images/logo_xiaomeng.png" alt="小梦怀旧手游" width="30" height="30"><b>小梦怀旧手游</b></a>
+    <nav class="snav-links" aria-label="主导航">
+      ${link('/', 'home', '首页')}
+      ${link('/games', 'games', '游戏大厅')}
+      ${link('/news', 'news', '官网资讯')}
+      ${link('/guides', 'guides', '游戏攻略')}
+    </nav>
+    <div class="snav-srch">
+      <span class="ic" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></span>
+      <input id="xmSearch" type="text" placeholder="搜索攻略 / 游戏" autocomplete="off" aria-label="站内搜索">
+      <div class="srch-panel" id="xmPanel" hidden></div>
+    </div>
+    <a class="snav-cta" href="/games">全部游戏</a>
+  </div>
 </header>
+<script src="/js/search-index.js" defer></script>
+<script src="/js/nav-search.js" defer></script>
 `;
 }
 
@@ -450,8 +553,9 @@ function foot() {
   return `
 <footer class="foot">
   <a href="/">首页</a>
-  <a href="/games">全部游戏</a>
-  <a href="/guides">全部攻略</a>
+  <a href="/games">游戏大厅</a>
+  <a href="/news">官网资讯</a>
+  <a href="/guides">游戏攻略</a>
   <p style="margin:14px 0 0">本站仅提供游戏导航与攻略信息 · 游戏版权归各开发商所有</p>
   <p style="margin:6px 0 0">© 2026 小梦怀旧手游 · fmbly.com</p>
 </footer>
@@ -533,6 +637,7 @@ ${related.map(r => `  <a href="/article/${r.id}"><span class="cat">${esc(r.categ
     ogType: 'article',
     image: a.cover,
     published: a.date,
+    active: 'guides',
     ld: [ldArticle, ldBreadcrumb]
   }) + `<main class="wrap">
   <nav class="crumb">${crumbs}<i>/</i><span>正文</span></nav>
@@ -668,6 +773,7 @@ ${nzArc.items.slice(0, 8).map(it => `  <li>
   const html = head(g.name + ' - 官方下载入口与攻略 - 小梦怀旧手游', desc, url, {
     ogType: 'article',
     image: g.cover,
+    active: 'games',
     ld: [ldGame, ldBreadcrumb]
   }) + `<main class="wrap">
   <nav class="crumb"><a href="/">首页</a><i>/</i><a href="/games">游戏大厅</a><i>/</i><span>${esc(g.name)}</span></nav>
@@ -838,7 +944,7 @@ ${newsArchiveHtml}
     '手游官方公告合集 - 开服/合服/维护/活动 - 小梦怀旧手游',
     `按游戏分类汇总怀旧手游的开服、合服、维护、版本更新与活动公告，每条均为站内独立页面，可直接阅读全文。`,
     newsUrl,
-    { prefix: '', ld: [{
+    { prefix: '', active: 'news', ld: [{
       '@context': 'https://schema.org', '@type': 'CollectionPage',
       name: '手游官方公告合集', url: newsUrl, inLanguage: 'zh-CN',
       isPartOf: { '@type': 'WebSite', name: '小梦怀旧手游', url: SITE + '/' }
@@ -910,7 +1016,7 @@ ${a.gameIds.filter(id => gameById[id]).map(id => `    <a href="/game/${id}"><spa
       `《${gameName}》官方公告归档 - 开服/维护/活动 - 小梦怀旧手游`,
       `${gameName}官方公告按开服、合服、维护、版本更新、活动等分类整理，每条均为站内独立页面，可直接阅读全文。`,
       url,
-      { ld: [{
+      { active: 'news', ld: [{
         '@context': 'https://schema.org', '@type': 'CollectionPage',
         name: `《${gameName}》官方公告归档`, url, inLanguage: 'zh-CN',
         isPartOf: { '@type': 'WebSite', name: '小梦怀旧手游', url: SITE + '/' }
@@ -981,7 +1087,7 @@ ${sameCat.map((x) => `  <a href="/news/${esc(a.slug)}/${esc(x.key)}"><span class
       const itemHtml = head(`${it.title} - 《${gameName}》官方公告 - 小梦怀旧手游`,
         (it.summary || `${gameName}官方公告`).slice(0, 150),
         itemUrl,
-        { prefix: '../../', ogType: 'article', published: it.date, ld: [ldItem, ldItemCrumb] }
+        { prefix: '../../', ogType: 'article', published: it.date, active: 'news', ld: [ldItem, ldItemCrumb] }
       ) + `<main class="wrap">
   <nav class="crumb"><a href="/">首页</a><i>/</i><a href="/news">官方公告</a><i>/</i><a href="/news/${esc(a.slug)}">《${esc(gameName)}》</a><i>/</i><span>${esc(catLabel)}</span></nav>
   <article class="nitem">
@@ -1027,7 +1133,7 @@ ${moreHtml}
     '官网资讯中心 - 开服/合服/维护/活动公告 - 小梦怀旧手游',
     '小梦怀旧手游官网资讯中心：按游戏分类整理手游开服、合服、维护、版本更新与活动公告，支持站内搜索。',
     SITE + '/news',
-    { prefix: '', ld: [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: '官网资讯中心', url: SITE + '/news' }] }
+    { prefix: '', active: 'news', ld: [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: '官网资讯中心', url: SITE + '/news' }] }
   ) + `<main class="wrap">
   <nav class="crumb"><a href="/">首页</a><i>/</i><span>官网资讯</span></nav>
   <h1 class="ttl">官网资讯中心</h1>
@@ -1055,7 +1161,7 @@ const guidesIndexHtml = head(
   '全部游戏攻略索引 - 小梦怀旧手游',
   `小梦怀旧手游全部游戏攻略索引，按游戏分类整理：职业加点、开荒路线、打金搬砖、装备获取、版本玩法，一站式查阅，支持站内搜索。`,
   SITE + '/guides',
-  { prefix: '', ld: [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: '全部游戏攻略索引', url: SITE + '/guides' }] }
+  { prefix: '', active: 'guides', ld: [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: '全部游戏攻略索引', url: SITE + '/guides' }] }
 ) + (() => {
   /* 游戏卡片式布局：每张卡片左边是游戏封面+名称，右边是攻略标题列表。
      点击卡片整体 → 进入游戏详情页；点击单篇攻略 → 进入文章页。
@@ -1083,7 +1189,7 @@ const guidesIndexHtml = head(
     const more = extraCount > 0 ? `  <a class="more" href="/game/${gid}">还有 ${extraCount} 篇 →</a>` : '';
     const cls = collapsed ? 'gcard collapsed' : 'gcard';
 
-    return `<div class="${cls}" data-href="/game/${gid}">
+    return `<div class="${cls}" data-href="/game/${gid}" data-game="${esc(gname)}">
   <div class="cover">
     <a href="/game/${gid}"><img src="${esc(cover)}" alt="${esc(gname)}" loading="lazy"></a>
   </div>
@@ -1107,6 +1213,19 @@ ${more}
   const restCards = restGroups.map(([gid, list]) => buildCard(gid, list, true)).join('\n');
   const moreBtn = restGroups.length ? `  <button class="more-btn" id="moreBtn" type="button">展开全部 ${restGroups.length} 个游戏攻略 ↓</button>` : '';
 
+  /* 游戏快捷筛选芯片：取攻略数最多（并列看热度）的前 12 个游戏 */
+  const chipGames = gameGroups
+    .map(([gid, list]) => ({ g: gameById[gid], n: list.length }))
+    .filter(x => x.g)
+    .sort((a, b) => b.n - a.n || ((b.g.heat || 0) - (a.g.heat || 0)))
+    .slice(0, 12);
+  const chipsHtml = chipGames.length
+    ? `  <div class="gchips" id="guideChips" aria-label="按游戏快捷筛选">
+    <button class="gchip on" data-g="" type="button">全部游戏</button>
+${chipGames.map(x => `    <button class="gchip" data-g="${esc(x.g.name)}" type="button">${esc(x.g.name)}<b>${x.n}</b></button>`).join('\n')}
+  </div>`
+    : '';
+
   return `<main class="wrap wide">
   <nav class="crumb"><a href="/">首页</a><i>/</i><span>攻略中心</span></nav>
   <h1 class="ttl">全部游戏攻略索引</h1>
@@ -1120,6 +1239,7 @@ ${more}
     <span class="hint" id="guideHint">输入即搜</span>
   </div>
   <div class="srch-res" id="guideRes" hidden></div>
+${chipsHtml}
 
   <div class="gcards" id="guideCards">
 ${hotCards}
@@ -1140,10 +1260,11 @@ ${restCards}
         hint=document.getElementById('guideHint'),moreBtn=document.getElementById('moreBtn');
     if(!box)return;
     var cards=[].slice.call(document.querySelectorAll('.gcard'));
-    var links=[].slice.call(document.querySelectorAll('.gcard .alist a'));
     var collapsedCards=cards.filter(function(c){return c.classList.contains('collapsed')});
+    var chips=[].slice.call(document.querySelectorAll('.gchips .gchip'));
     var IDLE_HINT='输入即搜';
     var expanded=false;
+    var chipGame='';   /* 当前芯片选中的游戏名，空串 = 全部 */
 
     function applyCollapse(){
       collapsedCards.forEach(function(c){c.classList.toggle('collapsed',!expanded)});
@@ -1176,10 +1297,16 @@ ${restCards}
     var cardOrder=[];
     cards.forEach(function(c){cardOrder.push(c);});
 
+    function setChipOn(g){
+      chips.forEach(function(x){x.classList.toggle('on',(x.getAttribute('data-g')||'')===g)});
+    }
+
     function render(){
       var q=String(box.value||'').trim().toLowerCase();
       var i,j;
-      if(!q){
+      /* 搜索优先：一旦输入关键词，自动回到「全部游戏」 */
+      if(q&&chipGame){chipGame='';setChipOn('');}
+      if(!q&&!chipGame){
         // 恢复原始顺序
         for(i=0;i<cardOrder.length;i++){
           var c=cardOrder[i];
@@ -1198,10 +1325,28 @@ ${restCards}
         hint.textContent=IDLE_HINT;
         return;
       }
+      if(!q&&chipGame){
+        /* 芯片筛选模式：只显示选中游戏的卡片，条目全部展开并高亮 */
+        collapsedCards.forEach(function(c){c.classList.remove('collapsed')});
+        if(moreBtn){moreBtn.hidden=true;}
+        for(i=0;i<cards.length;i++){
+          var mine=(cards[i].getAttribute('data-game')===chipGame);
+          cards[i].hidden=!mine;
+          cards[i].classList.toggle('srch',mine);
+          if(mine){
+            var it2=cards[i].querySelectorAll('.alist a');
+            for(var k2=0;k2<it2.length;k2++){it2[k2].hidden=false;it2[k2].classList.add('hit');}
+          }
+        }
+        res.hidden=true;res.innerHTML='';
+        hint.textContent=chipGame;
+        return;
+      }
       // 多关键词搜索：空格分隔，全部匹配才算命中（AND 逻辑）
       var keywords=q.split(/\\s+/).filter(function(k){return k.length>0;});
       // 搜索时展开所有折叠卡片
       collapsedCards.forEach(function(c){c.classList.remove('collapsed')});
+      if(moreBtn){moreBtn.hidden=true;}
       var n=0;
       var hitCards=[],missCards=[];
       for(i=0;i<cards.length;i++){
@@ -1235,8 +1380,19 @@ ${restCards}
       res.innerHTML='<p class="empty">没有找到与「'+d.innerHTML+'」相关的攻略。换个关键词试试，比如游戏名或「打金」「职业」。</p>';
       res.hidden=false;
     }
+
+    /* 芯片点击：清空搜索词，按游戏过滤 */
+    chips.forEach(function(ch){
+      ch.addEventListener('click',function(){
+        chipGame=ch.getAttribute('data-g')||'';
+        setChipOn(chipGame);
+        if(box.value){box.value='';}
+        render();
+      });
+    });
+
     box.addEventListener('input',render);
-    box.addEventListener('keydown',function(e){if(e.key==='Escape'){box.value='';render();box.blur();}});
+    box.addEventListener('keydown',function(e){if(e.key==='Escape'){box.value='';chipGame='';setChipOn('');render();box.blur();}});
     var srchBtn=document.getElementById('guideSrchBtn');
     if(srchBtn){srchBtn.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();render();box.blur();});}
   })();
@@ -1261,7 +1417,8 @@ const searchGames = games.map(g => ({
   t: g.name,
   s: [g.category, g.year].filter(Boolean).join(' · '),
   u: '/game/' + g.id,
-  g: ''
+  g: '',
+  c: g.cover || ''   /* 封面（内页导航搜索面板用，首页搜索不受影响） */
 }));
 const searchIndexSrc = '/* 站内搜索索引 · 由 scripts/build-articles.js 自动生成，请勿手改 */\n' +
   'var SEARCH_INDEX=' +
@@ -1272,22 +1429,41 @@ console.log('✅ 生成 js/search-index.js（攻略 ' + searchGuides.length + ' 
   '，' + Buffer.byteLength(searchIndexSrc, 'utf8') + ' 字节）');
 
 // ===== 8. 生成游戏索引页 games.html =====
+/* 热度显示：930000 -> 93万 */
+function fmtHeat(h) {
+  const n = Number(h) || 0;
+  return n >= 10000 ? (n / 10000).toFixed(1).replace(/\.0$/, '') + '万' : String(n);
+}
+const gamesByHeat = [...games].sort((a, b) => (b.heat || 0) - (a.heat || 0));
 const gamesHtml = head(
   '全部怀旧手游大全 - 小梦怀旧手游',
   `小梦怀旧手游收录 ${games.length} 款经典端游正版复刻怀旧手游：传奇、奇迹MU、仙境传说、龙之谷、武林外传、永恒岛等，点击进入游戏详情页查看官方下载入口与攻略。`,
   SITE + '/games',
-  { prefix: '', ld: [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: '全部怀旧手游大全', url: SITE + '/games' }] }
+  { prefix: '', active: 'games', ld: [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: '全部怀旧手游大全', url: SITE + '/games' }] }
 ) + `<main class="wrap wide">
   <nav class="crumb"><a href="/">首页</a><i>/</i><span>游戏大厅</span></nav>
   <h1 class="ttl">全部怀旧手游大全</h1>
   <p class="lead">共收录 <strong>${games.length}</strong> 款经典端游正版复刻手游。点击卡片进入游戏详情页，查看官方信息、下载入口与全部攻略。</p>
-  <div class="grid">
-${[...games].sort((a, b) => (b.heat || 0) - (a.heat || 0)).map(g => {
+
+  <div class="sortbar" role="group" aria-label="游戏排序方式">
+    <span class="sb-label">排序：</span>
+    <button class="sbtn on" data-sort="heat" type="button">人气优先</button>
+    <button class="sbtn" data-sort="year" type="button">最新上架</button>
+    <button class="sbtn" data-sort="rating" type="button">评分最高</button>
+    <span class="sb-count">${games.length} 款游戏 · 实时排序</span>
+  </div>
+
+  <div class="grid" id="gameGrid">
+${gamesByHeat.map((g, i) => {
   const cnt = (byGame.get(g.id) || []).length;
-  return `    <a class="card" href="/game/${g.id}" id="g-${g.id}">
-      <img src="${esc(g.cover)}" alt="${esc(g.name)}" loading="lazy"${sizeAttrs(g.cover)}>
+  return `    <a class="card" href="/game/${g.id}" id="g-${g.id}" data-heat="${g.heat || 0}" data-year="${g.year || 0}" data-rating="${g.rating || 0}">
+      <div class="cv">
+        <img src="${esc(g.cover)}" alt="${esc(g.name)}" loading="lazy"${sizeAttrs(g.cover)}>
+        ${i < 10 ? `<span class="rk">TOP ${i + 1}</span>` : ''}
+      </div>
       <div class="bd">
         <div class="nm">${esc(g.name)}</div>
+        <div class="mrow"><span class="star">★ ${(g.rating || 4)}.0</span><span class="ht">🔥 ${fmtHeat(g.heat)}</span>${g.year ? `<span class="ht">${g.year} 年</span>` : ''}</div>
         <div class="ds">${esc((g.desc || '').slice(0, 42))}</div>
         <div class="row">
           <span class="btn">游戏详情</span>
@@ -1297,6 +1473,28 @@ ${[...games].sort((a, b) => (b.heat || 0) - (a.heat || 0)).map(g => {
     </a>`;
 }).join('\n')}
   </div>
+
+  <script>
+  (function(){
+    var grid=document.getElementById('gameGrid');
+    if(!grid)return;
+    var btns=[].slice.call(document.querySelectorAll('.sortbar .sbtn'));
+    var cards=[].slice.call(grid.children);
+    if(!btns.length||!cards.length)return;
+    btns.forEach(function(b){
+      b.addEventListener('click',function(){
+        btns.forEach(function(x){x.classList.remove('on')});
+        b.classList.add('on');
+        var k=b.getAttribute('data-sort');
+        cards.sort(function(a,c){
+          var av=parseFloat(a.getAttribute('data-'+k))||0,bv=parseFloat(c.getAttribute('data-'+k))||0;
+          return bv-av;
+        });
+        cards.forEach(function(x){grid.appendChild(x)});
+      });
+    });
+  })();
+  </script>
 </main>
 ` + foot();
 writeFile('games.html', gamesHtml);
@@ -1304,16 +1502,21 @@ console.log('✅ 生成 games.html（' + games.length + ' 款）');
 
 // ===== 9. 生成 404.html =====
 const recent = [...articles].sort((a, b) => String(b.date).localeCompare(String(a.date))).slice(0, 8);
+const hotGames404 = [...games].sort((a, b) => (b.heat || 0) - (a.heat || 0)).slice(0, 8);
 const notFoundHtml = head('页面不存在 - 小梦怀旧手游', '你要找的页面可能已经下线，或者地址写错了。', SITE + '/404', {
   prefix: '/', robots: 'noindex, follow'
 }) + `<main class="wrap">
   <h1 class="ttl">页面不存在</h1>
-  <p class="lead">你要找的页面可能已经下线，或者地址写错了。下面这些入口应该能帮到你。</p>
+  <p class="lead">你要找的页面可能已经下线，或者地址写错了。可以先回首页，或在下面直接找游戏和攻略。</p>
   <p style="margin-bottom:34px">
     <a class="btn" href="/" style="padding:11px 24px;font-size:14px">返回首页</a>
     <a class="btn ghost" href="/games" style="padding:11px 24px;font-size:14px">全部游戏</a>
     <a class="btn ghost" href="/guides" style="padding:11px 24px;font-size:14px">全部攻略</a>
   </p>
+  <h2 class="sec-h">热门游戏推荐</h2>
+  <div class="popgrid">
+${hotGames404.map(g => `    <a href="/game/${g.id}"><img src="/${esc(g.cover)}" alt="${esc(g.name)}" loading="lazy"${sizeAttrs(g.cover)}><span class="pn2">${esc(g.name)}</span></a>`).join('\n')}
+  </div>
   <h2 class="sec-h">最新攻略</h2>
   <div class="lst">
 ${recent.map(a => `    <a href="/article/${a.id}"><span class="cat">${esc(a.category || '攻略')}</span><span class="nm">${esc(a.title)}</span></a>`).join('\n')}
@@ -1416,7 +1619,7 @@ if (indexSrc.includes(SEO_START) && indexSrc.includes(SEO_END)) {
    让百度/搜狗等爬虫直接拿到 42 个真实 <a href="/game/N">。 */
 const GRID_START = '<!-- GAME-GRID:START -->';
 const GRID_END = '<!-- GAME-GRID:END -->';
-const fmtHeat = (h) => (h >= 10000 ? (h / 10000).toFixed(1) + '万' : h);
+/* fmtHeat 已在上方「游戏索引页」统一定义：930000 -> 93万 */
 let inlineGames = [];
 try {
   inlineGames = new Function('return (' + extractBalanced(indexSrc, 'var GAMES', '[', ']') + ');')();
