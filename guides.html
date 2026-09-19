@@ -269,6 +269,42 @@
   .ncat.cat-gl{background:#0d9488}
   .ncat.cat-zx{background:#64748b}
 
+  /* ===== 资讯中心紧凑版（2026-09-19 用户反馈：字太大 / 排列松 / 搜索框大）=====
+     仅作用于 .newshub 页面（news.html 资讯中心 + news/<专区> 归档页），
+     攻略中心与顶部导航搜索不受影响。选择器均带 .newshub 前缀提高优先级。 */
+  .newshub .crumb{margin-bottom:12px}
+  .newshub h1{font-size:1.42rem;font-weight:900;color:#fff;margin:0 0 10px;letter-spacing:.02em}
+  .newshub .lead{font-size:.85rem;margin:0 0 18px;line-height:1.75}
+  .newshub .sec-h{font-size:1rem;margin:24px 0 12px}
+  .newshub .srchbar{margin-bottom:14px;gap:10px}
+  .newshub .srchbar input{height:40px;font-size:13.5px;padding:0 14px;border-radius:10px}
+  .newshub .srchbar .hint{font-size:.72rem}
+  .newshub .ncards{gap:12px;margin-bottom:18px}
+  .newshub .ncard{grid-template-columns:96px 1fr;gap:12px;padding:12px;border-radius:14px}
+  .newshub .ncard .ncv{width:96px;height:96px;border-radius:10px}
+  .newshub .ncard .ngname{font-size:.92rem}
+  .newshub .ncard .nhead{margin-bottom:7px}
+  .newshub .ncard .nlist{gap:3px}
+  .newshub .ncard .nlist .nlk{font-size:.8rem}
+  .newshub .ncard .nmore{margin-top:7px;font-size:.73rem}
+  .newshub .catnav{margin-bottom:6px}
+  .newshub .cathd{margin:22px 0 2px;font-size:.98rem;padding-bottom:7px}
+  .newshub .news li{padding:12px 2px}
+  .newshub .news .nh a,.newshub .news .nt{font-size:.86rem}
+  .newshub .news .ns{font-size:.82rem;margin-top:5px}
+  .newshub .lst a{padding:11px 14px}
+  .newshub .cta{margin-top:32px;padding:20px 18px}
+  .newshub .cta p{margin-bottom:12px;font-size:.85rem}
+  .newshub .cta-btn{font-size:.85rem;padding:10px 26px}
+  @media (max-width:640px){
+    .newshub h1{font-size:1.28rem}
+    .newshub .srchbar input{height:44px;font-size:15px;border-radius:11px}
+    .newshub .ncards{grid-template-columns:1fr;gap:10px}
+    .newshub .ncard{grid-template-columns:88px 1fr;gap:10px;padding:11px}
+    .newshub .ncard .ncv{width:88px;height:88px}
+    .newshub .ncard .nlist .nlk{font-size:12.8px}
+  }
+
   /* ===== 公告正文页 ===== */
   .nitem .nmeta{font-size:.8rem;color:var(--dim);display:flex;flex-wrap:wrap;gap:8px 18px;padding-bottom:18px;margin-bottom:24px;border-bottom:1px solid var(--line)}
   .nitem .body{font-size:16px;line-height:1.9}
