@@ -112,6 +112,32 @@ function newsTitleHtml(slug, it) {
 const gameById = {};
 games.forEach(g => { gameById[g.id] = g; });
 
+// 游戏元数据：从首页内联数据（index.html 的 GAMES 数组）提取 id→{grp,sc} 映射。
+// 游戏大厅的分类芯片与首页游戏区 tabs 共用 grp 分组，评分显示与首页共用 sc（10 分制），
+// 保证两处页面完全一致（2026-09-19 统一改造）。
+const gameMeta = (() => {
+  const m = {};
+  try {
+    const idx = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+    const re = /\{id:(\d+),[^{}]*?grp:"([^"]+)",sc:"([^"]+)"/g;
+    let mm;
+    while ((mm = re.exec(idx))) m[mm[1]] = { grp: mm[2], sc: mm[3] };
+  } catch (e) { console.log('⚠️ 首页元数据提取失败，游戏大厅将不显示分类芯片：' + e.message); }
+  return m;
+})();
+function grpOf(g) { return (gameMeta[String(g.id)] || {}).grp; }
+function scOf(g) { return (gameMeta[String(g.id)] || {}).sc || ((g.rating || 0) + '.0'); }
+// 分类芯片顺序与首页游戏区 tabs 保持一致
+const GRP_TABS = [
+  { k: '三九正版', label: '三九互娱正版' },
+  { k: '传奇怀旧', label: '传奇怀旧' },
+  { k: '奇迹MU', label: '奇迹MU / RO' },
+  { k: '永恒岛', label: '永恒岛系列' },
+  { k: '小小屠龙', label: '小小屠龙' },
+  { k: '游昕经典', label: '游昕经典' },
+  { k: '其他', label: '经典怀旧' },
+];
+
 // ===== 2. 工具 =====
 function esc(str) {
   return String(str == null ? '' : str)
@@ -951,7 +977,7 @@ ${nzArc.items.slice(0, 8).map(it => `  <li>
     <div class="info">
       <h1>${esc(g.name)}</h1>
       <div class="sub">${esc(g.developer || '')}${g.platform ? ' · ' + esc(g.platform) : ''}${g.year ? ' · ' + g.year + ' 年' : ''}</div>
-      <div class="score">${g.rating ? '★ ' + g.rating + '.0 / 5.0' : ''}</div>
+      <div class="score">★ ${esc(scOf(g))}</div>
       <div class="dl">
         <a class="and" href="${esc(androidHref)}" target="_blank" rel="sponsored noopener noreferrer">安卓下载</a>
         <a class="ios" href="${esc(iosHref)}" target="_blank" rel="sponsored noopener noreferrer">苹果下载</a>
@@ -1611,42 +1637,35 @@ fs.writeFileSync(path.join(ROOT, 'js', 'search-index.js'), searchIndexSrc);
 console.log('✅ 生成 js/search-index.js（攻略 ' + searchGuides.length + ' + 游戏 ' + searchGames.length +
   '，' + Buffer.byteLength(searchIndexSrc, 'utf8') + ' 字节）');
 
-// ===== 8. 生成游戏索引页 games.html =====
+// ===== 8. 生成游戏索引页 games.html（2026-09-19 重做：全站统一游戏大厅入口） =====
 /* 热度显示：930000 -> 93万 */
 function fmtHeat(h) {
   const n = Number(h) || 0;
   return n >= 10000 ? (n / 10000).toFixed(1).replace(/\.0$/, '') + '万' : String(n);
 }
 const gamesByHeat = [...games].sort((a, b) => (b.heat || 0) - (a.heat || 0));
-const gamesHtml = head(
-  '全部怀旧手游大全 - 小梦怀旧手游',
-  `小梦怀旧手游收录 ${games.length} 款经典端游正版复刻怀旧手游：传奇、奇迹MU、仙境传说、龙之谷、武林外传、永恒岛等，点击进入游戏详情页查看官方下载入口与攻略。`,
-  SITE + '/games',
-  { prefix: '', active: 'games', ld: [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: '全部怀旧手游大全', url: SITE + '/games' }] }
-) + `<main class="wrap wide">
-  <nav class="crumb"><a href="/">首页</a><i>/</i><span>游戏大厅</span></nav>
-  <h1 class="ttl">全部怀旧手游大全</h1>
-  <p class="lead">共收录 <strong>${games.length}</strong> 款经典端游正版复刻手游。点击卡片进入游戏详情页，查看官方信息、下载入口与全部攻略。</p>
 
-  <div class="sortbar" role="group" aria-label="游戏排序方式">
-    <span class="sb-label">排序：</span>
-    <button class="sbtn on" data-sort="heat" type="button">人气优先</button>
-    <button class="sbtn" data-sort="year" type="button">最新上架</button>
-    <button class="sbtn" data-sort="rating" type="button">评分最高</button>
-    <span class="sb-count">${games.length} 款游戏 · 实时排序</span>
-  </div>
+/* 分类芯片：数量为 0 的分类不显示 */
+const grpCount = {};
+games.forEach(g => {
+  const grp = grpOf(g) || '其他';
+  grpCount[grp] = (grpCount[grp] || 0) + 1;
+});
+const grpChipsHtml = GRP_TABS
+  .filter(t => grpCount[t.k])
+  .map(t => `    <button class="gchip" data-g="${esc(t.k)}" type="button">${esc(t.label)}<b>${grpCount[t.k]}</b></button>`)
+  .join('\n');
 
-  <div class="grid" id="gameGrid">
-${gamesByHeat.map((g, i) => {
+const gameCardsHtml = gamesByHeat.map((g, i) => {
   const cnt = (byGame.get(g.id) || []).length;
-  return `    <a class="card" href="/game/${g.id}" id="g-${g.id}" data-heat="${g.heat || 0}" data-year="${g.year || 0}" data-rating="${g.rating || 0}">
+  return `    <a class="card" href="/game/${g.id}" data-heat="${g.heat || 0}" data-year="${g.year || 0}" data-rating="${parseFloat(scOf(g)) || 0}" data-grp="${esc(grpOf(g) || '其他')}" data-name="${esc(String(g.name).toLowerCase())}">
       <div class="cv">
         <img src="${esc(g.cover)}" alt="${esc(g.name)}" loading="lazy"${sizeAttrs(g.cover)}>
         ${i < 10 ? `<span class="rk">TOP ${i + 1}</span>` : ''}
       </div>
       <div class="bd">
         <div class="nm">${esc(g.name)}</div>
-        <div class="mrow"><span class="star">★ ${(g.rating || 4)}.0</span><span class="ht">🔥 ${fmtHeat(g.heat)}</span>${g.year ? `<span class="ht">${g.year} 年</span>` : ''}</div>
+        <div class="mrow"><span class="star">★ ${esc(scOf(g))}</span><span class="ht">🔥 ${fmtHeat(g.heat)}</span>${g.year ? `<span class="ht">${g.year} 年</span>` : ''}</div>
         <div class="ds">${esc((g.desc || '').slice(0, 42))}</div>
         <div class="row">
           <span class="btn">游戏详情</span>
@@ -1654,26 +1673,102 @@ ${gamesByHeat.map((g, i) => {
         </div>
       </div>
     </a>`;
-}).join('\n')}
+}).join('\n');
+
+const gamesHtml = head(
+  '游戏大厅 - 全部怀旧手游大全 - 小梦怀旧手游',
+  `小梦怀旧手游游戏大厅收录 ${games.length} 款经典端游正版复刻怀旧手游：传奇、奇迹MU、仙境传说、龙之谷、武林外传、永恒岛等，支持搜索、分类筛选与人气/评分排序，点击进入游戏详情页查看官方下载入口与攻略。`,
+  SITE + '/games',
+  { prefix: '', active: 'games', ld: [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: '游戏大厅 · 全部怀旧手游大全', url: SITE + '/games' }] }
+) + `<main class="wrap wide">
+  <nav class="crumb"><a href="/">首页</a><i>/</i><span>游戏大厅</span></nav>
+
+  <div class="pagehead">
+    <span class="ph-kick">GAME HALL</span>
+    <h1 class="ttl">游戏大厅</h1>
+    <p class="lead">共收录 <strong>${games.length}</strong> 款经典端游正版复刻手游，横排陈列一键直达。支持按分类筛选、按人气 / 评分 / 上架时间排序，也可以直接搜索游戏名。</p>
+    <div class="ph-stats">
+      <span class="ph-s"><b>${games.length}</b> 款游戏</span>
+      <span class="ph-s"><b>${articles.length}</b> 篇攻略</span>
+      <span class="ph-s">正版授权 · 免费下载</span>
+    </div>
+  </div>
+
+  <div class="srchbar">
+    <input id="gameSearch" type="search" placeholder="搜索游戏名，例如「龙之谷」「屠龙」" autocomplete="off" aria-label="搜索游戏">
+    <span class="hint" id="gameHint">输入即搜</span>
+  </div>
+
+  <div class="sortbar" role="group" aria-label="游戏排序方式">
+    <span class="sb-label">排序：</span>
+    <button class="sbtn on" data-sort="heat" type="button">人气优先</button>
+    <button class="sbtn" data-sort="year" type="button">最新上架</button>
+    <button class="sbtn" data-sort="rating" type="button">评分最高</button>
+    <span class="sb-count" id="gameCount">${games.length} 款游戏</span>
+  </div>
+
+  <div class="gchips" id="gameChips" aria-label="按分类筛选">
+    <button class="gchip on" data-g="" type="button">全部游戏<b>${games.length}</b></button>
+${grpChipsHtml}
+  </div>
+
+  <div class="grid" id="gameGrid">
+${gameCardsHtml}
+  </div>
+  <p id="gameEmpty" hidden style="text-align:center;color:var(--muted);padding:34px 0 10px;font-size:.9rem">没有找到匹配的游戏，换个关键词或分类试试。</p>
+
+  <div class="cta">
+    <p>每款游戏都有独立详情页：官方下载入口、版本信息与全部攻略一站看全。</p>
+    <a class="cta-btn" href="/guides">去攻略中心找通关秘籍 →</a>
   </div>
 
   <script>
   (function(){
     var grid=document.getElementById('gameGrid');
     if(!grid)return;
-    var btns=[].slice.call(document.querySelectorAll('.sortbar .sbtn'));
+    var box=document.getElementById('gameSearch'),hint=document.getElementById('gameHint'),
+        count=document.getElementById('gameCount'),empty=document.getElementById('gameEmpty');
     var cards=[].slice.call(grid.children);
-    if(!btns.length||!cards.length)return;
-    btns.forEach(function(b){
+    var chips=[].slice.call(document.querySelectorAll('#gameChips .gchip'));
+    var sbtns=[].slice.call(document.querySelectorAll('.sortbar .sbtn'));
+    var state={q:'',grp:'',sort:'heat'};
+    function apply(){
+      var vis=[];
+      cards.forEach(function(c){
+        var okQ=!state.q||(c.getAttribute('data-name')||'').indexOf(state.q)>=0;
+        var okG=!state.grp||c.getAttribute('data-grp')===state.grp;
+        var show=okQ&&okG;
+        c.hidden=!show;
+        if(show)vis.push(c);
+      });
+      vis.sort(function(a,b){
+        var av=parseFloat(a.getAttribute('data-'+state.sort))||0,
+            bv=parseFloat(b.getAttribute('data-'+state.sort))||0;
+        return bv-av;
+      });
+      vis.forEach(function(c){grid.appendChild(c)});
+      if(count)count.textContent=vis.length+' 款游戏';
+      if(empty)empty.hidden=vis.length>0;
+      if(hint)hint.textContent=state.q?('命中 '+vis.length+' 款'):'输入即搜';
+    }
+    if(box){
+      box.addEventListener('input',function(){state.q=box.value.trim().toLowerCase();apply();});
+      box.addEventListener('keydown',function(e){if(e.key==='Escape'){box.value='';state.q='';apply();box.blur();}});
+    }
+    chips.forEach(function(ch){
+      ch.addEventListener('click',function(){
+        chips.forEach(function(x){x.classList.remove('on')});
+        ch.classList.add('on');
+        state.grp=ch.getAttribute('data-g')||'';
+        apply();
+      });
+    });
+    sbtns.forEach(function(b){
       b.addEventListener('click',function(){
-        btns.forEach(function(x){x.classList.remove('on')});
+        sbtns.forEach(function(x){x.classList.remove('on')});
         b.classList.add('on');
-        var k=b.getAttribute('data-sort');
-        cards.sort(function(a,c){
-          var av=parseFloat(a.getAttribute('data-'+k))||0,bv=parseFloat(c.getAttribute('data-'+k))||0;
-          return bv-av;
-        });
-        cards.forEach(function(x){grid.appendChild(x)});
+        state.sort=b.getAttribute('data-sort')||'heat';
+        apply();
       });
     });
   })();
@@ -1681,7 +1776,7 @@ ${gamesByHeat.map((g, i) => {
 </main>
 ` + foot();
 writeFile('games.html', gamesHtml);
-console.log('✅ 生成 games.html（' + games.length + ' 款）');
+console.log('✅ 生成 games.html（' + games.length + ' 款 / ' + Object.keys(grpCount).length + ' 个分类）');
 
 // ===== 9. 生成 404.html =====
 const recent = [...articles].sort((a, b) => String(b.date).localeCompare(String(a.date))).slice(0, 8);
