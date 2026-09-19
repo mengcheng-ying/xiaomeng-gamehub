@@ -287,26 +287,26 @@
   }
 
 /* ===== 资讯 / 攻略 入口（内容已独立成页，样式配套 #hub 区块） ===== */
-.hub-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:640px;margin:0 auto}
-.hub-card{position:relative;display:flex;flex-direction:column;gap:9px;padding:20px;border-radius:var(--radius);background:var(--card);border:1px solid var(--line);color:inherit;text-decoration:none;transition:.25s;overflow:hidden}
+.hub-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;max-width:560px;margin:0 auto}
+.hub-card{position:relative;display:flex;flex-direction:column;gap:6px;padding:13px 16px;border-radius:var(--radius);background:var(--card);border:1px solid var(--line);color:inherit;text-decoration:none;transition:.25s;overflow:hidden}
 .hub-card::before{content:"";position:absolute;top:0;bottom:0;left:0;width:3px;background:var(--grad)}
-.hub-card:hover{transform:translateY(-4px);border-color:rgba(0,212,255,.4);box-shadow:var(--shadow)}
-.hub-kick{font-size:.66rem;letter-spacing:2px;color:var(--accent2);font-weight:800}
-.hub-ic{font-size:1.1rem;line-height:1;margin-right:7px}
-.hub-t{font-size:1.12rem;font-weight:800;color:var(--ink);margin:0}
-.hub-p{font-size:.85rem;color:var(--muted);line-height:1.7;margin:0;flex:1}
+.hub-card:hover{transform:translateY(-3px);border-color:rgba(0,212,255,.4);box-shadow:var(--shadow)}
+.hub-kick{font-size:.62rem;letter-spacing:2px;color:var(--accent2);font-weight:800}
+.hub-ic{font-size:.92rem;line-height:1;margin-right:6px}
+.hub-t{font-size:.98rem;font-weight:800;color:var(--ink);margin:0}
+.hub-p{font-size:.8rem;color:var(--muted);line-height:1.65;margin:0;flex:1}
 .hub-p b{color:var(--ink);font-weight:700}
-.hub-go{font-size:.85rem;color:var(--accent2);font-weight:700;margin-top:2px}
-.hub-latest{display:flex;flex-direction:column;gap:9px;margin-top:16px}
-.hub-line{display:flex;align-items:center;gap:10px;min-width:0;padding:12px 16px;border-radius:12px;background:rgba(255,255,255,.035);border:1px solid var(--line);color:var(--muted);text-decoration:none;font-size:.86rem;transition:.2s}
+.hub-go{font-size:.8rem;color:var(--accent2);font-weight:700;margin-top:2px}
+.hub-latest{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.hub-line{display:flex;align-items:center;gap:10px;min-width:0;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,.035);border:1px solid var(--line);color:var(--muted);text-decoration:none;font-size:.84rem;transition:.2s}
 .hub-line:hover{border-color:rgba(61,123,255,.45);color:var(--ink)}
 .hub-line .lb{flex:none;font-size:.7rem;font-weight:800;color:#fff;background:var(--grad);border-radius:6px;padding:2px 9px}
 .hub-line .tx{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hub-line .dt2{flex:none;font-size:.75rem;color:var(--dim)}
 @media(max-width:760px){
-  .hub-grid{grid-template-columns:1fr;gap:14px}
-  .hub-card{padding:20px}
-  .hub-line{padding:11px 13px;font-size:.82rem}
+  .hub-grid{grid-template-columns:1fr;gap:10px}
+  .hub-card{padding:12px 14px}
+  .hub-line{padding:10px 12px;font-size:.8rem}
   .hub-line .dt2{display:none}
 }
 
@@ -362,7 +362,7 @@
   </div>
 </section>
 
-<section class="sec" id="games" style="padding-top:0">
+<section class="sec" id="games" style="padding-top:0;padding-bottom:12px">
   <div class="wrap">
     <div class="sec-head">
       <span class="kick">GAME LIBRARY</span>
@@ -375,7 +375,7 @@
 </section>
 
 <!-- ===== 资讯 / 攻略 入口（内容已独立成页） ===== -->
-<section class="sec" id="hub" style="background:linear-gradient(180deg,var(--bg1) 0%,var(--bg2) 100%);padding-top:48px;padding-bottom:48px">
+<section class="sec" id="hub" style="background:linear-gradient(180deg,var(--bg1) 0%,var(--bg2) 100%);padding-top:24px;padding-bottom:44px">
   <div class="wrap">
 <!-- HOME-HUB:START -->
     <div class="hub-grid">
