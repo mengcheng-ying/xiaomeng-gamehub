@@ -25,7 +25,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="../favicon-192.png">
 <link rel="apple-touch-icon" sizes="180x180" href="../favicon-192.png">
 <link rel="manifest" href="../site.webmanifest">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"巴风特之怒：RO怀旧","description":"《巴风特之怒：RO怀旧》是经典端游《仙境传说》（Ragnarok Online）的正版怀旧手游，由安徽游昕网络运营。游戏完整还原RO端游经典职业体系、卡牌系统和公会战玩法，重现普隆德拉、斐扬、吉芬等经典城镇，带你重返那个充满波利、巴风特和无限回忆的仙境世界。","image":"https://fmbly.com/assets/images/bafengte_cover.jpg","applicationCategory":"Game","operatingSystem":"Android, iOS","genre":"角色扮演","author":{"@type":"Organization","name":"安徽游昕"},"datePublished":"2023","inLanguage":"zh-CN"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"巴风特之怒：RO怀旧","description":"《巴风特之怒：RO怀旧》是经典端游《仙境传说》（Ragnarok Online）的正版怀旧手游，由安徽游昕网络运营。游戏完整还原RO端游经典职业体系、卡牌系统和公会战玩法，重现普隆德拉、斐扬、吉芬等经典城镇，带你重返那个充满波利、巴风特和无限回忆的仙境世界。","image":["https://fmbly.com/assets/images/bafengte_cover.jpg"],"applicationCategory":"Game","operatingSystem":"Android, iOS","genre":"角色扮演","author":{"@type":"Organization","name":"安徽游昕"},"datePublished":"2023","inLanguage":"zh-CN"}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://fmbly.com/"},{"@type":"ListItem","position":2,"name":"游戏大厅","item":"https://fmbly.com/games"},{"@type":"ListItem","position":3,"name":"巴风特之怒：RO怀旧","item":"https://fmbly.com/game/39"}]}</script>
 
 <style>
@@ -155,13 +155,14 @@
   .cathd .cn{font-size:13px;font-weight:400;color:var(--muted);margin-left:8px}
   .hl li{position:relative;padding-left:24px;margin-bottom:10px;font-size:15.5px;color:var(--ink2)}
   .hl li:before{content:"◆";position:absolute;left:0;top:0;color:var(--brand);font-size:12px}
-  .gcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:14px}
-  .gcard{border:1px solid var(--line);border-radius:11px;overflow:hidden;background:var(--card);display:block;color:var(--ink)}
-  .gcard:hover{box-shadow:0 6px 20px rgba(0,0,0,.34)}
-  .gcard img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;background:#1a2537}
-  .gcard .bd{padding:11px 13px}
-  .gcard .nm{font-size:14.5px;font-weight:600;margin-bottom:5px}
-  .gcard .ds{font-size:12px;color:var(--muted);line-height:1.6}
+  /* ===== 同类推荐 / 瓦片网格（游戏页「同类怀旧手游推荐」用） ===== */
+  .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:14px}
+  .tile{border:1px solid var(--line);border-radius:11px;overflow:hidden;background:var(--card);display:block;color:var(--ink);text-decoration:none}
+  .tile:hover{box-shadow:0 6px 20px rgba(0,0,0,.34)}
+  .tile img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;background:#1a2537}
+  .tile .bd{padding:11px 13px}
+  .tile .nm{font-size:14.5px;font-weight:600;margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tile .ds{font-size:12px;color:var(--muted);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:3.2em}
 
   /* ===== 索引页 ===== */
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px;align-items:stretch}
@@ -201,41 +202,47 @@
   /* 2026-09-18 修：html hidden 属性会被作者样式 display:grid/block 覆盖（UA 样式优先度最低），
      导致搜索过滤、结果区切换全部失效。这条 !important 是让 hidden 真正生效的唯一办法。 */
   [hidden]{display:none!important}
-  .gcards{display:flex;flex-direction:column;gap:16px;margin:0 0 16px}
-  .gcard{display:grid;grid-template-columns:100px 1fr;gap:14px;padding:14px;border:1px solid var(--line);border-radius:12px;
-    background:var(--card);transition:box-shadow .2s,border-color .2s;cursor:pointer;color:inherit}
-  .gcard:hover{border-color:rgba(91,140,255,.5);box-shadow:0 8px 24px rgba(0,0,0,.32)}
-  .gcard .cover{border-radius:8px;overflow:hidden;background:#1a2537;align-self:start}
-  .gcard .cover img{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:cover}
-  .gcard .info{min-width:0;display:flex;flex-direction:column;gap:8px}
-  .gcard .top{display:flex;align-items:center;justify-content:space-between;gap:10px}
-  .gcard .gname{font-size:15px;font-weight:700;color:var(--ink);margin:0}
-  .gcard .gname a{color:inherit;text-decoration:none}
-  .gcard .gcat{font-size:11.5px;color:var(--muted);font-weight:500}
-  .gcard .cnt{font-size:11px;font-weight:600;color:var(--brand);background:var(--brand-soft);
-    padding:2px 8px;border-radius:99px;white-space:nowrap}
-  .gcard .alist{display:flex;flex-direction:column;gap:5px;margin:0;padding:0;list-style:none}
-  .gcard .alist li{margin:0;padding:0}
-  .gcard .alist a{display:block;font-size:13px;color:var(--ink2);padding:8px 10px;min-height:40px;border-radius:6px;
-    transition:background .15s,color .15s;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .gcard .alist a:hover{background:var(--brand-soft);color:var(--brand)}
-  .gcard .alist a.hit{background:var(--brand-soft);color:var(--brand);font-weight:600}
-  .gcard .alist .cat{display:inline-block;font-size:11px;font-weight:600;color:#fff;
-    background:var(--brand-deep);border-radius:4px;padding:1px 5px;margin-right:5px;vertical-align:middle}
-  .gcard .alist .cat.info{background:var(--accent);color:#241a00}
-  /* 2026-09-18 合并自线上：卡片右侧默认只展示前 2 篇，其余靠「还有 N 篇」进游戏页看；
-     搜索命中时给卡片加 .srch，把命中的条目全部展开。 */
-  .gcard .alist li:nth-child(n+3){display:none}
-  .gcard.srch .alist li{display:list-item}
-  .gcard .more{font-size:11.5px;color:var(--muted);margin-top:2px;align-self:flex-start;text-decoration:none;display:inline-block;padding:8px 0}
-  .gcard .more:hover{color:var(--brand)}
-  .gcard.collapsed{display:none}
+  /* 2026-09-21 修：攻略中心卡片统一高度、图文对齐。
+     用 div.gcard 作用域，避免和游戏页 .tile 瓦片、首页内联 .gcard 冲突。 */
+  .gcards{display:flex;flex-direction:column;gap:14px;margin:0 0 16px}
+  div.gcard{
+    --row:40px;
+    display:grid;grid-template-columns:112px 1fr;gap:16px;padding:14px;
+    border:1px solid var(--line);border-radius:12px;background:var(--card);
+    transition:box-shadow .2s,border-color .2s;cursor:pointer;color:inherit;
+    align-items:center
+  }
+  div.gcard:hover{border-color:rgba(91,140,255,.5);box-shadow:0 8px 24px rgba(0,0,0,.32)}
+  div.gcard .cover{border-radius:10px;overflow:hidden;background:#1a2537;width:100%;align-self:center}
+  div.gcard .cover img{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:cover}
+  div.gcard .info{min-width:0;display:flex;flex-direction:column;gap:8px;align-self:stretch;justify-content:center}
+  div.gcard .top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+  div.gcard .gname{font-size:15px;font-weight:700;color:var(--ink);margin:0;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  div.gcard .gname a{color:inherit;text-decoration:none}
+  div.gcard .gcat{font-size:11.5px;color:var(--muted);font-weight:500;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  div.gcard .cnt{font-size:11px;font-weight:600;color:var(--brand);background:var(--brand-soft);
+    padding:2px 8px;border-radius:99px;white-space:nowrap;flex:none}
+  div.gcard .alist{display:flex;flex-direction:column;gap:5px;margin:0;padding:0;list-style:none;min-height:calc(var(--row)*2 + 5px)}
+  div.gcard .alist li{margin:0;padding:0}
+  div.gcard .alist a{display:flex;align-items:center;font-size:13px;color:var(--ink2);padding:8px 10px;border-radius:6px;
+    transition:background .15s,color .15s;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:var(--row)}
+  div.gcard .alist a:hover{background:var(--brand-soft);color:var(--brand)}
+  div.gcard .alist a.hit{background:var(--brand-soft);color:var(--brand);font-weight:600}
+  div.gcard .alist .cat{display:inline-block;font-size:11px;font-weight:600;color:#fff;
+    background:var(--brand-deep);border-radius:4px;padding:1px 5px;margin-right:5px;vertical-align:middle;flex:none}
+  div.gcard .alist .cat.info{background:var(--accent);color:#241a00}
+  /* 右侧默认只展示前 2 篇；搜索命中时展开。 */
+  div.gcard .alist li:nth-child(n+3){display:none}
+  div.gcard.srch .alist li{display:list-item}
+  div.gcard .more{font-size:11.5px;color:var(--muted);align-self:flex-start;text-decoration:none;display:inline-flex;align-items:center;padding:8px 0;min-height:28px}
+  div.gcard .more:hover{color:var(--brand)}
+  div.gcard.collapsed{display:none}
   .more-btn{display:block;width:100%;padding:14px;margin:8px 0 28px;border:1px dashed var(--line);
     border-radius:12px;background:var(--card);color:var(--ink2);font-size:14px;font-weight:600;
     text-align:center;cursor:pointer;transition:border-color .18s,color .18s;font-family:inherit}
   .more-btn:hover{border-color:var(--brand);color:var(--brand)}
-  @media (max-width:640px){
-    .gcard{grid-template-columns:84px 1fr;gap:12px;padding:12px}
+  @media (max-width:760px){
+    div.gcard{--row:44px;grid-template-columns:88px 1fr;gap:12px;padding:12px}
   }
   @media (max-width:640px){
     .srchbar{position:relative;flex-direction:row;align-items:center;gap:10px;margin-bottom:28px}
@@ -256,6 +263,23 @@
     .body h2{font-size:19px}
     .nav{gap:14px}
   }
+
+  /* ===== 资讯中心：原创资讯图文卡片 ===== */
+  .icards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;margin:18px 0 34px}
+  .icard{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:13px;overflow:hidden;background:var(--card);color:var(--ink);transition:box-shadow .2s,border-color .2s;text-decoration:none}
+  .icard:hover{border-color:rgba(91,140,255,.5);box-shadow:0 8px 24px rgba(0,0,0,.32)}
+  .icard .icv{aspect-ratio:16/9;background:#1a2537;overflow:hidden}
+  .icard .icv img{width:100%;height:100%;object-fit:cover;display:block}
+  .icard .icv-ph{width:100%;height:100%;background:linear-gradient(135deg,#1c2333,#131b29)}
+  .icard .ibd{padding:13px 14px 15px;display:flex;flex-direction:column;flex:1;min-width:0}
+  .icard .imeta{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:11.5px;color:var(--muted)}
+  .icard .icat{font-size:11px;font-weight:600;color:#fff;background:var(--brand-deep);border-radius:99px;padding:2px 8px;flex:none}
+  .icard .itl{font-size:15px;font-weight:700;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.9em}
+  .icard .ism{margin-top:7px;font-size:12.5px;color:var(--muted);line-height:1.7;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  /* ===== 游戏页：精彩图集 ===== */
+  .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:8px 0 30px}
+  .gallery img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:12px;background:#1a2537}
+  .gallery figcaption{font-size:12.5px;color:var(--muted);margin-top:6px;text-align:center}
 
   /* ══════════════════════════════════════════════════════════════
      内页移动端重设计 2026-09-21 · 仅 ≤760px 生效
@@ -281,12 +305,22 @@
       text-align:center;border-radius:9px}
 
     /* 攻略中心 / 归档列表：条目热区提到 44px */
-    .gcard .alist a{min-height:44px;display:flex;align-items:center}
-    .gcard .more{padding:11px 0}
+    div.gcard .alist a{min-height:44px;display:flex;align-items:center}
+    div.gcard .more{padding:11px 0}
     .lst a{min-height:52px}
     .rel a{min-height:52px}
     .catnav a{padding:11px 14px;min-height:42px;display:inline-flex;align-items:center}
     .pn a{padding:15px 16px}
+
+    /* 资讯中心：移动端改为横向小图卡，隐藏摘要缩短页面 */
+    .icards{grid-template-columns:1fr;gap:12px}
+    .icard{flex-direction:row;gap:12px;padding:12px;align-items:center}
+    .icard .icv{flex:0 0 96px;aspect-ratio:1/1;border-radius:9px}
+    .icard .ibd{padding:0}
+    .icard .itl{font-size:14.5px;-webkit-line-clamp:2;min-height:0}
+    .icard .ism{display:none}
+    /* 游戏页图集：2 列 */
+    .gallery{grid-template-columns:repeat(2,1fr);gap:10px}
 
     /* 文末按钮 / 搜索框热区 */
     .cta-btn{padding:14px 30px;min-height:48px}
@@ -363,42 +397,44 @@
 
 
 
+
+
 <h2 class="sec-h">巴风特之怒：RO怀旧 攻略（1 篇）</h2>
 <div class="lst">
   <a href="/article/39"><span class="cat">攻略</span><span><span class="nm">巴风特之怒RO怀旧：六大经典职业加点与转职攻略</span><span class="sm">RO经典职业体系详解，剑士、法师、弓箭手、服事、盗贼、商人一转二转全攻略。</span></span></a>
 </div>
 
 <h2 class="sec-h">同类怀旧手游推荐</h2>
-<div class="gcards">
-  <a class="gcard" href="/game/46">
+<div class="tiles">
+  <a class="tile" href="/game/46">
     <img src="../assets/images/jizhan_cover.jpg" alt="机战：钢铁巨舰" loading="lazy" width="960" height="540">
     <div class="bd"><div class="nm">机战：钢铁巨舰</div><div class="ds">《机战：钢铁巨舰》是大型科幻机甲题材MMORPG手游，驾驶钢铁巨舰征</div></div>
   </a>
-  <a class="gcard" href="/game/1">
+  <a class="tile" href="/game/1">
     <img src="../assets/images/longzhigu_cover.jpg" alt="龙之谷启程" loading="lazy" width="560" height="315">
     <div class="bd"><div class="nm">龙之谷启程</div><div class="ds">《龙之谷：启程》是由三九互娱发行的3D动作冒险MMORPG手游，作为</div></div>
   </a>
-  <a class="gcard" href="/game/45">
+  <a class="tile" href="/game/45">
     <img src="../assets/images/rxjianghu2_cover.jpg" alt="热血江湖2.0" loading="lazy" width="560" height="315">
     <div class="bd"><div class="nm">热血江湖2.0</div><div class="ds">《热血江湖2.0》是经典武侠IP的全新手游大作，Q版萌系画风搭配热血</div></div>
   </a>
-  <a class="gcard" href="/game/47">
+  <a class="tile" href="/game/47">
     <img src="../assets/images/tulongshijie_cover.jpg" alt="屠龙世界：再战沙巴克" loading="lazy" width="960" height="539">
     <div class="bd"><div class="nm">屠龙世界：再战沙巴克</div><div class="ds">《屠龙世界：再战沙巴克》（又名《沙巴克传奇》）是由安徽游昕联合运营的</div></div>
   </a>
-  <a class="gcard" href="/game/21">
+  <a class="tile" href="/game/21">
     <img src="../assets/images/wulin_cover.jpg" alt="武林外传：十年之约" loading="lazy" width="800" height="600">
     <div class="bd"><div class="nm">武林外传：十年之约</div><div class="ds">《武林外传：十年之约》是经典端游《武林外传》的正版怀旧手游，以七侠镇</div></div>
   </a>
-  <a class="gcard" href="/game/2">
+  <a class="tile" href="/game/2">
     <img src="../assets/images/moxiangqing_cover.jpg" alt="墨香情" loading="lazy" width="640" height="400">
     <div class="bd"><div class="nm">墨香情</div><div class="ds">《墨香情》是由三九互娱发行的正版武侠MMORPG手游，经典端游《墨香</div></div>
   </a>
-  <a class="gcard" href="/game/6">
+  <a class="tile" href="/game/6">
     <img src="../assets/images/rongyao_cover.jpg" alt="荣耀出征卡点服" loading="lazy" width="560" height="315">
     <div class="bd"><div class="nm">荣耀出征卡点服</div><div class="ds">《荣耀出征》是正版奇迹MU授权复刻的3D魔幻MMORPG手游，由安徽</div></div>
   </a>
-  <a class="gcard" href="/game/3">
+  <a class="tile" href="/game/3">
     <img src="../assets/images/xingchenbian_cover.jpg" alt="星辰变：归来" loading="lazy" width="560" height="315">
     <div class="bd"><div class="nm">星辰变：归来</div><div class="ds">《星辰变：归来》是阅文正版授权、复刻经典端游体验的大型修真MMORP</div></div>
   </a>
