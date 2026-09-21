@@ -295,14 +295,16 @@ const BASE_CSS = `
   .gcard .ds{font-size:12px;color:var(--muted);line-height:1.6}
 
   /* ===== 索引页 ===== */
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px;align-items:stretch}
+.grid>.card{display:flex;flex-direction:column}
+.grid>.card img{flex:0 0 auto}
   .card{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card);display:block;color:var(--ink)}
   .card:hover{box-shadow:0 8px 24px rgba(0,0,0,.34)}
   .card img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;background:#1a2537}
-  .card .bd{padding:13px 15px}
-  .card .nm{font-size:15.5px;font-weight:600;margin-bottom:6px}
-  .card .ds{font-size:12.5px;color:var(--muted);line-height:1.65;margin-bottom:11px;min-height:40px}
-  .card .row{display:flex;gap:8px;flex-wrap:wrap}
+  .card .bd{padding:13px 15px;display:flex;flex-direction:column;flex:1;min-width:0}
+  .card .nm{font-size:15.5px;font-weight:600;line-height:1.42;margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.84em}
+  .card .ds{font-size:12.5px;color:var(--muted);line-height:1.65;margin-bottom:11px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;min-height:4.95em}
+  .card .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
   .btn{display:inline-block;font-size:12.5px;font-weight:600;padding:6px 14px;border-radius:7px;background:var(--brand);color:#fff!important}
   .btn.ghost{background:var(--brand-soft);color:var(--brand)!important}
   .lead{font-size:15px;color:var(--ink2);margin:0 0 32px}
@@ -402,8 +404,8 @@ const BASE_CSS = `
     .grid .card{border-radius:14px}
     .grid .card img{aspect-ratio:16/9}
     .grid .card .bd{padding:10px 11px 12px}
-    .grid .card .nm{font-size:14px;line-height:1.35;margin-bottom:5px}
-    .grid .card .ds{font-size:11.5px;line-height:1.55;min-height:36px;margin-bottom:9px;
+    .grid .card .nm{font-size:14px;line-height:1.35;margin-bottom:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.7em}
+    .grid .card .ds{font-size:11.5px;line-height:1.55;min-height:3.1em;margin-bottom:9px;
       display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
     .grid .card .row{gap:6px}
     .grid .card .btn{flex:1 1 0;min-width:0;padding:11px 6px;font-size:11.5px;
@@ -899,6 +901,25 @@ const archiveList = newsArchives
   : [];
 
 let hubNews = null;
+
+/* 本站原创资讯：data/articles.js 里 category === '资讯' 的文章。
+   它们此前只出现在 /article/N 与 sitemap，资讯中心（/news）看不到 —— 这里补上入口。
+   定义在 if 之外，这样即便官方公告被清空走「空态」分支，原创资讯依然可见。 */
+const infoArticles = articles
+  .filter(a => a.category === '资讯')
+  .slice()
+  .sort((m, n) => String(n.date || '').localeCompare(String(m.date || '')));
+const infoArticlesHtml = infoArticles.map(a => {
+  const gname = (a.gameId && gameById[a.gameId]) ? gameById[a.gameId].name : '综合资讯';
+  const sm = a.summary ? '\n      <p class="ns">' + esc(a.summary) + '</p>' : '';
+  return '    <li>\n      <div class="nh"><span class="nd">' + esc(a.date || '') +
+    '</span><span class="nc">' + esc(gname) + '</span><a href="/article/' + a.id + '">' +
+    esc(a.title) + '</a></div>' + sm + '\n    </li>';
+}).join('\n');
+const infoSectionHtml = infoArticles.length
+  ? '  <h2 class="sec-h">本站原创资讯</h2>\n  <ul class="news">\n' + infoArticlesHtml + '\n  </ul>\n\n'
+  : '';
+
 if (archiveList.length) {
   const synced = String(officialNews.generatedAt || '').slice(0, 10);
   const nameOfSlug = {};
@@ -945,10 +966,10 @@ if (archiveList.length) {
     (s, a) => s + a.items.filter(it => newsHref(a.slug, it)).length, 0);
 
   const newsBody = `<main class="wrap wide">
-  <nav class="crumb"><a href="/">首页</a><i>/</i><span>官方公告</span></nav>
-  <h1>手游官方公告合集</h1>
-  <p class="lead">本页汇总本站收录的怀旧手游官方专区公开公告，<strong>按游戏分类</strong>整理，包含开服、合服、维护、版本更新与活动等。
-  每条公告均已收录到本站独立页面，点击即可直接阅读全文，无需跳转任何外部站点。</p>
+  <nav class="crumb"><a href="/">首页</a><i>/</i><span>游戏资讯</span></nav>
+  <h1>游戏资讯与官方公告</h1>
+  <p class="lead">本页汇总<strong>本站原创资讯</strong>与收录的怀旧手游官方专区公开公告，包含开服、合服、维护、版本更新与活动等。
+  每篇均可站内直接阅读全文，无需跳转任何外部站点。</p>
 
   <div class="srchbar">
     <input id="newsSearch" type="search" placeholder="搜索游戏名或公告标题，例如「龙之谷」「维护」" autocomplete="off" aria-label="搜索官方资讯">
@@ -957,7 +978,7 @@ if (archiveList.length) {
   <div class="srch-res" id="newsRes" hidden></div>
 
   <div id="newsBrowse">
-  <h2 class="sec-h">按游戏分类</h2>
+${infoSectionHtml}  <h2 class="sec-h">按游戏分类</h2>
   <div class="chips">
 ${newsChipsHtml}
   </div>
@@ -1018,8 +1039,8 @@ ${newsArchiveHtml}
 
   const newsUrl = SITE + '/news';
   writeFile('news.html', head(
-    '手游官方公告合集 - 开服/合服/维护/活动 - 小梦怀旧手游',
-    `按游戏分类汇总怀旧手游的开服、合服、维护、版本更新与活动公告，每条均为站内独立页面，可直接阅读全文。`,
+    '游戏资讯与官方公告 - 开服/合服/维护/活动 - 小梦怀旧手游',
+    `汇总怀旧手游的官方开服、合服、维护、版本更新与活动公告，以及本站原创资讯长文，均可站内直接阅读全文。`,
     newsUrl,
     { prefix: '', ld: [{
       '@context': 'https://schema.org', '@type': 'CollectionPage',
@@ -1038,6 +1059,11 @@ ${newsArchiveHtml}
       if (!href) return;
       newsIndexArr.push([it.title, href, gname, it.date || '']);
     });
+  });
+  /* 本站原创资讯也进搜索索引，否则资讯中心搜不到自己站内的文章 */
+  infoArticles.forEach(a => {
+    const gname = (a.gameId && gameById[a.gameId]) ? gameById[a.gameId].name : '综合资讯';
+    newsIndexArr.push([a.title, '/article/' + a.id, gname, a.date || '']);
   });
   const newsIndexSrc = '/* 资讯搜索索引 · 由 scripts/build-articles.js 自动生成，请勿手改 */\n' +
     'var NEWS_INDEX=' + JSON.stringify(newsIndexArr).replace(/</g, '\\u003c') + ';\n';
@@ -1214,8 +1240,8 @@ ${moreHtml}
   ) + `<main class="wrap">
   <nav class="crumb"><a href="/">首页</a><i>/</i><span>官网资讯</span></nav>
   <h1 class="ttl">官网资讯中心</h1>
-  <p class="lead">这里按游戏分类汇总各款怀旧手游的官方公告：开服、合服、维护、版本更新与活动。</p>
-  <p class="lead">内容正在重新整理，整理好会一款一款放上来。</p>
+  <p class="lead">这里汇总本站原创资讯，以及各款怀旧手游的官方公告：开服、合服、维护、版本更新与活动。</p>
+${infoSectionHtml}  <p class="lead">官方公告内容正在重新整理，整理好会一款一款放上来。</p>
   <div class="cta">
     <p>想先看看有哪些游戏？游戏大厅里有全部怀旧手游的下载入口和攻略。</p>
     <a class="cta-btn" href="/games">← 去游戏大厅</a>
@@ -1229,7 +1255,14 @@ ${moreHtml}
 
 // ===== 7. 生成攻略索引页 guides.html =====
 const byGame = articlesByGame;
-const gameGroups = [...byGame.entries()].sort((x, y) => y[1].length - x[1].length);
+/* gameId=0 / 无单一游戏归属的文章（例如「N 款游戏月度动态汇总」这类跨游戏长文）单独成组。
+   它们原本混在 gameGroups 里，但 buildCard 里取不到 gameById[0] 会整组 return ''，
+   导致这类文章在攻略中心完全不可达 —— 改成单独渲染一张卡。 */
+const miscArticles = (byGame.get(0) || []).slice()
+  .sort((m, n) => String(n.date).localeCompare(String(m.date)));
+const gameGroups = [...byGame.entries()]
+  .filter(([gid]) => gid !== 0 && gameById[gid])
+  .sort((x, y) => y[1].length - x[1].length);
 const HOT_COUNT = 4;
 const hotGroups = gameGroups.slice(0, HOT_COUNT);
 const restGroups = gameGroups.slice(HOT_COUNT);
@@ -1286,6 +1319,41 @@ ${more}
 </div>`;
   };
 
+  /* 无单一游戏归属的文章渲染成一张「综合汇总」卡。
+     封面用站点 logo —— 与 .gcard .cover img 的 1/1 正方形比例一致。 */
+  const buildMiscCard = (list) => {
+    if (!list || !list.length) return '';
+    const VISIBLE_ON_CARD = 2;
+    const shown = list.slice(0, Math.min(4, list.length));
+    const extraCount = Math.max(0, list.length - VISIBLE_ON_CARD);
+    const items = shown.map(a => {
+      const catLabel = a.category || '资讯';
+      const catClass = (a.category === '资讯') ? 'cat info' : 'cat';
+      const hay = esc(['综合汇总', catLabel, a.title, (a.summary || '')].join(' '));
+      return `    <li><a href="/article/${a.id}" data-s="${hay}"><span class="${catClass}">${esc(catLabel)}</span>${esc(a.title)}</a></li>`;
+    }).join('\n');
+    const more = extraCount > 0 ? `  <a class="more" href="/news">还有 ${extraCount} 篇 →</a>` : '';
+    return `<div class="gcard" data-href="/news">
+  <div class="cover">
+    <a href="/news"><img src="assets/images/logo_xiaomeng.png" alt="综合汇总" loading="lazy"></a>
+  </div>
+  <div class="info">
+    <div class="top">
+      <div>
+        <h3 class="gname"><a href="/news">综合汇总</a></h3>
+        <div class="gcat">多游戏资讯</div>
+      </div>
+      <span class="cnt">${list.length} 篇</span>
+    </div>
+    <ul class="alist">
+${items}
+    </ul>
+${more}
+  </div>
+</div>`;
+  };
+
+  const miscCard = buildMiscCard(miscArticles);
   const hotCards = hotGroups.map(([gid, list]) => buildCard(gid, list, false)).join('\n');
   const restCards = restGroups.map(([gid, list]) => buildCard(gid, list, true)).join('\n');
   const moreBtn = restGroups.length ? `  <button class="more-btn" id="moreBtn" type="button">展开全部 ${restGroups.length} 个游戏攻略 ↓</button>` : '';
@@ -1306,6 +1374,7 @@ ${more}
 
   <div class="gcards" id="guideCards">
 ${hotCards}
+${miscCard}
   </div>
 ${moreBtn}
   <div class="gcards" id="guideCardsRest">
