@@ -250,6 +250,67 @@
     .body h2{font-size:19px}
     .nav{gap:14px}
   }
+
+  /* ══════════════════════════════════════════════════════════════
+     内页移动端重设计 2026-09-21 · 仅 ≤760px 生效
+     ══════════════════════════════════════════════════════════════ */
+  @media (max-width:760px){
+    /* 顶栏：链接热区 27px → 44px */
+    .topbar{padding:7px 14px;gap:10px;min-height:56px}
+    .brand{font-size:15px;padding:9px 0;white-space:nowrap}
+    .topbar .nav{gap:3px;flex-wrap:nowrap}
+    .topbar .nav a{padding:12px 9px;font-size:13.5px;border-radius:9px;
+      min-height:44px;display:flex;align-items:center;white-space:nowrap}
+
+    /* 游戏大厅：单列 352px 高（一屏仅 1.5 张）→ 2 列 */
+    .grid{grid-template-columns:repeat(2,1fr)!important;gap:12px}
+    .grid .card{border-radius:14px}
+    .grid .card img{aspect-ratio:16/9}
+    .grid .card .bd{padding:10px 11px 12px}
+    .grid .card .nm{font-size:14px;line-height:1.35;margin-bottom:5px}
+    .grid .card .ds{font-size:11.5px;line-height:1.55;min-height:36px;margin-bottom:9px;
+      display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .grid .card .row{gap:6px}
+    .grid .card .btn{flex:1 1 0;min-width:0;padding:11px 6px;font-size:11.5px;
+      text-align:center;border-radius:9px}
+
+    /* 攻略中心 / 归档列表：条目热区提到 44px */
+    .gcard .alist a{min-height:44px;display:flex;align-items:center}
+    .gcard .more{padding:11px 0}
+    .lst a{min-height:52px}
+    .rel a{min-height:52px}
+    .catnav a{padding:11px 14px;min-height:42px;display:inline-flex;align-items:center}
+    .pn a{padding:15px 16px}
+
+    /* 文末按钮 / 搜索框热区 */
+    .cta-btn{padding:14px 30px;min-height:48px}
+    .srchbar input{height:44px}
+    .more-btn{padding:16px}
+
+    /* 标题略放大；正文维持 640px 断点的 16px，避免手机页面被拉长 */
+    h1.ttl{font-size:24px;line-height:1.35}
+
+    /* 底部标签栏占位 */
+    body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))!important}
+  }
+
+  /* ── 底部标签栏：移动端专属 ── */
+  .tabbar{display:none}
+  @media (max-width:760px){
+    .tabbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:140;
+      height:calc(62px + env(safe-area-inset-bottom,0px));
+      padding-bottom:env(safe-area-inset-bottom,0px);
+      background:rgba(10,15,25,.97);
+      -webkit-backdrop-filter:blur(18px) saturate(180%);backdrop-filter:blur(18px) saturate(180%);
+      border-top:1px solid rgba(255,255,255,.09);box-shadow:0 -6px 24px rgba(0,0,0,.42)}
+    .tabbar a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+      gap:4px;color:#6b7a90;text-decoration:none;font-size:10.5px;font-weight:600;
+      -webkit-tap-highlight-color:transparent;transition:color .16s}
+    .tabbar a svg{width:21px;height:21px;display:block}
+    .tabbar a svg path,.tabbar a svg rect{stroke-width:1.9}
+    .tabbar a.on{color:#00d4ff}
+    .tabbar a.on svg{filter:drop-shadow(0 0 7px rgba(0,212,255,.5))}
+  }
 </style>
 </head>
 <body>
@@ -350,5 +411,14 @@
   <p style="margin:14px 0 0">本站仅提供游戏导航与攻略信息 · 游戏版权归各开发商所有</p>
   <p style="margin:6px 0 0">© 2026 小梦怀旧手游 · fmbly.com</p>
 </footer>
+
+<nav class="tabbar" aria-label="主导航">
+  <a href="/" data-tab="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round"><path d="M3 10.6 12 3.2l9 7.4"/><path d="M5.6 9.4V20.8h12.8V9.4"/></svg><span>首页</span></a>
+  <a href="/games" data-tab="games"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round"><rect x="2" y="6.5" width="20" height="11" rx="5.5"/><path d="M7 10.2v3.6M5.2 12h3.6M15.8 11h.01M18.2 13h.01"/></svg><span>游戏大厅</span></a>
+  <a href="/guides" data-tab="guides"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round"><path d="M4 4.5h6.2a1.8 1.8 0 0 1 1.8 1.8v13.2a1.8 1.8 0 0 0-1.8-1.8H4z"/><path d="M20 4.5h-6.2A1.8 1.8 0 0 0 12 6.3v13.2a1.8 1.8 0 0 1 1.8-1.8H20z"/></svg><span>攻略</span></a>
+  <a href="/news" data-tab="news"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="14" rx="2.4"/><path d="M7.5 9.4h9M7.5 13h5.6"/></svg><span>资讯</span></a>
+</nav>
+<script>(function(){var p=location.pathname,t=p==='/'?'home':(p.indexOf('/games')===0||p.indexOf('/game/')===0)?'games':(p.indexOf('/guides')===0||p.indexOf('/article/')===0)?'guides':(p.indexOf('/news')===0)?'news':'home';var a=document.querySelector('.tabbar a[data-tab="'+t+'"]');if(a)a.classList.add('on');})()</script>
+
 </body>
 </html>

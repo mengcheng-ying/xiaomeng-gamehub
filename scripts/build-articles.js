@@ -385,6 +385,67 @@ const BASE_CSS = `
     .body h2{font-size:19px}
     .nav{gap:14px}
   }
+
+  /* ══════════════════════════════════════════════════════════════
+     内页移动端重设计 2026-09-21 · 仅 ≤760px 生效
+     ══════════════════════════════════════════════════════════════ */
+  @media (max-width:760px){
+    /* 顶栏：链接热区 27px → 44px */
+    .topbar{padding:7px 14px;gap:10px;min-height:56px}
+    .brand{font-size:15px;padding:9px 0;white-space:nowrap}
+    .topbar .nav{gap:3px;flex-wrap:nowrap}
+    .topbar .nav a{padding:12px 9px;font-size:13.5px;border-radius:9px;
+      min-height:44px;display:flex;align-items:center;white-space:nowrap}
+
+    /* 游戏大厅：单列 352px 高（一屏仅 1.5 张）→ 2 列 */
+    .grid{grid-template-columns:repeat(2,1fr)!important;gap:12px}
+    .grid .card{border-radius:14px}
+    .grid .card img{aspect-ratio:16/9}
+    .grid .card .bd{padding:10px 11px 12px}
+    .grid .card .nm{font-size:14px;line-height:1.35;margin-bottom:5px}
+    .grid .card .ds{font-size:11.5px;line-height:1.55;min-height:36px;margin-bottom:9px;
+      display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .grid .card .row{gap:6px}
+    .grid .card .btn{flex:1 1 0;min-width:0;padding:11px 6px;font-size:11.5px;
+      text-align:center;border-radius:9px}
+
+    /* 攻略中心 / 归档列表：条目热区提到 44px */
+    .gcard .alist a{min-height:44px;display:flex;align-items:center}
+    .gcard .more{padding:11px 0}
+    .lst a{min-height:52px}
+    .rel a{min-height:52px}
+    .catnav a{padding:11px 14px;min-height:42px;display:inline-flex;align-items:center}
+    .pn a{padding:15px 16px}
+
+    /* 文末按钮 / 搜索框热区 */
+    .cta-btn{padding:14px 30px;min-height:48px}
+    .srchbar input{height:44px}
+    .more-btn{padding:16px}
+
+    /* 标题略放大；正文维持 640px 断点的 16px，避免手机页面被拉长 */
+    h1.ttl{font-size:24px;line-height:1.35}
+
+    /* 底部标签栏占位 */
+    body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))!important}
+  }
+
+  /* ── 底部标签栏：移动端专属 ── */
+  .tabbar{display:none}
+  @media (max-width:760px){
+    .tabbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:140;
+      height:calc(62px + env(safe-area-inset-bottom,0px));
+      padding-bottom:env(safe-area-inset-bottom,0px);
+      background:rgba(10,15,25,.97);
+      -webkit-backdrop-filter:blur(18px) saturate(180%);backdrop-filter:blur(18px) saturate(180%);
+      border-top:1px solid rgba(255,255,255,.09);box-shadow:0 -6px 24px rgba(0,0,0,.42)}
+    .tabbar a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+      gap:4px;color:#6b7a90;text-decoration:none;font-size:10.5px;font-weight:600;
+      -webkit-tap-highlight-color:transparent;transition:color .16s}
+    .tabbar a svg{width:21px;height:21px;display:block}
+    .tabbar a svg path,.tabbar a svg rect{stroke-width:1.9}
+    .tabbar a.on{color:#00d4ff}
+    .tabbar a.on svg{filter:drop-shadow(0 0 7px rgba(0,212,255,.5))}
+  }
 `;
 
 // 首页「爬虫链接区」样式（首页是深色配色，跟随其变量）
@@ -399,6 +460,91 @@ const INDEX_EXTRA_CSS = `
   .seo-noscript li{font-size:.85rem;line-height:1.95}
   .seo-noscript a{color:#9aa3bd}
   .seo-noscript a:hover{color:#fff}
+
+      /* ══════════════════════════════════════════════════════════════
+     移动端重设计 2026-09-21 · 仅 ≤760px 生效，桌面样式不受影响
+     ══════════════════════════════════════════════════════════════ */
+  @media (max-width:760px){
+
+    /* ── 1. 顶栏：三行堆叠 173px → 单行 56px，主导航下沉到底部标签栏 ── */
+    .nav{height:56px;background:rgba(10,15,25,.95);
+      -webkit-backdrop-filter:blur(14px) saturate(180%);backdrop-filter:blur(14px) saturate(180%)}
+    .nav-in{height:56px;padding:0 14px;gap:10px;max-width:none;flex-wrap:nowrap!important}
+    .nav-logo{gap:7px;flex:none;order:1!important}
+    .nav-logo-img{width:26px;height:26px;border-radius:7px}
+    .logo-name{font-size:14.5px;font-weight:700;letter-spacing:0;white-space:nowrap}
+    #navLinks{display:none!important}
+    .nav-cta{display:none!important}
+    .nav-toggle{display:none!important}
+    .nav-srch{order:2!important;flex:0 1 auto!important;width:auto!important;
+      min-width:110px;margin-left:auto!important;position:relative}
+    .nav-srch input{width:100%!important;height:38px;font-size:13.5px;border-radius:11px;
+      padding:0 12px 0 34px;border:1px solid rgba(255,255,255,.1)}
+    .nav-srch input:focus{width:100%!important}
+    .nav-srch .ic{left:12px;font-size:12.5px}
+    .srch-panel{position:fixed;left:10px;right:10px;top:62px;max-height:62vh;overflow:auto}
+
+    /* ── 2. 轮播：3D 堆叠（左右被裁）→ 横向翻页卡（覆盖 JS 内联 transform）── */
+    .hero{height:auto!important;min-height:0!important;padding:66px 0 8px!important;margin-top:0!important}
+    .carousel{position:static!important;height:auto!important;display:flex;gap:10px;align-items:stretch;
+      overflow-x:auto;overflow-y:hidden;padding:4px 16px 12px;
+      scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+    .carousel::-webkit-scrollbar{display:none}
+    .carousel .card{position:static!important;top:auto!important;left:auto!important;right:auto!important;
+      width:auto!important;flex:0 0 80vw;max-width:330px;scroll-snap-align:center;
+      transform:none!important;opacity:1!important;pointer-events:auto!important;z-index:auto!important;
+      border-radius:16px}
+    .carousel .card .card-img{aspect-ratio:16/9;border-radius:16px 16px 0 0}
+    .carousel .card-bd{padding:12px 14px 14px}
+    .carousel .card-bd h3{font-size:16px;margin-bottom:4px}
+    .carousel .card-bd .sl{font-size:12px;margin-bottom:10px}
+    .hero-arrow{width:32px;height:32px;font-size:1rem;background:rgba(10,16,28,.62)}
+
+    /* ── 3. 信任状四宫格：4 列挤成一团 → 2×2 ── */
+    .feat-grid{grid-template-columns:repeat(2,1fr)!important;gap:10px}
+
+    /* ── 4. 游戏网格：3 列 113px（封面图仅 64px 高）→ 2 列 175px ── */
+    .game-grid{grid-template-columns:repeat(2,1fr)!important;gap:12px}
+    .game-grid .card{border-radius:14px}
+    .game-grid .card .card-img{aspect-ratio:16/9}
+    .game-grid .card-bd{padding:10px 11px 12px}
+    .game-grid .card-bd h3{font-size:14px;line-height:1.35;margin-bottom:4px}
+    .game-grid .card-bd .sl{font-size:11.5px;margin-bottom:9px;
+      display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .game-grid .btns{gap:6px}
+    .game-grid .btn{flex:1 1 0;min-width:0;padding:12px 6px;font-size:11.5px;
+      text-align:center;border-radius:9px;white-space:nowrap}
+
+    /* ── 5. 区块标题收紧 ── */
+    .sec-head{padding:0 4px}
+    .sec-head h2{font-size:22px;line-height:1.3}
+
+    /* ── 6. 筛选 chips：贴边滑动 + 右缘渐隐，提示可横向滚动 ── */
+    .tabs{margin:0 -16px;padding:2px 16px 10px;
+      -webkit-mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 26px),transparent 100%);
+      mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 26px),transparent 100%)}
+
+    /* ── 7. 为底部标签栏留出安全间距 ── */
+    body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))!important}
+  }
+
+  /* ── 底部标签栏：移动端专属，桌面隐藏 ── */
+  .tabbar{display:none}
+  @media (max-width:760px){
+    .tabbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:140;
+      height:calc(62px + env(safe-area-inset-bottom,0px));
+      padding-bottom:env(safe-area-inset-bottom,0px);
+      background:rgba(10,15,25,.97);
+      -webkit-backdrop-filter:blur(18px) saturate(180%);backdrop-filter:blur(18px) saturate(180%);
+      border-top:1px solid rgba(255,255,255,.09);box-shadow:0 -6px 24px rgba(0,0,0,.42)}
+    .tabbar a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+      gap:4px;color:#6b7a90;text-decoration:none;font-size:10.5px;font-weight:600;
+      -webkit-tap-highlight-color:transparent;transition:color .16s}
+    .tabbar a svg{width:21px;height:21px;display:block}
+    .tabbar a svg path,.tabbar a svg rect{stroke-width:1.9}
+    .tabbar a.on{color:#00d4ff}
+    .tabbar a.on svg{filter:drop-shadow(0 0 7px rgba(0,212,255,.5))}
+  }
 `;
 
 function head(title, desc, canonical, opts) {
@@ -449,6 +595,16 @@ ${o.extraHead || ''}
 `;
 }
 
+const TABBAR = `
+<nav class="tabbar" aria-label="主导航">
+  <a href="/" data-tab="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round"><path d="M3 10.6 12 3.2l9 7.4"/><path d="M5.6 9.4V20.8h12.8V9.4"/></svg><span>首页</span></a>
+  <a href="/games" data-tab="games"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round"><rect x="2" y="6.5" width="20" height="11" rx="5.5"/><path d="M7 10.2v3.6M5.2 12h3.6M15.8 11h.01M18.2 13h.01"/></svg><span>游戏大厅</span></a>
+  <a href="/guides" data-tab="guides"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round"><path d="M4 4.5h6.2a1.8 1.8 0 0 1 1.8 1.8v13.2a1.8 1.8 0 0 0-1.8-1.8H4z"/><path d="M20 4.5h-6.2A1.8 1.8 0 0 0 12 6.3v13.2a1.8 1.8 0 0 1 1.8-1.8H20z"/></svg><span>攻略</span></a>
+  <a href="/news" data-tab="news"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="14" rx="2.4"/><path d="M7.5 9.4h9M7.5 13h5.6"/></svg><span>资讯</span></a>
+</nav>
+<script>(function(){var p=location.pathname,t=p==='/'?'home':(p.indexOf('/games')===0||p.indexOf('/game/')===0)?'games':(p.indexOf('/guides')===0||p.indexOf('/article/')===0)?'guides':(p.indexOf('/news')===0)?'news':'home';var a=document.querySelector('.tabbar a[data-tab="'+t+'"]');if(a)a.classList.add('on');})()<\/script>
+`;
+
 function foot() {
   return `
 <footer class="foot">
@@ -458,6 +614,7 @@ function foot() {
   <p style="margin:14px 0 0">本站仅提供游戏导航与攻略信息 · 游戏版权归各开发商所有</p>
   <p style="margin:6px 0 0">© 2026 小梦怀旧手游 · fmbly.com</p>
 </footer>
+${TABBAR}
 </body>
 </html>
 `;
