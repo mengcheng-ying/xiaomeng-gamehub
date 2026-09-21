@@ -29,7 +29,10 @@
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://fmbly.com/"},{"@type":"ListItem","position":2,"name":"官方公告","item":"https://fmbly.com/news"},{"@type":"ListItem","position":3,"name":"《龙之谷启程》官方公告","item":"https://fmbly.com/news/dn"},{"@type":"ListItem","position":4,"name":"9月15日更新公告","item":"https://fmbly.com/news/dn/50ebf81a39"}]}</script>
 
 <style>
-  :root{--ink:#eef2f7;--ink2:#c6d0e2;--muted:#9aa7ba;--line:rgba(255,255,255,.1);--brand:#5b8cff;--brand-soft:rgba(91,140,255,.14);--accent:#f5b50a;--bg:#0b101a;--card:#16202f}
+  :root{
+  /* 2026-09-21：实心按钮专用底色。--brand(#5b8cff) 配白字只有 3.16:1，
+     低于 WCAG AA 的 4.5:1；加深到 #3d6fe0 后为 4.69:1，色相不变。 */
+  --brand-deep:#3d6fe0;--ink:#eef2f7;--ink2:#c6d0e2;--muted:#9aa7ba;--line:rgba(255,255,255,.1);--brand:#5b8cff;--brand-soft:rgba(91,140,255,.14);--accent:#f5b50a;--bg:#0b101a;--card:#16202f}
   *{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%}
   body{margin:0;background:var(--bg);color:var(--ink);
@@ -45,7 +48,7 @@
   .wrap{max-width:46rem;margin:0 auto;padding:34px 20px 64px}
   .wrap.wide{max-width:1040px}
   .crumb{font-size:13px;color:var(--muted);margin-bottom:20px}
-  .crumb a{color:var(--muted)}
+  .crumb a{color:var(--muted);padding:8px 6px;margin:-8px -6px;display:inline-block}
   .crumb a:hover{color:var(--brand)}
   .crumb i{font-style:normal;margin:0 7px;opacity:.55}
   .tag{display:inline-block;font-size:12px;font-weight:600;color:#241a00;background:var(--accent);border-radius:99px;padding:3px 12px;margin-bottom:14px}
@@ -80,7 +83,7 @@
   .cta{margin:44px 0 0;padding:26px 22px;text-align:center;background:linear-gradient(135deg,#16223a,#111a2b);
     border:1px solid rgba(91,140,255,.22);border-radius:14px}
   .cta p{margin:0 0 16px;font-size:15px;color:var(--ink2)}
-  .cta-btn{display:inline-block;font-size:15px;font-weight:600;color:#fff!important;background:var(--brand);
+  .cta-btn{display:inline-block;font-size:15px;font-weight:600;color:#fff!important;background:var(--brand-deep);
     padding:12px 30px;border-radius:99px;box-shadow:0 6px 18px rgba(91,140,255,.28);transition:transform .15s,box-shadow .15s}
   .cta-btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(91,140,255,.34)}
 
@@ -90,7 +93,7 @@
   .rel a{display:flex;align-items:center;gap:11px;padding:14px 16px;min-height:48px;border:1px solid var(--line);border-radius:10px;
     background:var(--card);color:var(--ink);transition:box-shadow .18s,border-color .18s}
   .rel a:hover{border-color:rgba(91,140,255,.5);box-shadow:0 4px 16px rgba(0,0,0,.3)}
-  .rel .cat{flex:none;font-size:11px;font-weight:600;color:#fff;background:var(--brand);border-radius:5px;padding:2px 9px}
+  .rel .cat{flex:none;font-size:11px;font-weight:600;color:#fff;background:var(--brand-deep);border-radius:5px;padding:2px 9px}
   .rel .nm{font-size:15px;font-weight:600;line-height:1.6}
 
   /* ===== 游戏页 ===== */
@@ -104,7 +107,7 @@
   .dl{display:flex;gap:12px;flex-wrap:wrap}
   .dl a{display:inline-block;font-size:15px;font-weight:600;color:#fff!important;padding:11px 26px;border-radius:99px;transition:transform .15s}
   .dl a:hover{transform:translateY(-2px)}
-  .dl .and{background:#3d7bff;box-shadow:0 6px 16px rgba(61,123,255,.32)}
+  .dl .and{background:#376ee4;box-shadow:0 6px 16px rgba(61,123,255,.32)}
   .dl .ios{background:#1d2a3d;box-shadow:0 6px 16px rgba(0,0,0,.32)}
   .facts{width:100%;border-collapse:collapse;margin:4px 0 30px;font-size:15px}
   .facts th,.facts td{border:1px solid var(--line);padding:11px 14px;text-align:left}
@@ -170,7 +173,7 @@
   .card .nm{font-size:15.5px;font-weight:600;line-height:1.42;margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.84em}
   .card .ds{font-size:12.5px;color:var(--muted);line-height:1.65;margin-bottom:11px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;min-height:4.95em}
   .card .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
-  .btn{display:inline-block;font-size:12.5px;font-weight:600;padding:6px 14px;border-radius:7px;background:var(--brand);color:#fff!important}
+  .btn{display:inline-block;font-size:12.5px;font-weight:600;padding:6px 14px;border-radius:7px;background:var(--brand-deep);color:#fff!important}
   .btn.ghost{background:var(--brand-soft);color:var(--brand)!important}
   .lead{font-size:15px;color:var(--ink2);margin:0 0 32px}
   .grp-h{font-size:19px;font-weight:700;margin:38px 0 14px;padding-bottom:10px;border-bottom:1px solid var(--line);
@@ -179,7 +182,7 @@
   .lst{display:grid;grid-template-columns:1fr;gap:10px}
   .lst a{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;min-height:48px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
   .lst a:hover{box-shadow:0 4px 16px rgba(0,0,0,.3)}
-  .lst .cat{flex:none;font-size:11px;font-weight:600;color:#fff;background:var(--brand);border-radius:5px;padding:2px 9px;margin-top:2px}
+  .lst .cat{flex:none;font-size:11px;font-weight:600;color:#fff;background:var(--brand-deep);border-radius:5px;padding:2px 9px;margin-top:2px}
   .lst .nm{font-size:15px;font-weight:600;line-height:1.6;display:block}
   .lst .sm{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.6;display:block}
     /* ===== 站内搜索 / 分类芯片（攻略中心 · 资讯中心） ===== */
@@ -188,7 +191,7 @@
     background:var(--card);color:var(--ink);font-size:15px;font-family:inherit;outline:none;transition:border-color .18s,box-shadow .18s}
   .srchbar input:focus{border-color:rgba(91,140,255,.55);box-shadow:0 0 0 4px rgba(91,140,255,.14)}
   .srchbar .srchbtn{display:none;flex:none;width:48px;height:48px;border:none;border-radius:12px;
-    background:var(--brand);color:#fff;cursor:pointer;align-items:center;justify-content:center}
+    background:var(--brand-deep);color:#fff;cursor:pointer;align-items:center;justify-content:center}
   .srchbar .srchbtn:hover{opacity:.9}
   .srchbar .hint{flex:none;font-size:13px;color:var(--muted);white-space:nowrap}
   .srch-res{margin:0 0 26px}
@@ -216,8 +219,8 @@
     transition:background .15s,color .15s;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .gcard .alist a:hover{background:var(--brand-soft);color:var(--brand)}
   .gcard .alist a.hit{background:var(--brand-soft);color:var(--brand);font-weight:600}
-  .gcard .alist .cat{display:inline-block;font-size:9.5px;font-weight:600;color:#fff;
-    background:var(--brand);border-radius:4px;padding:1px 5px;margin-right:5px;vertical-align:middle}
+  .gcard .alist .cat{display:inline-block;font-size:11px;font-weight:600;color:#fff;
+    background:var(--brand-deep);border-radius:4px;padding:1px 5px;margin-right:5px;vertical-align:middle}
   .gcard .alist .cat.info{background:var(--accent);color:#241a00}
   /* 2026-09-18 合并自线上：卡片右侧默认只展示前 2 篇，其余靠「还有 N 篇」进游戏页看；
      搜索命中时给卡片加 .srch，把命中的条目全部展开。 */
@@ -306,7 +309,7 @@
       -webkit-backdrop-filter:blur(18px) saturate(180%);backdrop-filter:blur(18px) saturate(180%);
       border-top:1px solid rgba(255,255,255,.09);box-shadow:0 -6px 24px rgba(0,0,0,.42)}
     .tabbar a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-      gap:4px;color:#6b7a90;text-decoration:none;font-size:10.5px;font-weight:600;
+      gap:4px;color:var(--muted);text-decoration:none;font-size:11.5px;font-weight:600;
       -webkit-tap-highlight-color:transparent;transition:color .16s}
     .tabbar a svg{width:21px;height:21px;display:block}
     .tabbar a svg path,.tabbar a svg rect{stroke-width:1.9}
