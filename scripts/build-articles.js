@@ -236,6 +236,20 @@ const BASE_CSS = `
     padding:12px 30px;border-radius:99px;box-shadow:0 6px 18px rgba(91,140,255,.28);transition:transform .15s,box-shadow .15s}
   .cta-btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(91,140,255,.34)}
 
+  /* ===== 文末游戏下载卡（攻略页） ===== */
+  .dlcard{display:flex;gap:18px;text-align:left;align-items:center;padding:20px}
+  .dlc-pic{flex:0 0 120px;width:120px;height:120px;border-radius:12px;overflow:hidden;display:block;background:#1a2537}
+  .dlc-pic img{width:100%;height:100%;object-fit:cover;display:block}
+  .dlc-info{flex:1;min-width:0}
+  .dlc-t{font-size:17px;font-weight:700;color:var(--ink);margin-bottom:6px}
+  .dlc-d{font-size:14px;color:var(--ink2);margin:0 0 14px;line-height:1.6}
+  .dlc-info .dl{margin-bottom:12px}
+  .dlc-more{font-size:13px;color:var(--brand)}
+  .dlc-more:hover{text-decoration:underline}
+  .cta-back{margin:12px 0 0;font-size:13px}
+  .cta-back a{color:var(--muted)}
+  @media(max-width:520px){.dlcard{flex-direction:column;align-items:flex-start}.dlc-pic{flex:none;width:100%;height:auto;aspect-ratio:16/10}}
+
   /* ===== 相关阅读 ===== */
   .sec-h{font-size:19px;font-weight:700;margin:46px 0 16px;color:var(--ink)}
   .rel{display:grid;grid-template-columns:1fr;gap:10px}
@@ -641,6 +655,7 @@ ${o.extraHead || ''}
   <a class="brand" href="/">🎮 小梦怀旧手游</a>
   <nav class="nav">
     <a href="/games">游戏大厅</a>
+    <a href="/news">官网资讯</a>
     <a href="/guides">攻略中心</a>
     <a href="/">首页</a>
   </nav>
@@ -663,6 +678,7 @@ function foot() {
 <footer class="foot">
   <a href="/">首页</a>
   <a href="/games">全部游戏</a>
+  <a href="/news">官网资讯</a>
   <a href="/guides">全部攻略</a>
   <p style="margin:14px 0 0">本站仅提供游戏导航与攻略信息 · 游戏版权归各开发商所有</p>
   <p style="margin:6px 0 0">© 2026 小梦怀旧手游 · fmbly.com</p>
@@ -702,11 +718,30 @@ articles.forEach((a) => {
     .slice(0, 6);
 
   const relatedHtml = related.length
-    ? `<h2 class="sec-h">继续阅读</h2>
+    ? `<div class="sec-h">继续阅读</div>
 <div class="rel">
 ${related.map(r => `  <a href="/article/${r.id}"><span class="cat">${esc(r.category || '攻略')}</span><span class="nm">${esc(r.title)}</span></a>`).join('\n')}
 </div>`
     : '';
+
+  // 文末下载卡：有归属游戏时直达联运落地页（链接取 games.js 原值，与游戏页同款回退规则），
+  // 无归属（综合/汇总文）时给「浏览全部游戏」出口，保证孤岛页也有站内出口。
+  const ctaHtml = game ? `<div class="cta dlcard">
+    <a class="dlc-pic" href="/game/${game.id}"><img src="../${esc(game.cover)}" alt="${esc(game.name)}"${sizeAttrs(game.cover)} loading="lazy"></a>
+    <div class="dlc-info">
+      <div class="dlc-t">🎮 ${esc(game.name)}</div>
+      <p class="dlc-d">${esc((game.desc || '').replace(/\s+/g, ' ').slice(0, 72))}</p>
+      <div class="dl">
+        <a class="and" href="${esc(game.androidUrl ? game.androidUrl : game.url)}" target="_blank" rel="sponsored noopener noreferrer">安卓下载</a>
+        <a class="ios" href="${esc(game.iosUrl ? game.iosUrl : game.url)}" target="_blank" rel="sponsored noopener noreferrer">苹果下载</a>
+      </div>
+      <a class="dlc-more" href="/game/${game.id}">查看《${esc(game.name)}》详情与全部攻略 →</a>
+    </div>
+  </div>` : `<div class="cta">
+    <p>这篇攻略对你有帮助吗？站内还有多款怀旧手游与攻略，一次看全。</p>
+    <a class="cta-btn" href="/games">浏览全部游戏</a>
+    <p class="cta-back"><a href="/">← 返回首页</a></p>
+  </div>`;
 
   const crumbs = [
     `<a href="/">首页</a>`,
@@ -763,10 +798,7 @@ ${contentHtml}
     </div>
   </article>
 
-  <div class="cta">
-    <p>这篇攻略对你有帮助吗？回到首页，还有更多怀旧手游和攻略等你发现。</p>
-    <a class="cta-btn" href="/">← 返回小梦怀旧手游首页</a>
-  </div>
+${ctaHtml}
 ${relatedHtml}
 </main>
 ` + foot();
