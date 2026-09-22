@@ -112,23 +112,6 @@ function newsTitleHtml(slug, it) {
 const gameById = {};
 games.forEach(g => { gameById[g.id] = g; });
 
-// 2026-09-22：主站 → 自家 7 个子站官网的内链。
-// 此前主站 197 个页面里对 7 个子站是「零内链」，子站只能靠各自 sitemap 被发现 → 爬虫发现不了。
-// 归属用「下载链接逐字节一致」核实过（子站下载入口与 games.js 的 url/androidUrl/iosUrl 完全对应）。
-const SUB_SITE = {
-  1: 'lzgqc',    // 龙之谷启程
-  2: 'mxq',      // 墨香情
-  6: 'mu',       // 荣耀出征卡点服
-  21: 'wulin',   // 武林外传：十年之约
-  36: 'xiuxian', // 修仙家族模拟器2
-  45: 'jh',      // 热血江湖2.0
-  46: 'jz'       // 机战：钢铁巨舰
-};
-function subsiteOf(gid) {
-  const s = SUB_SITE[gid];
-  return s ? 'https://' + s + '.fmbly.com/' : '';
-}
-
 // 2026-09-21：用户投放的 28 张游戏宣传图（按 slug 归组），落地到对应 /game/<id> 页「精彩图集」。
 const ART_GAMES = { longzhigu: 1, xingchenbian: 3, juezhan: 14, wulin: 21, xiuxianjiazu: 36, rxjianghu: 45 };
 function artImagesForGame(gid) {
@@ -275,11 +258,6 @@ const BASE_CSS = `
   .dl a:hover{transform:translateY(-2px)}
   .dl .and{background:#376ee4;box-shadow:0 6px 16px rgba(61,123,255,.32)}
   .dl .ios{background:#1d2a3d;box-shadow:0 6px 16px rgba(0,0,0,.32)}
-  /* 2026-09-22：游戏页的「官方网站」内链（指向自家子站），给爬虫一条从主站进子站的路。
-     --brand 当文字色在 --card 上是 5.18:1，达 WCAG AA。 */
-  .subsite{font-size:13.5px;color:var(--ink2);margin:13px 0 0}
-  .subsite a{color:var(--brand);text-decoration:none;border-bottom:1px solid rgba(91,140,255,.42)}
-  .subsite a:hover{color:#8fb0ff;border-bottom-color:#8fb0ff}
   .facts{width:100%;border-collapse:collapse;margin:4px 0 30px;font-size:15px}
   .facts th,.facts td{border:1px solid var(--line);padding:11px 14px;text-align:left}
   .facts th{background:#1c2333;width:118px;font-weight:600;color:var(--ink)}
@@ -945,7 +923,6 @@ ${nzArc.items.slice(0, 8).map(it => `  <li>
         <a class="and" href="${esc(androidHref)}" target="_blank" rel="sponsored noopener noreferrer">安卓下载</a>
         <a class="ios" href="${esc(iosHref)}" target="_blank" rel="sponsored noopener noreferrer">苹果下载</a>
       </div>
-      ${subsiteOf(g.id) ? `<p class="subsite">官方网站：<a href="${subsiteOf(g.id)}" target="_blank" rel="noopener">${esc(subsiteOf(g.id).replace('https://', ''))}</a></p>` : ''}
     </div>
   </div>
 
