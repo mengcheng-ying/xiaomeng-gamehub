@@ -5,9 +5,13 @@
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
 
-# 图片资源：内容几乎不变，长缓存 + 过期后先返回旧图再后台更新
+# 图片资源：2026-09-22 由 30 天改为 10 分钟。
+# 事故：jizhan_cover.jpg 换了两次图，但文件名不变 + 原 30 天强缓存，
+# 边缘节点连着 8.7 天一直吐旧图（cf-cache HIT, age=752397），用户看到"没换成"。
+# 换图后现在最多 10 分钟自动生效；要立即生效就 purge：
+#   POST /zones/519cd5165c4d5a9c7350419ee5f7bb8d/purge_cache  {"files":["<完整URL>"]}
 /assets/*
-  Cache-Control: public, max-age=2592000, stale-while-revalidate=604800
+  Cache-Control: public, max-age=600, stale-while-revalidate=3600
 
 # 样式与脚本：使用 ?v= 版本号做缓存刷新，改文件时记得同步改版本号
 /css/*
