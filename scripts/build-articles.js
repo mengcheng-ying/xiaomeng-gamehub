@@ -67,6 +67,10 @@ function loadJsObjectSafe(rel, keyword) {
 
 const articles = loadJsArray('data/articles.js', 'ARTICLES_DATA');
 const games = loadJsArray('data/games.js', 'GAMES_DATA');
+// 福利礼包/兑换码（可选，活动时效内容；缺失或为空时礼包页降级）
+let gifts = [];
+try { gifts = loadJsArray('data/gifts.js', 'GIFTS_DATA'); }
+catch (e) { console.log('⚠️  data/gifts.js 缺失或解析失败，礼包页跳过：' + e.message); }
 // 攻略加厚内容（可选增量文件）：{ 文章id: '<h2>…</h2><p>…</p>' }
 const guideExtra = loadJsObjectSafe('data/guide-extra.js', 'GUIDE_EXTRA');
 // 攻略进阶问答（可选增量文件，追加在 guide-extra 之后）：{ 文章id: '<h2>…</h2><p>…</p>' }
@@ -249,6 +253,23 @@ const BASE_CSS = `
   .cta-back{margin:12px 0 0;font-size:13px}
   .cta-back a{color:var(--muted)}
   @media(max-width:520px){.dlcard{flex-direction:column;align-items:flex-start}.dlc-pic{flex:none;width:100%;height:auto;aspect-ratio:16/10}}
+
+  /* ===== 福利礼包中心（/gift） ===== */
+  .gift-notice{background:rgba(245,181,10,.1);border:1px solid rgba(245,181,10,.25);color:var(--ink2);padding:10px 14px;border-radius:10px;font-size:13px;margin:4px 0 8px}
+  .gift-sec{margin-bottom:30px}
+  .gift-sec .sec-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .gift-tag{font-size:12px;font-weight:700;color:#f5b50a;background:rgba(245,181,10,.14);padding:2px 9px;border-radius:6px;border:1px solid rgba(245,181,10,.3)}
+  .gift-game-link{font-size:13px;font-weight:400;color:var(--brand);margin-left:auto}
+  .gift-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .gift-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .gift-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .gift-name{font-size:15px;font-weight:700;color:var(--ink)}
+  .gift-period{font-size:12px;color:var(--muted)}
+  .gift-code{font-family:Consolas,Monaco,monospace;font-size:19px;font-weight:700;color:#00d4ff;letter-spacing:1px;background:rgba(0,212,255,.08);border:1px dashed rgba(0,212,255,.35);border-radius:8px;padding:9px 12px;text-align:center;margin-bottom:9px;word-break:break-all;user-select:all}
+  .gift-copy{display:block;width:100%;font-size:14px;font-weight:600;color:#fff;background:var(--brand-deep);border:none;border-radius:99px;padding:10px;cursor:pointer;margin-bottom:10px;transition:transform .15s}
+  .gift-copy:active{transform:scale(.97)}
+  .gift-items{font-size:13px;color:var(--ink2);line-height:1.7}
+  @media(max-width:560px){.gift-grid{grid-template-columns:1fr}}
 
   /* ===== 相关阅读 ===== */
   .sec-h{font-size:19px;font-weight:700;margin:46px 0 16px;color:var(--ink)}
@@ -657,7 +678,7 @@ ${o.extraHead || ''}
     <a href="/games">游戏大厅</a>
     <a href="/news">官网资讯</a>
     <a href="/guides">攻略中心</a>
-    <a href="/">首页</a>
+    <a href="/gift">福利礼包</a>
   </nav>
 </header>
 `;
@@ -669,8 +690,9 @@ const TABBAR = `
   <a href="/games" data-tab="games"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round"><rect x="2" y="6.5" width="20" height="11" rx="5.5"/><path d="M7 10.2v3.6M5.2 12h3.6M15.8 11h.01M18.2 13h.01"/></svg><span>游戏大厅</span></a>
   <a href="/guides" data-tab="guides"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round"><path d="M4 4.5h6.2a1.8 1.8 0 0 1 1.8 1.8v13.2a1.8 1.8 0 0 0-1.8-1.8H4z"/><path d="M20 4.5h-6.2A1.8 1.8 0 0 0 12 6.3v13.2a1.8 1.8 0 0 1 1.8-1.8H20z"/></svg><span>攻略</span></a>
   <a href="/news" data-tab="news"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="14" rx="2.4"/><path d="M7.5 9.4h9M7.5 13h5.6"/></svg><span>资讯</span></a>
+  <a href="/gift" data-tab="gift"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round"><rect x="3" y="8" width="18" height="4" rx="1.5"/><path d="M5 12v7a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 19v-7"/><path d="M12 8v12.5"/><path d="M12 8c-2.6 0-4-1.9-4-4 0-.8.7-1.5 1.5-1.5S11 3.6 11 5v3M12 8c2.6 0 4-1.9 4-4 0-.8.7-1.5-1.5-1.5S13 3.6 13 5v3"/></svg><span>礼包</span></a>
 </nav>
-<script>(function(){var p=location.pathname,t=p==='/'?'home':(p.indexOf('/games')===0||p.indexOf('/game/')===0)?'games':(p.indexOf('/guides')===0||p.indexOf('/article/')===0)?'guides':(p.indexOf('/news')===0)?'news':'home';var a=document.querySelector('.tabbar a[data-tab="'+t+'"]');if(a)a.classList.add('on');})()<\/script>
+<script>(function(){var p=location.pathname,t=p==='/'?'home':(p.indexOf('/games')===0||p.indexOf('/game/')===0)?'games':(p.indexOf('/guides')===0||p.indexOf('/article/')===0)?'guides':(p.indexOf('/news')===0)?'news':(p.indexOf('/gift')===0)?'gift':'home';var a=document.querySelector('.tabbar a[data-tab="'+t+'"]');if(a)a.classList.add('on');})()<\/script>
 `;
 
 function foot() {
@@ -1156,6 +1178,79 @@ ${newsArchiveHtml}
     }], extraHead: '<script src="/js/news-index.js" defer><\/script>' }
   ) + newsBody);
   sitemapUrls.push({ loc: newsUrl, lastmod: TODAY, priority: '0.7' });
+
+  // ===== 6.6 福利礼包 / 兑换码中心（活动时效内容，数据来自 data/gifts.js） =====
+  const giftUrl = SITE + '/gift';
+  if (gifts && gifts.length) {
+    const giftSections = gifts.map(g => {
+      const gg = g.gameId ? gameById[g.gameId] : null;
+      const gameName = gg ? gg.name : g.game;
+      const tagHtml = g.tag ? `<span class="gift-tag">${esc(g.tag)}</span>` : '';
+      const gameLink = gg ? `<a class="gift-game-link" href="/game/${gg.id}">下载与攻略 →</a>` : '';
+      const cardsHtml = g.gifts.map(gf => `    <div class="gift-card">
+      <div class="gift-top"><span class="gift-name">${esc(gf.name)}</span><span class="gift-period">${esc(gf.period)}</span></div>
+      <div class="gift-code">${esc(gf.code)}</div>
+      <button class="gift-copy" type="button" data-code="${esc(gf.code)}">复制兑换码</button>
+      <div class="gift-items">${esc(gf.items)}</div>
+    </div>`).join('\n');
+      return `  <section class="gift-sec">
+    <h2 class="sec-h">${tagHtml}${esc(gameName)}${gameLink}</h2>
+    <div class="gift-grid">
+${cardsHtml}
+    </div>
+  </section>`;
+    }).join('\n');
+
+    const giftBody = `<main class="wrap">
+  <nav class="crumb"><a href="/">首页</a><i>/</i><span>福利礼包</span></nav>
+  <h1>福利礼包兑换中心</h1>
+  <p class="lead">中秋、国庆活动限时礼包码汇总，点击「复制兑换码」后在对应游戏内兑换。礼包码请在有效期内使用，过期失效。</p>
+  <div class="gift-notice">⚠️ 兑换是否成功以游戏内实际为准；若提示无效，可能是已过期或该账号已领取过。</div>
+
+${giftSections}
+
+  <div class="cta">
+    <p>没看到你想玩的游戏？回游戏大厅一次看全。</p>
+    <a class="cta-btn" href="/games">浏览全部游戏</a>
+  </div>
+
+  <script>
+  (function(){
+    function doCopy(code, cb){
+      if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(code).then(function(){cb(true)},function(){cb(false)}); }
+      else{
+        var ta=document.createElement('textarea'); ta.value=code; ta.style.position='fixed'; ta.style.opacity='0';
+        document.body.appendChild(ta); ta.select();
+        var ok=false; try{ ok=document.execCommand('copy'); }catch(e){}
+        document.body.removeChild(ta); cb(ok);
+      }
+    }
+    var btns=document.querySelectorAll('.gift-copy');
+    for(var i=0;i<btns.length;i++){
+      btns[i].addEventListener('click', function(){
+        var self=this, code=this.getAttribute('data-code');
+        doCopy(code, function(ok){ self.textContent = ok ? '已复制 ✓' : '复制失败'; setTimeout(function(){ self.textContent='复制兑换码'; },1600); });
+      });
+    }
+  })();
+  <\/script>
+</main>` + foot();
+
+    writeFile('gift.html', head(
+      '福利礼包兑换中心 - 中秋国庆礼包码 - 小梦怀旧手游',
+      '怀旧手游中秋、国庆活动福利礼包码汇总，一键复制兑换，含永恒岛、星辰变等热门游戏。',
+      giftUrl,
+      { prefix: '', ld: [{
+        '@context': 'https://schema.org', '@type': 'CollectionPage',
+        name: '福利礼包兑换中心', url: giftUrl, inLanguage: 'zh-CN',
+        isPartOf: { '@type': 'WebSite', name: '小梦怀旧手游', url: SITE + '/' }
+      }] }
+    ) + giftBody);
+    sitemapUrls.push({ loc: giftUrl, lastmod: TODAY, priority: '0.8' });
+    console.log('✅ 生成 gift.html（' + gifts.length + ' 款游戏 / ' + gifts.reduce(function(s, g) { return s + g.gifts.length; }, 0) + ' 个礼包）');
+  } else {
+    console.log('ℹ️  无礼包数据，跳过 gift.html');
+  }
 
   // --- 站内搜索索引 /js/news-index.js（资讯中心用；随每日公告自动重建） ---
   const newsIndexArr = [];
