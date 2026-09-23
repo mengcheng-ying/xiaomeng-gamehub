@@ -98,6 +98,13 @@ const newsBodies = (() => {
   }
 })();
 
+// 精选资讯 · 编辑专题（手维护，见 data/editorials.js）：[{ slug, title, date, category, summary, cover, content }]
+// 用途：为每条生成 /news/feature/<slug>.html 静态专题页，并在资讯中心置顶展示，供搜索引擎收录。
+const editorials = (() => {
+  try { return loadJsArray('data/editorials.js', 'FEATURES_DATA'); }
+  catch (e) { console.log('⚠️  data/editorials.js 读取失败(忽略)：' + e.message); return []; }
+})();
+
 /**
  * 公告条目的站内地址。
  * 有正文 → /news/<专区>/<key>（本站独立页）；没有正文 → 返回 null，
@@ -459,6 +466,18 @@ const BASE_CSS = `
   .icard .icat{font-size:11px;font-weight:600;color:#fff;background:var(--brand-deep);border-radius:99px;padding:2px 8px;flex:none}
   .icard .itl{font-size:15px;font-weight:700;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.9em}
   .icard .ism{margin-top:7px;font-size:12.5px;color:var(--muted);line-height:1.7;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  /* ===== 资讯中心：置顶精选专题（编辑长文） ===== */
+  .feagrid{display:grid;grid-template-columns:1fr;gap:14px;margin:18px 0 34px}
+  .fea{position:relative;display:block;padding:22px 24px;border-radius:16px;background:linear-gradient(120deg,#16233f,#101b30);
+    border:1px solid rgba(97,175,255,.38);overflow:hidden;text-decoration:none;transition:transform .2s,box-shadow .2s,border-color .2s}
+  .fea:before{content:"";position:absolute;inset:0;background:radial-gradient(420px 180px at 0% 0%,rgba(61,123,255,.22),transparent 60%);pointer-events:none}
+  .fea:hover{transform:translateY(-3px);border-color:rgba(97,175,255,.7);box-shadow:0 14px 34px rgba(8,14,28,.5),0 0 0 1px rgba(97,175,255,.2)}
+  .fea .fea-tag{display:inline-block;font-size:.7rem;font-weight:700;color:#0e1a30;background:linear-gradient(90deg,#6ab8ff,#7dd3fc);border-radius:99px;padding:2.5px 12px;margin-bottom:12px}
+  .fea .fea-t{font-size:1.24rem;line-height:1.5;font-weight:800;color:#fff;margin:0 0 8px;position:relative}
+  .fea .fea-s{font-size:.9rem;line-height:1.8;color:#a9b6cd;margin:0 0 14px;position:relative}
+  .fea .fea-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:.76rem;color:#6f7d94;position:relative}
+  .fea .fea-more{color:#6ab8ff;font-weight:700}
+  .fea:hover .fea-more{color:#8ecbff}
   /* ===== 游戏页：精彩图集 ===== */
   .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:8px 0 30px}
   .gallery img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:12px;background:#1a2537}
@@ -1049,6 +1068,22 @@ const infoSectionHtml = infoArticles.length
   ? '  <h2 class="sec-h">本站原创资讯</h2>\n  <div class="icards">\n' + infoCardsHtml + '\n  </div>\n\n'
   : '';
 
+/* 置顶精选专题：上传统计汇总等本站编辑长文（data/editorials.js）。
+   独立页在 /news/feature/<slug>.html，资讯中心最顶部置顶一块高亮卡。 */
+const feaCardsHtml = editorials.map(e => {
+  const feaUrl = SITE + '/news/feature/' + String(e.slug || '').trim();
+  const feaCat = esc(e.category || '精选专题');
+  return `  <a class="fea" href="${feaUrl}" aria-label="阅读：${esc(e.title)}">
+  <div class="fea-tag">${feaCat}</div>
+  <h3 class="fea-t">${esc(e.title)}</h3>
+  <p class="fea-s">${esc(e.summary || '')}</p>
+  <div class="fea-meta"><span>${esc(String(e.date || ''))}</span><span class="fea-more">阅读全文 →</span></div>
+</a>`;
+}).join('\n');
+const editorialTopHtml = editorials.length
+  ? '  <h2 class="sec-h">本期精选专题</h2>\n  <div class="feagrid">\n' + feaCardsHtml + '\n  </div>\n\n'
+  : '';
+
 if (archiveList.length) {
   const synced = String(officialNews.generatedAt || '').slice(0, 10);
   const nameOfSlug = {};
@@ -1100,6 +1135,7 @@ if (archiveList.length) {
   <p class="lead">本页汇总<strong>本站原创资讯</strong>与收录的怀旧手游官方专区公开公告，包含开服、合服、维护、版本更新与活动等。
   每篇均可站内直接阅读全文，无需跳转任何外部站点。</p>
 
+${editorialTopHtml}
   <div class="srchbar">
     <input id="newsSearch" type="search" placeholder="搜索游戏名或公告标题，例如「龙之谷」「维护」" autocomplete="off" aria-label="搜索官方资讯">
     <span class="hint" id="newsHint">输入即搜</span>
@@ -1266,6 +1302,10 @@ ${giftSections}
   infoArticles.forEach(a => {
     const gname = (a.gameId && gameById[a.gameId]) ? gameById[a.gameId].name : '综合资讯';
     newsIndexArr.push([a.title, '/article/' + a.id, gname, a.date || '']);
+  });
+  /* 置顶精选专题也进搜索索引 */
+  editorials.forEach(e => {
+    if (e && e.slug) newsIndexArr.push([e.title, '/news/feature/' + String(e.slug).trim(), e.category || '精选专题', String(e.date || '')]);
   });
   const newsIndexSrc = '/* 资讯搜索索引 · 由 scripts/build-articles.js 自动生成，请勿手改 */\n' +
     'var NEWS_INDEX=' + JSON.stringify(newsIndexArr).replace(/</g, '\\u003c') + ';\n';
@@ -1443,7 +1483,7 @@ ${moreHtml}
   <nav class="crumb"><a href="/">首页</a><i>/</i><span>官网资讯</span></nav>
   <h1 class="ttl">官网资讯中心</h1>
   <p class="lead">这里汇总本站原创资讯，以及各款怀旧手游的官方公告：开服、合服、维护、版本更新与活动。</p>
-${infoSectionHtml}  <p class="lead">官方公告内容正在重新整理，整理好会一款一款放上来。</p>
+${editorialTopHtml}${infoSectionHtml}  <p class="lead">官方公告内容正在重新整理，整理好会一款一款放上来。</p>
   <div class="cta">
     <p>想先看看有哪些游戏？游戏大厅里有全部怀旧手游的下载入口和攻略。</p>
     <a class="cta-btn" href="/games">← 去游戏大厅</a>
@@ -1453,6 +1493,58 @@ ${infoSectionHtml}  <p class="lead">官方公告内容正在重新整理，整�
   fs.writeFileSync(path.join(ROOT, 'js', 'news-index.js'),
     '/* 资讯搜索索引 · 由 scripts/build-articles.js 自动生成，请勿手改 */\nvar NEWS_INDEX=[];\n');
   console.log('✅ 生成 news.html（空态）与空的 js/news-index.js');
+}
+
+// ===== 6.6 生成置顶精选专题独立页 /news/feature/<slug>.html =====
+// 内容为本站原创编辑（data/editorials.js），整页静态 HTML，六分段正文，供搜索引擎完整抓取收录。
+if (editorials.length) {
+  editorials.forEach((e) => {
+    const slug = String(e.slug || '').trim();
+    if (!slug) return;
+    const url = SITE + '/news/feature/' + slug;
+    const pub = e.date && /^\d{4}-\d{2}-\d{2}$/.test(String(e.date)) ? String(e.date) : TODAY;
+    const contentHtml = fixRel(e.content || '', '../');
+
+    const ho = { '@context': 'https://schema.org', '@type': 'NewsArticle',
+      headline: e.title, description: e.summary || '',
+      image: e.cover ? [SITE + '/' + String(e.cover).replace(/^assets\//, 'assets/')] : undefined,
+      datePublished: pub, dateModified: pub,
+      articleSection: e.category || '精选专题', inLanguage: 'zh-CN',
+      author: { '@type': 'Organization', name: '小梦怀旧手游' },
+      publisher: { '@type': 'Organization', name: '小梦怀旧手游', logo: { '@type': 'ImageObject', url: SITE + '/assets/images/logo_xiaomeng.png' } },
+      mainEntityOfPage: { '@type': 'WebPage', '@id': url } };
+    const hb = { '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: '首页', item: SITE + '/' },
+        { '@type': 'ListItem', position: 2, name: '游戏资讯', item: SITE + '/news' },
+        { '@type': 'ListItem', position: 3, name: e.title, item: url }
+      ] };
+
+    const html = head(e.title + ' - 小梦怀旧手游资讯', e.summary || '', url, {
+      ogType: 'article', image: e.cover, published: pub, active: 'news', ld: [ho, hb]
+    }) + `<main class="wrap">
+  <nav class="crumb"><a href="/">首页</a><i>/</i><a href="/news">游戏资讯</a><i>/</i><span>${esc(e.category || '精选专题')}</span></nav>
+  <article>
+    <span class="tag">${esc(e.category || '精选专题')}</span>
+    <h1 class="ttl">${esc(e.title)}</h1>
+    <div class="meta"><span>小梦怀旧手游</span><span>${esc(pub)}</span></div>
+    ${e.cover ? `<img class="cover" src="../${esc(String(e.cover).replace(/^assets\//, 'assets/'))}" alt="${esc(e.title)}" loading="eager" fetchpriority="high">` : ''}
+    <div class="body">
+${contentHtml}
+    </div>
+  </article>
+
+  <div class="cta">
+    <p>更多怀旧手游的最新公告和更新，回到官网资讯中心一次看全。</p>
+    <a class="cta-btn" href="/news">← 返回官网资讯中心</a>
+  </div>
+</main>
+` + foot();
+
+    writeFile('news/feature/' + slug + '.html', html);
+    sitemapUrls.push({ loc: url, lastmod: pub, priority: '0.8' });
+  });
+  console.log('✅ 生成置顶精选专题独立页 ' + editorials.length + ' 个（/news/feature/*）');
 }
 
 // ===== 7. 生成攻略索引页 guides.html =====

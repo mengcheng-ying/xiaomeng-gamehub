@@ -306,6 +306,18 @@
   .icard .icat{font-size:11px;font-weight:600;color:#fff;background:var(--brand-deep);border-radius:99px;padding:2px 8px;flex:none}
   .icard .itl{font-size:15px;font-weight:700;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.9em}
   .icard .ism{margin-top:7px;font-size:12.5px;color:var(--muted);line-height:1.7;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  /* ===== 资讯中心：置顶精选专题（编辑长文） ===== */
+  .feagrid{display:grid;grid-template-columns:1fr;gap:14px;margin:18px 0 34px}
+  .fea{position:relative;display:block;padding:22px 24px;border-radius:16px;background:linear-gradient(120deg,#16233f,#101b30);
+    border:1px solid rgba(97,175,255,.38);overflow:hidden;text-decoration:none;transition:transform .2s,box-shadow .2s,border-color .2s}
+  .fea:before{content:"";position:absolute;inset:0;background:radial-gradient(420px 180px at 0% 0%,rgba(61,123,255,.22),transparent 60%);pointer-events:none}
+  .fea:hover{transform:translateY(-3px);border-color:rgba(97,175,255,.7);box-shadow:0 14px 34px rgba(8,14,28,.5),0 0 0 1px rgba(97,175,255,.2)}
+  .fea .fea-tag{display:inline-block;font-size:.7rem;font-weight:700;color:#0e1a30;background:linear-gradient(90deg,#6ab8ff,#7dd3fc);border-radius:99px;padding:2.5px 12px;margin-bottom:12px}
+  .fea .fea-t{font-size:1.24rem;line-height:1.5;font-weight:800;color:#fff;margin:0 0 8px;position:relative}
+  .fea .fea-s{font-size:.9rem;line-height:1.8;color:#a9b6cd;margin:0 0 14px;position:relative}
+  .fea .fea-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:.76rem;color:#6f7d94;position:relative}
+  .fea .fea-more{color:#6ab8ff;font-weight:700}
+  .fea:hover .fea-more{color:#8ecbff}
   /* ===== 游戏页：精彩图集 ===== */
   .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:8px 0 30px}
   .gallery img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:12px;background:#1a2537}
@@ -398,6 +410,17 @@
   <h1>游戏资讯与官方公告</h1>
   <p class="lead">本页汇总<strong>本站原创资讯</strong>与收录的怀旧手游官方专区公开公告，包含开服、合服、维护、版本更新与活动等。
   每篇均可站内直接阅读全文，无需跳转任何外部站点。</p>
+
+  <h2 class="sec-h">本期精选专题</h2>
+  <div class="feagrid">
+  <a class="fea" href="https://fmbly.com/news/feature/2026-09-23-huai-jiu-game-update-summary" aria-label="阅读：9月下旬怀旧手游更新汇总：六大游戏最新公告和活动一次看完">
+  <div class="fea-tag">更新汇总</div>
+  <h3 class="fea-t">9月下旬怀旧手游更新汇总：六大游戏最新公告和活动一次看完</h3>
+  <p class="fea-s">机战、龙之谷、热血江湖这些老IP手游扎堆发版本和活动。本文把近期机战钢铁巨舰、龙之谷启程、贰点零江湖热血江湖2.0、星辰变归来、墨香情、寻梦丝路六个游戏的更新公告和活动全部整理出来，玩家对照着看自己玩的游戏这周改了什么。</p>
+  <div class="fea-meta"><span>2026-09-23</span><span class="fea-more">阅读全文 →</span></div>
+</a>
+  </div>
+
 
   <div class="srchbar">
     <input id="newsSearch" type="search" placeholder="搜索游戏名或公告标题，例如「龙之谷」「维护」" autocomplete="off" aria-label="搜索官方资讯">
