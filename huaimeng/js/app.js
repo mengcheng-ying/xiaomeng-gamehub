@@ -22,6 +22,7 @@
 
   var $  = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  function setText(sel, v) { var el = $(sel); if (el) el.textContent = v; }
 
   /* ---------------- 工具 ---------------- */
   function esc(x) {
@@ -177,10 +178,9 @@
       (HOT_IDS[g.id] ? '<span>近期热门</span>' : '');
     $('#gmDesc').textContent = g.desc || '暂无介绍。';
     var facts = '<div><b>题材</b>' + esc(genreOf(g)) + '</div>' +
-      '<div><b>开发商</b>' + esc(g.developer || '以游戏内为准') + '</div>' +
-      (g.year ? '<div><b>发行年份</b>' + esc(g.year) + ' 年</div>' : '') +
-      (g.sizeText ? '<div><b>安装包</b>约 ' + esc(g.sizeText) + '</div>'
-                  : '<div><b>热度</b>' + esc(heatText(g.heat)) + '</div>');
+      '<div><b>发行年份</b>' + (g.year ? esc(g.year) + ' 年' : '以游戏内为准') + '</div>' +
+      '<div><b>安装包</b>' + (g.sizeText ? '约 ' + esc(g.sizeText) : '以官方商店页为准') + '</div>' +
+      '<div><b>热度</b>' + esc(heatText(g.heat)) + '</div>';
     $('#gmFacts').innerHTML = facts;
 
     var acts = [];
@@ -243,7 +243,8 @@
   }
 
   /* ---------------- 游戏库 ---------------- */
-  var curGenre = 'all', gamesExpanded = false;
+  /* 若页面里已预渲染了全部游戏（例如导出快照），默认保持展开，避免加载后列表"缩水" */
+  var curGenre = 'all', gamesExpanded = $$('#gameGrid .gcard').length > GAME_LIMIT;
   function genreCounts() {
     var c = {};
     GAMES.forEach(function (g) { var k = genreOf(g); c[k] = (c[k] || 0) + 1; });
@@ -273,8 +274,7 @@
         '<div class="bd">' +
           '<h3 class="nm">' + esc(g.name) + '</h3>' +
           '<div class="meta"><span class="tag">' + esc(genreOf(g)) + '</span>' +
-            (g.year ? '<span>' + esc(g.year) + '年</span>' : '') +
-            '<span>' + esc(g.developer || '') + '</span></div>' +
+            (g.year ? '<span>' + esc(g.year) + '年</span>' : '') + '</div>' +
           '<p class="ds">' + esc(shortDesc(g)) + '</p>' +
           '<div class="acts">' +
             '<button class="btn btn-brand" type="button" data-dl="' + g.id + '">下载游戏</button>' +
@@ -283,7 +283,7 @@
         '</div></article>';
     }).join('');
 
-    $('#gamesShown').textContent = show;
+    setText('#gamesShown', show);
     var more = $('#moreGames');
     if (curGenre === 'all' && !gamesExpanded && total > GAME_LIMIT) {
       more.hidden = false;
@@ -316,7 +316,8 @@
   });
 
   /* ---------------- 最新公告 ---------------- */
-  var noticesExpanded = false;
+  /* 同游戏库：快照里若已展开全部公告，加载后保持展开 */
+  var noticesExpanded = $$('#noticeList .nitem').length > NOTICE_LIMIT;
   var TYPE_CLS = { '开区': 'nt-open', '更新': 'nt-update', '活动': 'nt-act', '维护': 'nt-fix' };
   function sortedNotices() {
     return NOTICES.slice().sort(function (a, b) { return String(b.date || '').localeCompare(String(a.date || '')); });
@@ -413,8 +414,8 @@
     GAMES.forEach(function (g) {
       idx.push({
         kind: 'game', id: g.id, title: g.name, cover: g.cover,
-        meta: genreOf(g) + (g.developer ? ' · ' + g.developer : '') + (g.year ? ' · ' + g.year + '年' : ''),
-        text: (g.name + ' ' + (g.desc || '') + ' ' + (g.developer || '')).toLowerCase(),
+        meta: genreOf(g) + (g.year ? ' · ' + g.year + '年' : ''),
+        text: (g.name + ' ' + (g.desc || '')).toLowerCase(),
         heat: g.heat || 0
       });
     });
@@ -556,10 +557,11 @@
     var live = 0;
     GIFTS.forEach(function (g) { g.gifts.forEach(function (gf) { if (periodStatus(gf.period).k === 'live') live++; }); });
     var latest = sortedNotices()[0];
-    $('#statGames').textContent = GAMES.length;
-    $('#statGifts').textContent = live;
-    $('#statFresh').textContent = latest ? dateCN(latest.date) : '—';
-    $('#footFresh').textContent = latest ? dateCN(latest.date, true) : '—';
+    /* 统计位可能按运营需要从页面删掉，缺位就跳过，避免报错影响后面的搜索等功能 */
+    setText('#statGames', GAMES.length);
+    setText('#statGifts', live);
+    setText('#statFresh', latest ? dateCN(latest.date) : '—');
+    setText('#footFresh', latest ? dateCN(latest.date, true) : '—');
   }
 
   /* ---------------- 导航高亮（滚动跟随） ---------------- */
