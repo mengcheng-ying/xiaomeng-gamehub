@@ -182,6 +182,10 @@
     el.classList.remove('open');
     el.hidden = true;
     if (!$('.modal.open')) document.body.style.overflow = '';
+    /* 关闭游戏详情时同步清掉地址栏里的 #game-xx，避免"关了还在深链状态" */
+    if (el === gameModal && /^#game-\d+$/.test(location.hash || '')) {
+      try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+    }
     if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
   function closeAll() { $$('.modal.open').forEach(closeModal); }
@@ -236,6 +240,8 @@
     }).join('');
 
     openModal(gameModal);
+    /* 把当前游戏写进地址栏（#game-46）：可分享、可收藏，搜索爬虫也能拿到真实链接 */
+    try { history.replaceState(null, '', '#game-' + g.id); } catch (e) {}
   }
   $('#gmActs').addEventListener('click', function (e) {
     var b = e.target.closest('[data-go]');
@@ -315,7 +321,7 @@
         '<div class="cv"><img src="' + esc(g.cover) + '" alt="' + esc(g.name) + ' 游戏封面" loading="lazy" decoding="async" width="640" height="360">' +
         (HOT_IDS[g.id] ? '<span class="hotb">热门</span>' : '') + '</div>' +
         '<div class="bd">' +
-          '<h3 class="nm">' + esc(g.name) + '</h3>' +
+          '<h3 class="nm"><a href="#game-' + g.id + '">' + esc(g.name) + '</a></h3>' +
           '<div class="meta"><span class="tag">' + esc(genreOf(g)) + '</span>' +
             (g.year ? '<span>' + esc(g.year) + '年</span>' : '') + '</div>' +
           '<p class="ds">' + esc(shortDesc(g)) + '</p>' +
@@ -347,6 +353,13 @@
     toast('已显示全部 ' + GAMES.length + ' 款游戏');
   });
   $('#gameGrid').addEventListener('click', function (e) {
+    /* 游戏名是真实链接（#game-46），点它走深链；按钮优先级更高，放前面判断 */
+    var t = e.target.closest('a[href^="#game-"]');
+    if (t) {
+      e.preventDefault();
+      openGame(+(t.getAttribute('href') || '').slice(6));
+      return;
+    }
     var d = e.target.closest('[data-detail]');
     if (d) { openGame(+d.getAttribute('data-detail')); return; }
     var b = e.target.closest('[data-dl]');
@@ -654,7 +667,20 @@
     if (first) first.click();
   });
 
+  /* ---------------- 深链：#game-46 直接打开对应游戏 ----------------
+     游戏名在页面里是真实链接（<a href="#game-46">），既方便分享收藏，
+     也让搜索引擎爬到 42 条带游戏名的站内链接。 */
+  function hashGameId() {
+    var m = /^#game-(\d+)$/.exec(location.hash || '');
+    return m ? +m[1] : 0;
+  }
+  window.addEventListener('hashchange', function () {
+    var id = hashGameId();
+    if (id) openGame(id); else closeModal(gameModal);
+  });
+
   /* ---------------- 启动 ---------------- */
+  if (hashGameId()) openGame(hashGameId());
   renderChips();
   renderGames();
   renderNotices();
