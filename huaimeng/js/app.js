@@ -312,6 +312,14 @@
       if (!g) return;
       currentGameName = g.name;
       askDownload(g.name, bestUrl(g), g.cover);
+      return;
+    }
+    /* 整行可点：点在这一行的空白处也打开游戏介绍（横向列表的常见做法，触控更宽容）；
+       gameId 从行内既有按钮上取，导出过的静态快照同样适用 */
+    var card = e.target.closest('.gcard');
+    if (card) {
+      var ref = card.querySelector('[data-detail]');
+      if (ref) openGame(+ref.getAttribute('data-detail'));
     }
   });
 
