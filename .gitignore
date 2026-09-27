@@ -15,3 +15,10 @@ node_modules/
 # 独立站点：怀梦手游已拆分为单独仓库（mengcheng-ying/huaimeng-site），
 # 本地保留工作副本但不纳入本仓库，避免两个站混在一起。
 huaimeng/
+
+# IDE 自动生成的 HTML 分享包（每改动一个 html 就重新生成一份 zip，约 266MB；
+# 不参与站点构建，也不被任何页面引用，2026-09-27 移出版本库）
+.trae-html-share-packages/
+
+# 临时截图 / 调试产物，不属于站点文件
+iphone_shots/
