@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>怀梦手游 - 经典怀旧手游下载、最新公告与兑换码一站找齐</title>
+<meta name="description" content="怀梦手游收录 42 款经典怀旧手游：龙之谷启程、热血江湖2.0、武林外传、墨香情、千年盛世、永恒岛等。提供官方下载跳转、游戏介绍、最新公告与免费兑换码，不弹广告、不绕弯子，老玩家的省心入口。">
+<meta name="keywords" content="怀旧手游,怀梦手游,经典端游手游,龙之谷启程,热血江湖2.0,武林外传十年之约,墨香情,千年盛世,永恒岛,手游下载,游戏公告,游戏兑换码">
+<meta name="theme-color" content="#FAF7F1">
+<meta name="robots" content="index, follow">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css">
+<script src="data/games.js" defer></script>
+<script src="data/notices.js" defer></script>
+<script src="data/gifts.js" defer></script>
+<script src="js/app.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要内容</a>
+
+<!-- ================= 顶栏 ================= -->
+<header class="topbar">
+  <div class="topbar-in">
+    <a class="brand" href="#top" aria-label="怀梦手游 首页">
+      <span class="seal" aria-hidden="true">梦</span>
+      <span class="wm">怀梦手游<small>经典怀旧手游入口</small></span>
+    </a>
+    <nav class="nav" aria-label="主导航">
+      <a href="#games">游戏库</a>
+      <a href="#notices">最新公告</a>
+      <a href="#gifts">兑换码</a>
+      <a href="#faq">常见问题</a>
+    </nav>
+    <div class="search" id="topSearch">
+      <svg class="mag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg>
+      <input id="topSearchInput" type="search" placeholder="搜索游戏或兑换码" autocomplete="off" aria-label="站内搜索">
+      <div class="search-panel" id="topSearchPanel" hidden></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ================= 首屏 ================= -->
+  <section class="hero" id="top">
+    <div class="wrap">
+      <div class="hero-h">
+        <span class="hero-kick">老玩家的省心入口</span>
+        <h1>怀旧手游，<em>一站找齐</em></h1>
+        <p class="hero-sub">不用四处找官网，也不用看垃圾广告。<br>经典怀旧手游的<b>官方下载入口、公告、兑换码</b>，都在这儿。</p>
+
+        <div class="hero-search search" id="heroSearch">
+          <svg class="mag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg>
+          <input id="heroSearchInput" type="search" placeholder="输入游戏名或兑换码" autocomplete="off" aria-label="搜索游戏、公告和兑换码">
+          <button class="btn-go" type="button" id="heroSearchBtn">搜索</button>
+          <div class="search-panel" id="heroSearchPanel" hidden></div>
+        </div>
+
+        <div class="hot">
+          <span>大家在找：</span>
+          <button type="button" data-q="传奇">传奇</button>
+          <button type="button" data-q="江湖">热血江湖</button>
+          <button type="button" data-q="龙之谷">龙之谷</button>
+          <button type="button" data-q="奇迹MU">奇迹MU</button>
+          <button type="button" data-q="永恒岛">永恒岛</button>
+          <button type="button" data-q="兑换码">兑换码</button>
+        </div>
+
+        <p class="freshness">
+          已收录 <b id="statGames">—</b> 款游戏<i>·</i>兑换码 <b id="statGifts">—</b> 个<i>·</i>公告最近更新 <b id="statFresh">—</b>
+        </p>
+      </div>
+
+      <div class="trust">
+        <div class="trust-item">
+          <span class="ti" aria-hidden="true"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><circle cx="12" cy="12" r="9.2"/><path d="M15.6 8.4 13 13l-4.6 2.6L11 11z"/></svg></span>
+          <h3>跳转前告诉你去哪</h3>
+          <p>只收录发行方下载入口。点下载先显示目标网站，确认后再跳转，不经过任何广告页。</p>
+        </div>
+        <div class="trust-item">
+          <span class="ti" aria-hidden="true"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9.2"/><path d="M5.8 5.8 18.2 18.2"/></svg></span>
+          <h3>没有弹窗和假按钮</h3>
+          <p>不弹广告、不做"高速下载"诱导、不自动跳转。页面上每个下载按钮都是你要的那款游戏。</p>
+        </div>
+        <div class="trust-item">
+          <span class="ti" aria-hidden="true"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="3.6" y="9.2" width="16.8" height="11" rx="2.2"/><path d="M3.6 13.2h16.8M12 9.2v11"/><path d="M8.4 9.2a2.4 2.4 0 1 1 0-4.8c1.9 0 3.6 4.8 3.6 4.8s1.7-4.8 3.6-4.8a2.4 2.4 0 1 1 0 4.8"/></svg></span>
+          <h3>兑换码人工核对</h3>
+          <p>按活动原文录入，标注有效期，自动区分"兑换中 / 未开始 / 已结束"，过期的及时下架。</p>
+        </div>
+        <div class="trust-item">
+          <span class="ti" aria-hidden="true"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9.2"/><path d="M9.2 8.6 12 12.2l2.8-3.6M12 12.2v4.6M9.6 13.2h4.8M9.6 15h4.8"/></svg></span>
+          <h3>全程免费，不代充</h3>
+          <p>本站不卖账号、不代充、不收费。任何向你要钱的人都与怀梦无关。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 游戏库 ================= -->
+  <section class="sec" id="games">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="row">
+          <div>
+            <div class="kick">GAME LIBRARY</div>
+            <h2>游戏库</h2>
+            <p>点卡片看介绍，或直接进官方下载。当前显示 <b id="gamesShown">—</b> 款。</p>
+          </div>
+        </div>
+      </div>
+      <div class="chips" id="genreChips" role="group" aria-label="按题材筛选"></div>
+      <div class="games" id="gameGrid"></div>
+      <div class="more-wrap"><button class="btn btn-ghost" type="button" id="moreGames" hidden></button></div>
+    </div>
+  </section>
+
+  <!-- ================= 最新公告 ================= -->
+  <section class="sec" id="notices">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kick">NOTICES</div>
+        <h2>最新公告</h2>
+        <p>开服、更新、活动、维护，按游戏整理。点击标题展开全文，公告内容以游戏内为准。</p>
+      </div>
+      <div class="notice-box" id="noticeList"></div>
+      <div class="more-wrap"><button class="btn btn-ghost" type="button" id="moreNotices" hidden></button></div>
+    </div>
+  </section>
+
+  <!-- ================= 兑换码 ================= -->
+  <section class="sec" id="gifts">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kick">GIFT CODES</div>
+        <h2>游戏兑换码</h2>
+        <p>官方活动发放的免费礼包码，点「复制」就能用。有效期过了的，我们会下架。</p>
+      </div>
+      <div class="gifts" id="giftList"></div>
+      <div class="steps">
+        <h3>兑换码怎么用？三步就好</h3>
+        <ol>
+          <li>点一下「复制兑换码」，码就已经在手机里了，不用抄。</li>
+          <li>打开对应游戏，在「福利 / 活动」或「设置」里找到兑换入口。</li>
+          <li>长按输入框粘贴，点确认领取，奖励会发到角色邮箱或背包。</li>
+        </ol>
+        <p class="note">兑换码由游戏官方活动发放，可能有数量或等级限制；若提示已失效，说明活动已结束，我们核对后会及时下架。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 常见问题 ================= -->
+  <section class="sec" id="faq">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="kick">FAQ</div>
+        <h2>常见问题</h2>
+        <p>你最关心的几件事，我们直接说清楚。</p>
+      </div>
+      <div class="faq">
+        <details open>
+          <summary>这个网站为什么值得信任？</summary>
+          <p class="ans">三点：一，所有下载入口都是发行方提供的渠道链接，跳转前会先把目标网站显示给你；二，页面不放弹窗广告、不做"高速下载"之类的假按钮；三，本站不卖东西——不卖账号、不代充、不收费，任何索要钱财的人都和我们无关。</p>
+        </details>
+        <details>
+          <summary>为什么下载要跳转到别的网站？</summary>
+          <p class="ans">游戏由发行方自己运营和发版，安装包也只能由官方渠道提供，所以我们不做"站内下载"，只做整理和跳转。这样你拿到的永远是官方最新版本，也更安全。跳转前，页面会先把目标网址告诉你。</p>
+        </details>
+        <details>
+          <summary>下载收费吗？会不会有内购陷阱？</summary>
+          <p class="ans">下载本身都是免费的。游戏内的充值消费由各游戏官方决定，请按自己的情况判断，量力而行。怀梦不参与任何游戏的收费环节，也不会向你索要任何费用。</p>
+        </details>
+        <details>
+          <summary>兑换码从哪来？保证能用吗？</summary>
+          <p class="ans">都来自游戏官方活动，按活动原文录入并标注有效期。页面会自动区分"兑换中 / 未开始 / 已结束"三种状态；活动结束后我们会核对并下架，尽量不让你白跑一趟。</p>
+        </details>
+        <details>
+          <summary>找不到我想玩的游戏怎么办？</summary>
+          <p class="ans">先试试搜索框，输入游戏名里的关键词会更快，例如"屠龙""江湖""MU""岛"。如果还是没有，说明暂未收录或是渠道暂未开放，可以隔段时间再来看看，我们在持续补充。</p>
+        </details>
+        <details>
+          <summary>页面信息有误、链接打不开怎么办？</summary>
+          <p class="ans">游戏版本、开服和活动信息变化很快，页面内容以游戏内公告为准。发现错误或打不开的链接，欢迎通过页脚的联系方式告诉我们，核对后我们会尽快更新。</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ================= 页脚 ================= -->
+<footer>
+  <div class="foot">
+    <div class="fl"><span class="seal" aria-hidden="true">梦</span>怀梦手游</div>
+    <p>本站只做怀旧手游的信息整理与官方入口跳转 &nbsp;·&nbsp; 游戏版权归各开发商与发行商所有</p>
+    <p>不卖账号 · 不代充 · 不收费 · 不放弹窗广告</p>
+    <div class="split" aria-hidden="true"></div>
+    <p>纠错与建议：<span class="tbd">待填写（上线前替换为客服邮箱或公众号）</span></p>
+    <p>© 2026 怀梦手游 &nbsp;·&nbsp; 页面内容最近更新 <b id="footFresh">—</b></p>
+  </div>
+</footer>
+
+<!-- ================= 游戏详情 ================= -->
+<div class="modal" id="gameModal" role="dialog" aria-modal="true" aria-labelledby="gmTitle" hidden>
+  <div class="modal-card">
+    <button class="x" type="button" data-close aria-label="关闭">×</button>
+    <div class="gm-cv"><img id="gmCover" src="" alt=""></div>
+    <div class="gm-bd">
+      <h3 id="gmTitle"></h3>
+      <div class="gm-tags" id="gmTags"></div>
+      <div class="gm-desc" id="gmDesc"></div>
+      <div class="gm-facts" id="gmFacts"></div>
+      <div class="gm-acts" id="gmActs"></div>
+      <p class="gm-safe">提示：点击下载会先显示官方入口网址，确认后再跳转；下载免费，怀梦不收取任何费用。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 下载跳转确认 ================= -->
+<div class="modal" id="goModal" role="dialog" aria-modal="true" aria-labelledby="goTitle" hidden>
+  <div class="modal-card">
+    <button class="x" type="button" data-close aria-label="关闭">×</button>
+    <div class="go-ic" aria-hidden="true">↗</div>
+    <h3 id="goTitle">即将前往官方下载</h3>
+    <p class="sub">确认目标网站无误，再继续。</p>
+    <div class="go-game">
+      <img id="goCover" src="" alt="">
+      <div>
+        <div class="n" id="goName"></div>
+        <div class="h" id="goHost"></div>
+      </div>
+    </div>
+    <ul class="go-points">
+      <li>该入口来自游戏发行渠道，不是广告中转页</li>
+      <li>怀梦全程免费、不代充，收费的都和我们无关</li>
+    </ul>
+    <label class="go-remember"><input type="checkbox" id="goRemember"> 以后直接跳转，不再提示</label>
+    <div class="go-acts">
+      <button class="btn btn-ghost" type="button" data-close>再想想</button>
+      <a class="btn btn-brand" id="goLink" href="#" target="_blank" rel="noopener noreferrer">继续前往下载</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<noscript><div class="noscript">这个页面的游戏列表、公告和兑换码需要开启 JavaScript 才能显示。请在浏览器设置里允许 JavaScript 后刷新页面。</div></noscript>
+</body>
+</html>
