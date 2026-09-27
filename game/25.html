@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=0.85, minimum-scale=0.85, maximum-scale=3.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=3.0">
 <title>奇迹世界：起源 - 官方下载入口与攻略 - 小梦怀旧手游</title>
 <meta name="description" content="《奇迹世界：起源》是经典端游《奇迹世界》的正版授权MMORPG手游，由安徽游昕网络运营。游戏以魔幻暗黑风格和大型阵营对抗为核心，还原端游经典职业、副本团战和装备养成体系，支持三端互通，带你重返奇迹世界，再战光暗之争。">
 <meta name="robots" content="index, follow">
@@ -268,6 +268,8 @@
   div.gcard .more{font-size:11.5px;color:var(--muted);align-self:flex-start;text-decoration:none;display:inline-flex;align-items:center;padding:8px 0;min-height:28px}
   div.gcard .more:hover{color:var(--brand)}
   div.gcard.collapsed{display:none}
+  .gempty{margin:0;padding:26px 18px;border:1px dashed rgba(140,160,200,.28);border-radius:12px;
+    color:var(--muted);font-size:14px;line-height:1.8;text-align:center}
   .more-btn{display:block;width:100%;padding:14px;margin:8px 0 28px;border:1px dashed var(--line);
     border-radius:12px;background:var(--card);color:var(--ink2);font-size:14px;font-weight:600;
     text-align:center;cursor:pointer;transition:border-color .18s,color .18s;font-family:inherit}
@@ -377,6 +379,22 @@
     body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))!important}
   }
 
+  /* ══════════════════════════════════════════════════════════════
+     窄屏顶栏收缩 2026-09-27 · 仅 ≤430px 生效
+     背景：viewport 由 0.85 恢复为 1.0 后，顶栏「品牌 + 4 个导航链接」
+     在 390px 机型上放不下（实测溢出 35px，出现横向滚动、末个链接被裁）。
+     这里压缩字号与热区间距，并允许品牌收缩省略，保证窄屏不横向溢出。
+     ══════════════════════════════════════════════════════════════ */
+  @media (max-width:430px){
+    .topbar{padding:7px 12px;gap:8px}
+    .brand{font-size:13px;padding:9px 0;min-width:0;overflow:hidden;text-overflow:ellipsis}
+    .topbar .nav{gap:2px;flex:none}
+    .topbar .nav a{padding:12px 7px;font-size:12px}
+  }
+  @media (max-width:360px){
+    .topbar .nav a{padding:12px 5px;font-size:11.5px}
+  }
+
   /* ── 底部标签栏：移动端专属 ── */
   .tabbar{display:none}
   @media (max-width:760px){
@@ -443,10 +461,7 @@
 
 
 
-<h2 class="sec-h">奇迹世界：起源 攻略（1 篇）</h2>
-<div class="lst">
-  <a href="/article/25"><span class="cat">攻略</span><span><span class="nm">奇迹世界起源：阵营对抗与副本团战策略指南</span><span class="sm">光暗阵营对抗玩法详解，副本团战策略，职业搭配与装备养成路线。</span></span></a>
-</div>
+
 
 <h2 class="sec-h">同类怀旧手游推荐</h2>
 <div class="tiles">

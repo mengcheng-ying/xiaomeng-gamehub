@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=0.85, minimum-scale=0.85, maximum-scale=3.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=3.0">
 <title>墨香情 - 官方下载入口与攻略 - 小梦怀旧手游</title>
 <meta name="description" content="《墨香情》是由三九互娱发行的正版武侠MMORPG手游，经典端游《墨香》IP正统复刻，1:1还原端游核心精髓。游戏以东方武侠世界为基底，融合中国古代历史与武侠文化，构建横跨中原、江南、塞北、西域四大区域的宏大江湖。2026年正式上线，自由兵器系统、水墨画风，带你重温二十年经典武侠情怀。">
 <meta name="robots" content="index, follow">
@@ -268,6 +268,8 @@
   div.gcard .more{font-size:11.5px;color:var(--muted);align-self:flex-start;text-decoration:none;display:inline-flex;align-items:center;padding:8px 0;min-height:28px}
   div.gcard .more:hover{color:var(--brand)}
   div.gcard.collapsed{display:none}
+  .gempty{margin:0;padding:26px 18px;border:1px dashed rgba(140,160,200,.28);border-radius:12px;
+    color:var(--muted);font-size:14px;line-height:1.8;text-align:center}
   .more-btn{display:block;width:100%;padding:14px;margin:8px 0 28px;border:1px dashed var(--line);
     border-radius:12px;background:var(--card);color:var(--ink2);font-size:14px;font-weight:600;
     text-align:center;cursor:pointer;transition:border-color .18s,color .18s;font-family:inherit}
@@ -377,6 +379,22 @@
     body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))!important}
   }
 
+  /* ══════════════════════════════════════════════════════════════
+     窄屏顶栏收缩 2026-09-27 · 仅 ≤430px 生效
+     背景：viewport 由 0.85 恢复为 1.0 后，顶栏「品牌 + 4 个导航链接」
+     在 390px 机型上放不下（实测溢出 35px，出现横向滚动、末个链接被裁）。
+     这里压缩字号与热区间距，并允许品牌收缩省略，保证窄屏不横向溢出。
+     ══════════════════════════════════════════════════════════════ */
+  @media (max-width:430px){
+    .topbar{padding:7px 12px;gap:8px}
+    .brand{font-size:13px;padding:9px 0;min-width:0;overflow:hidden;text-overflow:ellipsis}
+    .topbar .nav{gap:2px;flex:none}
+    .topbar .nav a{padding:12px 7px;font-size:12px}
+  }
+  @media (max-width:360px){
+    .topbar .nav a{padding:12px 5px;font-size:11.5px}
+  }
+
   /* ── 底部标签栏：移动端专属 ── */
   .tabbar{display:none}
   @media (max-width:760px){
@@ -462,27 +480,7 @@
 
 
 
-<h2 class="sec-h">墨香情 攻略（18 篇）</h2>
-<div class="lst">
-  <a href="/article/47"><span class="cat">资讯</span><span><span class="nm">墨香情：当年藏在网吧里的水墨江湖，终于又能握在手心</span><span class="sm">从2004年《墨香OL》的全3D水墨武侠到正版IP《墨香情》复刻归来，兰州城、六大兵器、人幽两界，写给80、90后老玩家的一篇情怀长文。</span></span></a>
-  <a href="/article/118"><span class="cat">攻略</span><span><span class="nm">墨香情手游|8月底最新墨报</span><span class="sm">📌正在进行（游戏内常驻） 墨香庆典（长期循环） 获取途径：师门、野外挂机、BOSS、秘境刷活跃度攒庆典积分 奖励：修为丹、淬炼晶石、武学残</span></span></a>
-  <a href="/article/46"><span class="cat">资讯</span><span><span class="nm">墨香情八月新版本「星徽耀世 跨服争锋」爆料：四大全新系统抢先看</span><span class="sm">徽章系统、降妖塔、跨服副本、原石副本四大新玩法同步上线，角色深度养成与跨服社交竞技两大核心内容全面解析。</span></span></a>
-  <a href="/article/113"><span class="cat">攻略</span><span><span class="nm">星徽耀世 跨服争锋</span><span class="sm">墨香情八月全新版本重磅来袭！本次版本聚焦角色深度养成与跨服社交竞技两大核心内容，四大全新系统与玩法同步上线，为各位少侠带来多元成长路径与热血</span></span></a>
-  <a href="/article/2"><span class="cat">攻略</span><span><span class="nm">墨香情：六大武器流派全解析与新手推荐</span><span class="sm">墨香情无职业设定，武器即流派。刀剑枪弓箭拳暗器六大武器详解，帮你找到最适合的江湖路。</span></span></a>
-  <a href="/article/79"><span class="cat">攻略</span><span><span class="nm">《墨香情》为何让人上头？这四点告诉你答案</span><span class="sm">《墨香情》最吸引人的地方，在于它成功营造了一个自由、有血有肉的江湖世界</span></span></a>
-  <a href="/article/80"><span class="cat">攻略</span><span><span class="nm">《墨香情》搬砖攻略介绍，需要多少成本，以及能搬的物品类型</span><span class="sm">搬砖首先就是要解锁交易行，这个游戏的交易行需要开通月卡解锁，68</span></span></a>
-  <a href="/article/76"><span class="cat">资讯</span><span><span class="nm">江湖已开，只待君来，《墨香情》手游已上线</span><span class="sm">各位少侠，久等了！</span></span></a>
-  <a href="/article/75"><span class="cat">攻略</span><span><span class="nm">墨染江湖千里月，暗器无声，今日带来《墨香情》手游特色玩法 已修改 第1次修改 2026年07月14日 16时55分 梦尘</span><span class="sm">主播现在已经把所有武器都玩了个遍，综合说说我的看法吧</span></span></a>
-  <a href="/article/74"><span class="cat">攻略</span><span><span class="nm">《墨香情》六大武器中刷怪最快的一种是什么？搬砖刷图平民玩家怎么选？ 已修改 第1次修改 2026年07月13日 19时15分 梦尘</span><span class="sm">现在六大武器我已经玩过四种了，综合看下来，弓箭与暗器的刷怪效率是最高的</span></span></a>
-  <a href="/article/73"><span class="cat">攻略</span><span><span class="nm">《墨香情》职业转换，哪个职业最适合挂机推图？目前30级游戏体验如何？</span><span class="sm">目前我已经30级了，感觉打的越来越吃力，枪这个职业虽然站得住脚，但刷怪速率确实不够</span></span></a>
-  <a href="/article/72"><span class="cat">攻略</span><span><span class="nm">《墨香情》游戏体验如何？零氪微氪能否畅玩以及微氪玩家如何最低成本收益最大化</span><span class="sm">游戏体验</span></span></a>
-  <a href="/article/71"><span class="cat">攻略</span><span><span class="nm">《墨香情》手游，属性加点与技能玩法小技巧，还能这么玩？ 原创 已修改 第1次修改 2026年07月10日 14时08分 梦尘</span><span class="sm">今天给大家带来的是零氪、微氪玩法技巧，如何通过加点来打副本与个人boss？</span></span></a>
-  <a href="/article/70"><span class="cat">资讯</span><span><span class="nm">《墨香情》手游已经开服公测，诸位在第几区呢？</span><span class="sm">小编目前已经有22级，来给大家分享一下目前的进度吧，我在5区哦，不知道诸位在哪个区？目前进度如何</span></span></a>
-  <a href="/article/69"><span class="cat">攻略</span><span><span class="nm">《墨香情》手游上线，全套攻略已献上，包含前中期玩法内容——装备篇</span><span class="sm">本期主要讲讲战力的组成部分，装备！还是挺复杂的这个部分</span></span></a>
-  <a href="/article/68"><span class="cat">攻略</span><span><span class="nm">《墨香情》长枪武器流派玩法，技能加点与属性点应该如何均衡搭配？</span><span class="sm">墨香情手游中长枪是近战中最强的一个武器，那它的玩法应该是什么样的呢？这期小鸭就从各方面来讲解一下</span></span></a>
-  <a href="/article/67"><span class="cat">攻略</span><span><span class="nm">7.8日《墨香情》就要上线了，新墨香，旧江湖，让我们怀着期待的心情看看他的玩法内容吧</span><span class="sm">下周三7月8号《墨香情》手游就要公测了，小伙伴们是不是已经期待很久了？别着急，小鸭先带你看透他的玩法，避免游戏资源浪费。</span></span></a>
-  <a href="/article/66"><span class="cat">资讯</span><span><span class="nm">《墨香情》复古水墨武侠MMO手游即将上线，墨染江湖，梦回墨香</span><span class="sm">作为一款正统水墨武侠题材手游，这游戏最让我眼前一亮的一点是他并没有职业绑定，可以自由的切换刀剑枪。也就是说如果我们玩到了游戏中后期，觉得这个</span></span></a>
-</div>
+
 
 <h2 class="sec-h">同类怀旧手游推荐</h2>
 <div class="tiles">

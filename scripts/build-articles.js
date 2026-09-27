@@ -427,6 +427,8 @@ const BASE_CSS = `
   div.gcard .more{font-size:11.5px;color:var(--muted);align-self:flex-start;text-decoration:none;display:inline-flex;align-items:center;padding:8px 0;min-height:28px}
   div.gcard .more:hover{color:var(--brand)}
   div.gcard.collapsed{display:none}
+  .gempty{margin:0;padding:26px 18px;border:1px dashed rgba(140,160,200,.28);border-radius:12px;
+    color:var(--muted);font-size:14px;line-height:1.8;text-align:center}
   .more-btn{display:block;width:100%;padding:14px;margin:8px 0 28px;border:1px dashed var(--line);
     border-radius:12px;background:var(--card);color:var(--ink2);font-size:14px;font-weight:600;
     text-align:center;cursor:pointer;transition:border-color .18s,color .18s;font-family:inherit}
@@ -534,6 +536,22 @@ const BASE_CSS = `
 
     /* 底部标签栏占位 */
     body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))!important}
+  }
+
+  /* ══════════════════════════════════════════════════════════════
+     窄屏顶栏收缩 2026-09-27 · 仅 ≤430px 生效
+     背景：viewport 由 0.85 恢复为 1.0 后，顶栏「品牌 + 4 个导航链接」
+     在 390px 机型上放不下（实测溢出 35px，出现横向滚动、末个链接被裁）。
+     这里压缩字号与热区间距，并允许品牌收缩省略，保证窄屏不横向溢出。
+     ══════════════════════════════════════════════════════════════ */
+  @media (max-width:430px){
+    .topbar{padding:7px 12px;gap:8px}
+    .brand{font-size:13px;padding:9px 0;min-width:0;overflow:hidden;text-overflow:ellipsis}
+    .topbar .nav{gap:2px;flex:none}
+    .topbar .nav a{padding:12px 7px;font-size:12px}
+  }
+  @media (max-width:360px){
+    .topbar .nav a{padding:12px 5px;font-size:11.5px}
   }
 
   /* ── 底部标签栏：移动端专属 ── */
@@ -663,7 +681,7 @@ function head(title, desc, canonical, opts) {
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=0.85, minimum-scale=0.85, maximum-scale=3.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=3.0">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(desc)}">
 <meta name="robots" content="${o.robots || 'index, follow'}">
@@ -1673,6 +1691,7 @@ ${more}
   <div class="gcards" id="guideCards">
 ${hotCards}
 ${miscCard}
+${(!hotCards && !miscCard) ? `  <p class="gempty">攻略正在整理中，新攻略会陆续上线，敬请期待。</p>` : ''}
   </div>
 ${moreBtn}
   <div class="gcards" id="guideCardsRest">
@@ -1873,11 +1892,11 @@ const notFoundHtml = head('页面不存在 - 小梦怀旧手游', '你要找的�
     <a class="btn ghost" href="/games" style="padding:11px 24px;font-size:14px">全部游戏</a>
     <a class="btn ghost" href="/guides" style="padding:11px 24px;font-size:14px">全部攻略</a>
   </p>
-  <h2 class="sec-h">最新攻略</h2>
+${recent.length ? `  <h2 class="sec-h">最新攻略</h2>
   <div class="lst">
 ${recent.map(a => `    <a href="/article/${a.id}"><span class="cat">${esc(a.category || '攻略')}</span><span class="nm">${esc(a.title)}</span></a>`).join('\n')}
   </div>
-</main>
+` : ''}</main>
 ` + foot();
 writeFile('404.html', notFoundHtml);
 console.log('✅ 生成 404.html');
@@ -1953,10 +1972,10 @@ const seoBlock = `${SEO_START}
     <ul>
 ${sortedGames.map(g => `      <li><a href="/game/${g.id}">${esc(g.name)}</a></li>`).join('\n')}
     </ul>
-    <h2>全部攻略</h2>
+${sortedArticles.length ? `    <h2>全部攻略</h2>
     <ul>
 ${sortedArticles.map(a => `      <li><a href="/article/${a.id}">${esc(a.title)}</a></li>`).join('\n')}
-    </ul>
+    </ul>` : ''}
   </div>
   </noscript>
   ${SEO_END}`;
@@ -2028,7 +2047,7 @@ const hubBlock = `${HUB_START}
     </div>
     <div class="hub-latest">
       ${hubNews ? `<a class="hub-line" href="${hubNews.latestUrl}"><span class="lb">最新资讯</span><span class="tx">${esc(hubNews.latestTitle)}</span><span class="dt2">${esc(shortDate(hubNews.latestDate))}</span></a>` : ''}
-      <a class="hub-line" href="/article/${latestArticle.id}"><span class="lb">最新攻略</span><span class="tx">${esc(latestArticle.title)}</span><span class="dt2">${esc(shortDate(latestArticle.date))}</span></a>
+      ${latestArticle ? `<a class="hub-line" href="/article/${latestArticle.id}"><span class="lb">最新攻略</span><span class="tx">${esc(latestArticle.title)}</span><span class="dt2">${esc(shortDate(latestArticle.date))}</span></a>` : ''}
     </div>
   ${HUB_END}`;
 

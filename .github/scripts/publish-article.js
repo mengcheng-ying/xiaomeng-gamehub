@@ -100,7 +100,11 @@ if (lastBrack === -1) {
   console.error('错误：articles.js 格式异常，找不到结尾 ];');
   process.exit(1);
 }
-const updated = articlesSrc.slice(0, lastBrack).trimEnd() + ',' + entry + '\n';
+const head = articlesSrc.slice(0, lastBrack).trimEnd();
+/* ⚠️ 数组为空时（head 以 [ 结尾）不能再补逗号，
+   否则产物是「[,\n{…}]」，文件直接语法错误、整站构建失败。
+   2026-09-27 清空全部文章后，第 1 篇自动发布就会走到这个分支。 */
+const updated = head + (/\[\s*$/.test(head) ? '' : ',') + entry + '\n';
 fs.writeFileSync('data/articles.js', updated);
 
 // ===== 7. 更新 sitemap 日期 =====

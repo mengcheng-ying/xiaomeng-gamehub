@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=0.85, minimum-scale=0.85, maximum-scale=3.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=3.0">
 <title>全部怀旧手游大全 - 小梦怀旧手游</title>
 <meta name="description" content="小梦怀旧手游收录 42 款经典端游正版复刻怀旧手游：传奇、奇迹MU、仙境传说、龙之谷、武林外传、永恒岛等，点击进入游戏详情页查看官方下载入口与攻略。">
 <meta name="robots" content="index, follow">
@@ -267,6 +267,8 @@
   div.gcard .more{font-size:11.5px;color:var(--muted);align-self:flex-start;text-decoration:none;display:inline-flex;align-items:center;padding:8px 0;min-height:28px}
   div.gcard .more:hover{color:var(--brand)}
   div.gcard.collapsed{display:none}
+  .gempty{margin:0;padding:26px 18px;border:1px dashed rgba(140,160,200,.28);border-radius:12px;
+    color:var(--muted);font-size:14px;line-height:1.8;text-align:center}
   .more-btn{display:block;width:100%;padding:14px;margin:8px 0 28px;border:1px dashed var(--line);
     border-radius:12px;background:var(--card);color:var(--ink2);font-size:14px;font-weight:600;
     text-align:center;cursor:pointer;transition:border-color .18s,color .18s;font-family:inherit}
@@ -376,6 +378,22 @@
     body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))!important}
   }
 
+  /* ══════════════════════════════════════════════════════════════
+     窄屏顶栏收缩 2026-09-27 · 仅 ≤430px 生效
+     背景：viewport 由 0.85 恢复为 1.0 后，顶栏「品牌 + 4 个导航链接」
+     在 390px 机型上放不下（实测溢出 35px，出现横向滚动、末个链接被裁）。
+     这里压缩字号与热区间距，并允许品牌收缩省略，保证窄屏不横向溢出。
+     ══════════════════════════════════════════════════════════════ */
+  @media (max-width:430px){
+    .topbar{padding:7px 12px;gap:8px}
+    .brand{font-size:13px;padding:9px 0;min-width:0;overflow:hidden;text-overflow:ellipsis}
+    .topbar .nav{gap:2px;flex:none}
+    .topbar .nav a{padding:12px 7px;font-size:12px}
+  }
+  @media (max-width:360px){
+    .topbar .nav a{padding:12px 5px;font-size:11.5px}
+  }
+
   /* ── 底部标签栏：移动端专属 ── */
   .tabbar{display:none}
   @media (max-width:760px){
@@ -417,7 +435,7 @@
         <div class="ds">《机战：钢铁巨舰》是大型科幻机甲题材MMORPG手游，驾驶钢铁巨舰征战浩渺星际。海量</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 12</span>
+          
         </div>
       </div>
     </a>
@@ -428,7 +446,7 @@
         <div class="ds">《龙之谷：启程》是由三九互娱发行的3D动作冒险MMORPG手游，作为经典端游《龙之谷</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 26</span>
+          
         </div>
       </div>
     </a>
@@ -439,7 +457,7 @@
         <div class="ds">《热血江湖2.0》是经典武侠IP的全新手游大作，Q版萌系画风搭配热血PK玩法，五大职</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 3</span>
+          
         </div>
       </div>
     </a>
@@ -461,7 +479,7 @@
         <div class="ds">《武林外传：十年之约》是经典端游《武林外传》的正版怀旧手游，以七侠镇同福客栈为核心场</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 21</span>
+          
         </div>
       </div>
     </a>
@@ -472,7 +490,7 @@
         <div class="ds">《墨香情》是由三九互娱发行的正版武侠MMORPG手游，经典端游《墨香》IP正统复刻，</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 18</span>
+          
         </div>
       </div>
     </a>
@@ -483,7 +501,7 @@
         <div class="ds">《荣耀出征》是正版奇迹MU授权复刻的3D魔幻MMORPG手游，由安徽游昕网络运营，像</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 8</span>
+          
         </div>
       </div>
     </a>
@@ -494,7 +512,7 @@
         <div class="ds">《星辰变：归来》是阅文正版授权、复刻经典端游体验的大型修真MMORPG手游，由江苏欢</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 3</span>
+          
         </div>
       </div>
     </a>
@@ -505,7 +523,7 @@
         <div class="ds">《千年盛世：千年传奇版》是经典武侠端游《千年》的正版移植手游，由安徽游昕网络全程直营</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 3</span>
+          
         </div>
       </div>
     </a>
@@ -516,7 +534,7 @@
         <div class="ds">《龙城秘境：凤凰沉默》是游昕怀旧星光平台正版运营的经典沉默系传奇MMORPG手游，深</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 2</span>
+          
         </div>
       </div>
     </a>
@@ -527,7 +545,7 @@
         <div class="ds">《飞飞：重逢》是经典端游《飞飞》（FlyFF）的正版授权手游续作，由GalaLab研</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 1</span>
+          
         </div>
       </div>
     </a>
@@ -538,7 +556,7 @@
         <div class="ds">《剑与翼》是奇迹MU 1.03H黄金版本的完美复刻手游，由安徽游昕网络正版运营。游戏</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 1</span>
+          
         </div>
       </div>
     </a>
@@ -549,7 +567,7 @@
         <div class="ds">《龙城秘境：觉醒合击》是安徽游昕正版运营的复古合击传奇手游，1:1还原祖玛寺庙、赤月</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 1</span>
+          
         </div>
       </div>
     </a>
@@ -560,7 +578,7 @@
         <div class="ds">《神泣：纷争》是经典端游《神泣》正版授权的3D暗黑奇幻MMORPG手游，由三九互娱联</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 1</span>
+          
         </div>
       </div>
     </a>
@@ -571,7 +589,7 @@
         <div class="ds">《小小屠龙：原始火龙》是安徽游昕官方运营的1.80火龙版本复刻单职业传奇手游，获国家</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 1</span>
+          
         </div>
       </div>
     </a>
@@ -582,7 +600,7 @@
         <div class="ds">《荣耀出征》是正版奇迹MU授权复刻的3D魔幻MMORPG手游，由安徽游昕网络运营。游</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 1</span>
+          
         </div>
       </div>
     </a>
@@ -593,7 +611,7 @@
         <div class="ds">《龙城秘境：重返冰雪》是安徽游昕正版运营的2019冰雪版本复刻传奇手游，以经典冰雪传</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 1</span>
+          
         </div>
       </div>
     </a>
@@ -604,7 +622,7 @@
         <div class="ds">《决战破晓》（DROYAN）是由三九互娱联合运营、安徽游昕负责发行的科幻MMORPG</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 1</span>
+          
         </div>
       </div>
     </a>
@@ -615,7 +633,7 @@
         <div class="ds">《小小屠龙：幻变三职业》是安徽游昕正版运营的冰雪传奇变种手游，以「一人三职、自由幻变</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 1</span>
+          
         </div>
       </div>
     </a>
@@ -626,7 +644,7 @@
         <div class="ds">《小小屠龙：灵符自由版》是安徽游昕正版运营的复古传奇手游，以灵符自由交易系统为核心特</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 1</span>
+          
         </div>
       </div>
     </a>
@@ -637,7 +655,7 @@
         <div class="ds">《小小屠龙：3D合击版》是安徽游昕正版运营的3D合击传奇手游，以英雄合击与3D画面为</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 1</span>
+          
         </div>
       </div>
     </a>
@@ -648,7 +666,7 @@
         <div class="ds">《风暴远征：英雄年代联动版》是经典端游《英雄年代》IP联动的策略MMORPG手游，由</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 1</span>
+          
         </div>
       </div>
     </a>
@@ -659,7 +677,7 @@
         <div class="ds">《永恒岛：高清重制版》是经典端游《永恒岛》的正版授权高清重制手游，由安徽游昕网络运营</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 1</span>
+          
         </div>
       </div>
     </a>
@@ -670,7 +688,7 @@
         <div class="ds">《魔力宝贝回忆十宠版》是经典端游《魔力宝贝》的正版怀旧手游，以十宠系统为核心特色，完</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 1</span>
+          
         </div>
       </div>
     </a>
@@ -681,7 +699,7 @@
         <div class="ds">《热江：武林版》是经典端游《热江》的正版移植手游，由安徽游昕网络运营。游戏以正邪对立</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 1</span>
+          
         </div>
       </div>
     </a>
@@ -692,7 +710,7 @@
         <div class="ds">《飞飞：重逢》是经典端游《飞飞》（FlyFF）的正版授权手游续作，以Q版童话风格和自</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 1</span>
+          
         </div>
       </div>
     </a>
@@ -703,7 +721,7 @@
         <div class="ds">《小小屠龙：卡点重置版》是安徽游昕正版运营的冰雪传奇重制手游，以卡点时长计费模式为核</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 1</span>
+          
         </div>
       </div>
     </a>
@@ -714,7 +732,7 @@
         <div class="ds">《奇迹世界：起源》是经典端游《奇迹世界》的正版授权MMORPG手游，由安徽游昕网络运</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 1</span>
+          
         </div>
       </div>
     </a>
@@ -725,7 +743,7 @@
         <div class="ds">《天天龙族怀旧服》是经典端游《龙族》的正版怀旧手游，由安徽游昕网络运营。游戏以中古世</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 1</span>
+          
         </div>
       </div>
     </a>
@@ -736,7 +754,7 @@
         <div class="ds">《寻梦丝路》是一款以古代丝绸之路为背景的3D MMORPG手游，由安徽游昕网络运营，</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 1</span>
+          
         </div>
       </div>
     </a>
@@ -747,7 +765,7 @@
         <div class="ds">《小小屠龙：冰雪骑战》是安徽游昕正版运营的冰雪传奇手游，以骑战系统为核心特色，融合经</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 1</span>
+          
         </div>
       </div>
     </a>
@@ -758,7 +776,7 @@
         <div class="ds">《烈火屠龙：美杜莎卡点服》是安徽游昕正版运营的传奇手游，以美杜莎主题版本与卡点时长计</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 1</span>
+          
         </div>
       </div>
     </a>
@@ -769,7 +787,7 @@
         <div class="ds">《永恒岛：怀旧版》是经典端游《永恒岛》的正版授权怀旧手游，由安徽游昕网络运营。游戏以</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 1</span>
+          
         </div>
       </div>
     </a>
@@ -780,7 +798,7 @@
         <div class="ds">《修仙家族模拟器2》是融合修仙文化与模拟经营元素的MMORPG手游，由安徽游昕网络运</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 6</span>
+          
         </div>
       </div>
     </a>
@@ -791,7 +809,7 @@
         <div class="ds">《义战龙城：3D纯净服》是安徽游昕正版运营的传奇手游，以3D引擎重制与纯净公平运营为</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 1</span>
+          
         </div>
       </div>
     </a>
@@ -802,7 +820,7 @@
         <div class="ds">《热江：全新玩法》是经典端游《热江》的正版创新手游，由安徽游昕网络运营。游戏在保留经</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 6</span>
+          
         </div>
       </div>
     </a>
@@ -813,7 +831,7 @@
         <div class="ds">《巴风特之怒：RO怀旧》是经典端游《仙境传说》（Ragnarok Online）的正</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 1</span>
+          
         </div>
       </div>
     </a>
@@ -824,7 +842,7 @@
         <div class="ds">《千年盛世：原始千年》是经典武侠端游《千年》的原始版本复刻手游，由安徽游昕网络运营。</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 1</span>
+          
         </div>
       </div>
     </a>
@@ -835,7 +853,7 @@
         <div class="ds">《永恒岛：彩虹回忆》是经典端游《永恒岛》的正版授权怀旧手游，由安徽游昕网络运营。游戏</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 1</span>
+          
         </div>
       </div>
     </a>
@@ -846,7 +864,7 @@
         <div class="ds">《金装裁决》是安徽游昕正版运营的传奇手游，以金装系统与裁决神器为核心特色。游戏还原经</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 1</span>
+          
         </div>
       </div>
     </a>
@@ -857,7 +875,7 @@
         <div class="ds">《屠龙决战沙城：传奇三光通版》是经典传奇三端互通的正版手游，由安徽游昕网络运营。游戏</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 2</span>
+          
         </div>
       </div>
     </a>
@@ -868,7 +886,7 @@
         <div class="ds">《热血传说：复古传奇》是安徽游昕正版运营的复古传奇手游，以1.76经典版本为核心，还</div>
         <div class="row">
           <span class="btn">游戏详情</span>
-          <span class="btn ghost">攻略 1</span>
+          
         </div>
       </div>
     </a>

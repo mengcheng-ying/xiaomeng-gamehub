@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=0.85, minimum-scale=0.85, maximum-scale=3.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=3.0">
 <title>星辰变：归来 - 官方下载入口与攻略 - 小梦怀旧手游</title>
 <meta name="description" content="《星辰变：归来》是阅文正版授权、复刻经典端游体验的大型修真MMORPG手游，由江苏欢娱/游昕网络运营，于2026年6月全平台公测。游戏深度还原小说从潜龙大陆到鸿蒙宇宙的宏大世界观，包含灵兽渡劫、修真体系、自由交易等特色玩法，带你亲历秦羽的修真传奇。">
 <meta name="robots" content="index, follow">
@@ -268,6 +268,8 @@
   div.gcard .more{font-size:11.5px;color:var(--muted);align-self:flex-start;text-decoration:none;display:inline-flex;align-items:center;padding:8px 0;min-height:28px}
   div.gcard .more:hover{color:var(--brand)}
   div.gcard.collapsed{display:none}
+  .gempty{margin:0;padding:26px 18px;border:1px dashed rgba(140,160,200,.28);border-radius:12px;
+    color:var(--muted);font-size:14px;line-height:1.8;text-align:center}
   .more-btn{display:block;width:100%;padding:14px;margin:8px 0 28px;border:1px dashed var(--line);
     border-radius:12px;background:var(--card);color:var(--ink2);font-size:14px;font-weight:600;
     text-align:center;cursor:pointer;transition:border-color .18s,color .18s;font-family:inherit}
@@ -377,6 +379,22 @@
     body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))!important}
   }
 
+  /* ══════════════════════════════════════════════════════════════
+     窄屏顶栏收缩 2026-09-27 · 仅 ≤430px 生效
+     背景：viewport 由 0.85 恢复为 1.0 后，顶栏「品牌 + 4 个导航链接」
+     在 390px 机型上放不下（实测溢出 35px，出现横向滚动、末个链接被裁）。
+     这里压缩字号与热区间距，并允许品牌收缩省略，保证窄屏不横向溢出。
+     ══════════════════════════════════════════════════════════════ */
+  @media (max-width:430px){
+    .topbar{padding:7px 12px;gap:8px}
+    .brand{font-size:13px;padding:9px 0;min-width:0;overflow:hidden;text-overflow:ellipsis}
+    .topbar .nav{gap:2px;flex:none}
+    .topbar .nav a{padding:12px 7px;font-size:12px}
+  }
+  @media (max-width:360px){
+    .topbar .nav a{padding:12px 5px;font-size:11.5px}
+  }
+
   /* ── 底部标签栏：移动端专属 ── */
   .tabbar{display:none}
   @media (max-width:760px){
@@ -467,12 +485,7 @@
 
 
 
-<h2 class="sec-h">星辰变：归来 攻略（3 篇）</h2>
-<div class="lst">
-  <a href="/article/150"><span class="cat">攻略</span><span><span class="nm">《星辰变归来》功勋版本怎么玩：称号怎么点亮，商店换什么</span><span class="sm">星辰变归来9月的版本重心很明确，就是功勋。9月11号官方上线了功勋系统，9月17号又开了功勋商店，一周之内把一条新的养成线完整铺了出来。</span></span></a>
-  <a href="/article/151"><span class="cat">攻略</span><span><span class="nm">《星辰变归来》功勋版本怎么玩：称号怎么点</span><span class="sm">9月11号《星辰变归来》把功勋系统推上来了，9月17号功勋商店也跟着开。一周铺完一条新养成线。 攒功勋值就盯四件事：副本攻坚、跨服对战、宗族</span></span></a>
-  <a href="/article/3"><span class="cat">攻略</span><span><span class="nm">星辰变归来：境界突破全攻略与战力提升避坑</span><span class="sm">六大修真境界详解，突破顺序、材料获取、渡劫技巧，帮你少走弯路快速提升战力。</span></span></a>
-</div>
+
 
 <h2 class="sec-h">同类怀旧手游推荐</h2>
 <div class="tiles">

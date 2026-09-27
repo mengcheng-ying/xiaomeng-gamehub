@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=0.85, minimum-scale=0.85, maximum-scale=3.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=3.0">
 <title>游戏资讯与官方公告 - 开服/合服/维护/活动 - 小梦怀旧手游</title>
 <meta name="description" content="汇总怀旧手游的官方开服、合服、维护、版本更新与活动公告，以及本站原创资讯长文，均可站内直接阅读全文。">
 <meta name="robots" content="index, follow">
@@ -267,6 +267,8 @@
   div.gcard .more{font-size:11.5px;color:var(--muted);align-self:flex-start;text-decoration:none;display:inline-flex;align-items:center;padding:8px 0;min-height:28px}
   div.gcard .more:hover{color:var(--brand)}
   div.gcard.collapsed{display:none}
+  .gempty{margin:0;padding:26px 18px;border:1px dashed rgba(140,160,200,.28);border-radius:12px;
+    color:var(--muted);font-size:14px;line-height:1.8;text-align:center}
   .more-btn{display:block;width:100%;padding:14px;margin:8px 0 28px;border:1px dashed var(--line);
     border-radius:12px;background:var(--card);color:var(--ink2);font-size:14px;font-weight:600;
     text-align:center;cursor:pointer;transition:border-color .18s,color .18s;font-family:inherit}
@@ -376,6 +378,22 @@
     body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px))!important}
   }
 
+  /* ══════════════════════════════════════════════════════════════
+     窄屏顶栏收缩 2026-09-27 · 仅 ≤430px 生效
+     背景：viewport 由 0.85 恢复为 1.0 后，顶栏「品牌 + 4 个导航链接」
+     在 390px 机型上放不下（实测溢出 35px，出现横向滚动、末个链接被裁）。
+     这里压缩字号与热区间距，并允许品牌收缩省略，保证窄屏不横向溢出。
+     ══════════════════════════════════════════════════════════════ */
+  @media (max-width:430px){
+    .topbar{padding:7px 12px;gap:8px}
+    .brand{font-size:13px;padding:9px 0;min-width:0;overflow:hidden;text-overflow:ellipsis}
+    .topbar .nav{gap:2px;flex:none}
+    .topbar .nav a{padding:12px 7px;font-size:12px}
+  }
+  @media (max-width:360px){
+    .topbar .nav a{padding:12px 5px;font-size:11.5px}
+  }
+
   /* ── 底部标签栏：移动端专属 ── */
   .tabbar{display:none}
   @media (max-width:760px){
@@ -429,146 +447,6 @@
   <div class="srch-res" id="newsRes" hidden></div>
 
   <div id="newsBrowse">
-  <h2 class="sec-h">本站原创资讯</h2>
-  <div class="icards">
-<a class="icard" href="/article/65">
-  <div class="icv"><img src="../assets/images/longzhigu_cover.jpg" alt="怀旧手游近一个月官方动态汇总（42 款）：公测、版本更新、新服开服与限时活动" width="560" height="315" loading="lazy"></div>
-  <div class="ibd">
-    <div class="imeta"><span class="icat">综合资讯</span><span>2026-09-19</span></div>
-    <div class="itl">怀旧手游近一个月官方动态汇总（42 款）：公测、版本更新、新服开服与限时活动</div>
-    <div class="ism">把这批怀旧手游近一个月的官方公告、版本更新、新服开服和限时活动按游戏逐个整理：公测、大版本更新、新服时间、限时活动全覆盖，每条都标日期，共 42 款游戏。</div>
-  </div>
-</a>
-<a class="icard" href="/article/149">
-  <div class="icv"><img src="../assets/images/wulin_cover.jpg" alt="《武林外传十年之约绿色版》公测：绿色服到" width="800" height="600" loading="lazy"></div>
-  <div class="ibd">
-    <div class="imeta"><span class="icat">武林外传：十年之约</span><span>2026-09-19</span></div>
-    <div class="itl">《武林外传十年之约绿色版》公测：绿色服到</div>
-    <div class="ism">《武林外传十年之约绿色版》9月8号开服了，安卓、iOS和PC三端数据互通。这回主打一个“绿色公平”，跟以前的老版本不是一条线。 所谓“绿色”，就是砍掉碾压性的付费设计。特权侠客令取消了，靠月卡就能解锁核心玩法。…</div>
-  </div>
-</a>
-<a class="icard" href="/article/64">
-  <div class="icv"><img src="../assets/images/longzhigu_cover.jpg" alt="《龙之谷启程》2026年9月最新官方公告｜版本更新、新服开服、限时活动汇总（官方可查）" width="560" height="315" loading="lazy"></div>
-  <div class="ibd">
-    <div class="imeta"><span class="icat">龙之谷启程</span><span>2026-09-16</span></div>
-    <div class="itl">《龙之谷启程》2026年9月最新官方公告｜版本更新、新服开服、限时活动汇总（官方可查）</div>
-    <div class="ism">《龙之谷启程》2026年9月官方公告汇总：9月全月停机维护与版本更新、S48–S50新服开服时间、常驻活动福利、狮蝎巢穴简单模式与竞技场体系调整，附官方通用礼包码。</div>
-  </div>
-</a>
-<a class="icard" href="/article/48">
-  <div class="icv"><img src="../assets/images/wulin_cover.jpg" alt="武林外传：十年江湖路，七侠镇再相逢" width="800" height="600" loading="lazy"></div>
-  <div class="ibd">
-    <div class="imeta"><span class="icat">武林外传：十年之约</span><span>2026-09-09</span></div>
-    <div class="itl">武林外传：十年江湖路，七侠镇再相逢</div>
-    <div class="ism">同福客栈、白展堂、BT武器……经典端游复刻归来，写给老玩家的一篇江湖情怀长文，共赴十年之约。</div>
-  </div>
-</a>
-<a class="icard" href="/article/57">
-  <div class="icv"><img src="../assets/images/wulin_cover.jpg" alt="武林外传：有人的地方，才是真正的江湖" width="800" height="600" loading="lazy"></div>
-  <div class="ibd">
-    <div class="imeta"><span class="icat">武林外传：十年之约</span><span>2026-09-09</span></div>
-    <div class="itl">武林外传：有人的地方，才是真正的江湖</div>
-    <div class="ism">帮派承载的不只是属性加成，更是一群人的江湖羁绊，写给喜欢社交的老玩家的一篇情怀文章。</div>
-  </div>
-</a>
-<a class="icard" href="/article/47">
-  <div class="icv"><img src="../assets/images/moxiangqing_cover.jpg" alt="墨香情：当年藏在网吧里的水墨江湖，终于又能握在手心" width="640" height="400" loading="lazy"></div>
-  <div class="ibd">
-    <div class="imeta"><span class="icat">墨香情</span><span>2026-08-30</span></div>
-    <div class="itl">墨香情：当年藏在网吧里的水墨江湖，终于又能握在手心</div>
-    <div class="ism">从2004年《墨香OL》的全3D水墨武侠到正版IP《墨香情》复刻归来，兰州城、六大兵器、人幽两界，写给80、90后老玩家的一篇情怀长文。</div>
-  </div>
-</a>
-<a class="icard" href="/article/119">
-  <div class="icv"><img src="../assets/images/wx/034-01.jpg" alt="《修仙家族模拟器2》9月大版本前瞻" width="1200" height="675" loading="lazy"></div>
-  <div class="ibd">
-    <div class="imeta"><span class="icat">修仙家族模拟器2</span><span>2026-08-30</span></div>
-    <div class="itl">《修仙家族模拟器2》9月大版本前瞻</div>
-    <div class="ism">一、8月核心活动与版本动态整个8月围绕七夕主题与新服布局展开，先后上线限时节日活动、玩家征集活动与全新模式大区</div>
-  </div>
-</a>
-<a class="icard" href="/article/120">
-  <div class="icv"><img src="../assets/images/xiuxianjiazu2_cover.jpg" alt="《修仙家族模拟器2》9月大版本前瞻" width="560" height="315" loading="lazy"></div>
-  <div class="ibd">
-    <div class="imeta"><span class="icat">修仙家族模拟器2</span><span>2026-08-30</span></div>
-    <div class="itl">《修仙家族模拟器2》9月大版本前瞻</div>
-    <div class="ism">《修仙家族模拟器2》9月要上大版本，还得备战跨服。 8月收尾：七夕活动已经结束。和平模式新服“天梦”开了，主打无交易、不内卷。以后每个月都会开新服。 9月重头戏：11.0大版本预计9月15日后上线。修炼、家族…</div>
-  </div>
-</a>
-<a class="icard" href="/article/117">
-  <div class="icv"><img src="../assets/images/longzhigu_cover.jpg" alt="龙之谷：启程｜8 月末最新活动汇总" width="560" height="315" loading="lazy"></div>
-  <div class="ibd">
-    <div class="imeta"><span class="icat">龙之谷启程</span><span>2026-08-28</span></div>
-    <div class="itl">龙之谷：启程｜8 月末最新活动汇总</div>
-    <div class="ism">一、限时正在进行活动 1️⃣ 海龙竞速挑战赛 时间：8.26‑8.30 入口：巢穴竞速板块，组队挑战海龙巢穴，记录通关时间冲榜单 奖励：专属竞速头衔、高级龙玉、精炼材料、大量绑定龙币 💡 提示：可无限练习，正…</div>
-  </div>
-</a>
-<a class="icard" href="/article/46">
-  <div class="icv"><img src="../assets/images/moxiangqing_cover.jpg" alt="墨香情八月新版本「星徽耀世 跨服争锋」爆料：四大全新系统抢先看" width="640" height="400" loading="lazy"></div>
-  <div class="ibd">
-    <div class="imeta"><span class="icat">墨香情</span><span>2026-08-26</span></div>
-    <div class="itl">墨香情八月新版本「星徽耀世 跨服争锋」爆料：四大全新系统抢先看</div>
-    <div class="ism">徽章系统、降妖塔、跨服副本、原石副本四大新玩法同步上线，角色深度养成与跨服社交竞技两大核心内容全面解析。</div>
-  </div>
-</a>
-<a class="icard" href="/article/116">
-  <div class="icv"><img src="../assets/images/wx/039-02.jpg" alt="即将上线的热江2.0版本是怎样的？提前看看吧" width="1200" height="675" loading="lazy"></div>
-  <div class="ibd">
-    <div class="imeta"><span class="icat">热江：全新玩法</span><span>2026-08-23</span></div>
-    <div class="itl">即将上线的热江2.0版本是怎样的？提前看看吧</div>
-    <div class="ism">PART.01</div>
-  </div>
-</a>
-<a class="icard" href="/article/106">
-  <div class="icv"><img src="../assets/images/rongyao_cover.jpg" alt="荣耀出征卡点服开服啦，下午1点开放打怪" width="560" height="315" loading="lazy"></div>
-  <div class="ibd">
-    <div class="imeta"><span class="icat">荣耀出征卡点服</span><span>2026-08-13</span></div>
-    <div class="itl">荣耀出征卡点服开服啦，下午1点开放打怪</div>
-    <div class="ism">现在还在筹备，先抢前十的区！ 今天早上10点开服的，我已经抢到一区了，后续看一下这个一区搬砖情况，还有搬砖收益怎么样 离线挂机、摆摊、安全区待命、整理仓库不扣点卡 每个星期有56小时的免费卡点额度，零氪也能每天…</div>
-  </div>
-</a>
-<a class="icard" href="/article/84">
-  <div class="icv"><img src="../assets/images/wx/072-01.jpg" alt="《千年传奇版》即将公测，距离7.24仅有一天，本期内容——道具" width="1200" height="675" loading="lazy"></div>
-  <div class="ibd">
-    <div class="imeta"><span class="icat">千年盛世：千年传奇版</span><span>2026-07-23</span></div>
-    <div class="itl">《千年传奇版》即将公测，距离7.24仅有一天，本期内容——道具</div>
-    <div class="ism">前期我们要用到的道具无疑就是关于打怪的和升级的，首先第一个就是装备升级道具</div>
-  </div>
-</a>
-<a class="icard" href="/article/82">
-  <div class="icv"><img src="../assets/images/wx/076-01.jpg" alt="龙之谷启程于7月29日公测，这一次出的是手游版，端游玩家" width="1200" height="675" loading="lazy"></div>
-  <div class="ibd">
-    <div class="imeta"><span class="icat">龙之谷启程</span><span>2026-07-21</span></div>
-    <div class="itl">龙之谷启程于7月29日公测，这一次出的是手游版，端游玩家</div>
-    <div class="ism">作为一位从端游时期就入坑的忠实玩家，知到《龙之谷：启程》公测定档7月29日</div>
-  </div>
-</a>
-<a class="icard" href="/article/76">
-  <div class="icv"><img src="../assets/images/wx/083-01.jpg" alt="江湖已开，只待君来，《墨香情》手游已上线" width="1200" height="675" loading="lazy"></div>
-  <div class="ibd">
-    <div class="imeta"><span class="icat">墨香情</span><span>2026-07-15</span></div>
-    <div class="itl">江湖已开，只待君来，《墨香情》手游已上线</div>
-    <div class="ism">各位少侠，久等了！</div>
-  </div>
-</a>
-<a class="icard" href="/article/70">
-  <div class="icv"><img src="../assets/images/wx/089-01.jpg" alt="《墨香情》手游已经开服公测，诸位在第几区呢？" width="1200" height="675" loading="lazy"></div>
-  <div class="ibd">
-    <div class="imeta"><span class="icat">墨香情</span><span>2026-07-08</span></div>
-    <div class="itl">《墨香情》手游已经开服公测，诸位在第几区呢？</div>
-    <div class="ism">小编目前已经有22级，来给大家分享一下目前的进度吧，我在5区哦，不知道诸位在哪个区？目前进度如何</div>
-  </div>
-</a>
-<a class="icard" href="/article/66">
-  <div class="icv"><img src="../assets/images/wx/093-01.jpg" alt="《墨香情》复古水墨武侠MMO手游即将上线，墨染江湖，梦回墨香" width="1200" height="675" loading="lazy"></div>
-  <div class="ibd">
-    <div class="imeta"><span class="icat">墨香情</span><span>2026-07-01</span></div>
-    <div class="itl">《墨香情》复古水墨武侠MMO手游即将上线，墨染江湖，梦回墨香</div>
-    <div class="ism">作为一款正统水墨武侠题材手游，这游戏最让我眼前一亮的一点是他并没有职业绑定，可以自由的切换刀剑枪。也就是说如果我们玩到了游戏中后期，觉得这个武器的打击感不是很好，那么就可以直接转换成自己喜欢的</div>
-  </div>
-</a>
-  </div>
-
   <h2 class="sec-h">按游戏分类</h2>
   <div class="chips">
     <a href="#s-dn">龙之谷启程<b>1</b></a>
