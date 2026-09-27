@@ -388,14 +388,14 @@
       var rows = grp.gifts.map(function (gf) {
         var st = periodStatus(gf.period);
         return '<div class="code-row">' +
-            '<span class="cl"><span class="cname">' + esc(gf.name) +
-              (gf.period ? ' · 有效期 ' + esc(gf.period) : '') + '</span>' +
+            '<span class="cl"><span class="cname">' + esc(gf.name) + '</span>' +
               '<span class="code">' + esc(gf.code) + '</span></span>' +
             '<button class="btn btn-brand btn-sm" type="button" data-copy="' + esc(gf.code) + '">复制兑换码</button>' +
           '</div>' +
           '<p class="items"><b>礼包内容：</b>' + esc(gf.items || '以游戏内实际发放为准') + '</p>' +
+          /* 有效期放状态行：窄屏时"有效期 + 复制按钮"挤在一行会折行断开 */
           '<div class="gfoot"><span class="pill pill-' + st.k + '">' + st.t + '</span>' +
-            '<span>' + esc(grp.game) + '</span></div>';
+            (gf.period ? '<span>有效期 ' + esc(gf.period) + '</span>' : '') + '</div>';
       }).join('');
       return '<article class="gift">' +
         '<div class="gh"><span class="gn">' + esc(grp.game) + '</span>' +
@@ -564,19 +564,22 @@
     setText('#footFresh', latest ? dateCN(latest.date, true) : '—');
   }
 
-  /* ---------------- 导航高亮（滚动跟随） ---------------- */
+  /* ---------------- 导航高亮（顶栏导航 + 底部标签栏同步） ---------------- */
   function bindSpy() {
-    var links = $$('.nav a');
+    var links = $$('.nav a, .tabbar a');
     var map = {};
-    links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
-    var secs = ['games', 'notices', 'gifts', 'faq'].map(function (id) { return document.getElementById(id); }).filter(Boolean);
+    links.forEach(function (a) {
+      var id = String(a.getAttribute('href') || '').slice(1);
+      if (id) (map[id] = map[id] || []).push(a);
+    });
+    var secs = ['top', 'games', 'notices', 'gifts', 'faq']
+      .map(function (id) { return document.getElementById(id); }).filter(Boolean);
     if (!('IntersectionObserver' in window)) return;
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
         if (!en.isIntersecting) return;
         links.forEach(function (a) { a.classList.remove('on'); });
-        var a = map[en.target.id];
-        if (a) a.classList.add('on');
+        (map[en.target.id] || []).forEach(function (a) { a.classList.add('on'); });
       });
     }, { rootMargin: '-45% 0px -50% 0px' });
     secs.forEach(function (s) { io.observe(s); });
