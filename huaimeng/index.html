@@ -14,7 +14,7 @@
 <script src="data/gifts.js" defer=""></script>
 <script src="js/app.js" defer=""></script>
 </head>
-<body style="overflow: hidden;">
+<body>
 <a class="skip-link" href="#main">跳到主要内容</a>
 
 <!-- ================= 顶栏 ================= -->
@@ -32,7 +32,7 @@
     </nav>
     <div class="search" id="topSearch">
       <svg class="mag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.2-3.2"></path></svg>
-      <input id="topSearchInput" type="search" placeholder="搜游戏或兑换码" autocomplete="off" aria-label="站内搜索">
+      <input id="topSearchInput" type="search" placeholder="搜索游戏或兑换码" autocomplete="off" aria-label="站内搜索">
       <div class="search-panel" id="topSearchPanel" hidden=""></div>
     </div>
   </div>
@@ -45,8 +45,8 @@
     <div class="wrap">
       <div class="hero-h">
         <span class="hero-kick">老玩家的省心入口</span>
-        <h1>怀旧手游，<em>一站找齐</em></h1>
-        <p class="hero-sub">不用四处找官网与兑换码<br>经典怀旧手游的<b>官方下载入口、公告、兑换码</b>，都在这儿</p>
+        <h1>怀旧手游<em>一站找齐</em></h1>
+        <p class="hero-sub">经典怀旧手游的<b>官方下载入口、公告、兑换码</b>，都在这儿</p>
 
         <div class="hero-search search" id="heroSearch">
           <svg class="mag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.2-3.2"></path></svg>
@@ -57,18 +57,19 @@
 
         <div class="hot">
           <span>大家在找：</span>
-          <button type="button" data-q="传奇">传奇</button>
+          <button type="button" data-q="兑换码">兑换码</button><button type="button" data-q="传奇">传奇</button>
           <button type="button" data-q="江湖">热血江湖</button>
           <button type="button" data-q="龙之谷">龙之谷</button>
           <button type="button" data-q="奇迹MU">奇迹MU</button>
-          <button type="button" data-q="永恒岛">永恒岛</button>
-          <button type="button" data-q="兑换码">兑换码</button>
+          
+          
         </div>
 
         <p class="freshness">本站只收录官网可查的信息</p>
       </div>
 
-      <div class="trust">
+      
+    <div class="trust">
         <div class="trust-item">
           <span class="ti" aria-hidden="true"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><circle cx="12" cy="12" r="9.2"></circle><path d="M15.6 8.4 13 13l-4.6 2.6L11 11z"></path></svg></span>
           <h3>跳转前告诉你去哪</h3>
@@ -89,8 +90,7 @@
           <h3>全程免费，不代充</h3>
           <p>本站不卖账号、不代充、不收费。任何向你要钱的人都与怀梦无关。</p>
         </div>
-      </div>
-    </div>
+      </div></div>
   </section>
 
   <!-- ================= 游戏库 ================= -->
@@ -132,7 +132,7 @@
         <h2>游戏兑换码</h2>
         <p>官方活动发放的免费礼包码，点「复制」就能用。有效期过了的，我们会下架。</p>
       </div>
-      <div class="gifts" id="giftList"><article class="gift"><div class="gh"><span class="gn">永恒岛：高清重制版</span></div><div class="code-row"><span class="cl"><span class="cname">中秋礼包</span><span class="code">ALSZQ666</span></span><button class="btn btn-brand btn-sm" type="button" data-copy="ALSZQ666">复制兑换码</button></div><p class="items"><b>礼包内容：</b>神藏精华*20、勋章的光辉*5、1级宝石礼盒*20、金币*100000</p><div class="gfoot"><span class="pill pill-live">兑换中</span><span>有效期 9.25-10.1</span></div><div class="code-row"><span class="cl"><span class="cname">国庆礼包</span><span class="code">ALSGQ888</span></span><button class="btn btn-brand btn-sm" type="button" data-copy="ALSGQ888">复制兑换码</button></div><p class="items"><b>礼包内容：</b>史诗卡片随机礼盒*1、脚底升级石*50、幻想羽毛*5、装备强化晶石*10</p><div class="gfoot"><span class="pill pill-soon">未开始</span><span>有效期 10.1-10.7</span></div></article><article class="gift"><div class="gh"><span class="gn">永恒岛：彩虹回忆</span><span class="gt">普发</span></div><div class="code-row"><span class="cl"><span class="cname">中秋礼包</span><span class="code">CHDZQ2026</span></span><button class="btn btn-brand btn-sm" type="button" data-copy="CHDZQ2026">复制兑换码</button></div><p class="items"><b>礼包内容：</b>神佑水晶*20、装备精炼石*20、装备洗练石*10</p><div class="gfoot"><span class="pill pill-live">兑换中</span><span>有效期 9.25-10.1</span></div><div class="code-row"><span class="cl"><span class="cname">国庆礼包</span><span class="code">CHDGQ2026</span></span><button class="btn btn-brand btn-sm" type="button" data-copy="CHDGQ2026">复制兑换码</button></div><p class="items"><b>礼包内容：</b>幻想羽毛*20、高级坐骑经验药*10、高级翅膀经验药*10</p><div class="gfoot"><span class="pill pill-soon">未开始</span><span>有效期 10.1-10.7</span></div></article><article class="gift"><div class="gh"><span class="gn">星辰变：归来</span><span class="gt">普发</span></div><div class="code-row"><span class="cl"><span class="cname">中秋礼包</span><span class="code">XCBZQ666</span></span><button class="btn btn-brand btn-sm" type="button" data-copy="XCBZQ666">复制兑换码</button></div><p class="items"><b>礼包内容：</b>还童天书*10、归元石*50、中品灵兽经验丹*10</p><div class="gfoot"><span class="pill pill-live">兑换中</span><span>有效期 9.24-9.30</span></div><div class="code-row"><span class="cl"><span class="cname">国庆礼包</span><span class="code">XCBGQ888</span></span><button class="btn btn-brand btn-sm" type="button" data-copy="XCBGQ888">复制兑换码</button></div><p class="items"><b>礼包内容：</b>下品灵性丹*10、地劫余烬*100、一级符篆包*10</p><div class="gfoot"><span class="pill pill-soon">未开始</span><span>有效期 9.30-10.7</span></div></article></div>
+      <div class="gifts" id="giftList"><article class="gift"><div class="gh"><span class="gn">永恒岛：高清重制版</span></div><div class="code-row"><span class="cl"><span class="cname">中秋礼包 · 有效期 9.25-10.1</span><span class="code">ALSZQ666</span></span><button class="btn btn-brand btn-sm" type="button" data-copy="ALSZQ666">复制兑换码</button></div><p class="items"><b>礼包内容：</b>神藏精华*20、勋章的光辉*5、1级宝石礼盒*20、金币*100000</p><div class="gfoot"><span class="pill pill-live">兑换中</span><span>永恒岛：高清重制版</span></div><div class="code-row"><span class="cl"><span class="cname">国庆礼包 · 有效期 10.1-10.7</span><span class="code">ALSGQ888</span></span><button class="btn btn-brand btn-sm" type="button" data-copy="ALSGQ888">复制兑换码</button></div><p class="items"><b>礼包内容：</b>史诗卡片随机礼盒*1、脚底升级石*50、幻想羽毛*5、装备强化晶石*10</p><div class="gfoot"><span class="pill pill-soon">未开始</span><span>永恒岛：高清重制版</span></div></article><article class="gift"><div class="gh"><span class="gn">永恒岛：彩虹回忆</span><span class="gt">普发</span></div><div class="code-row"><span class="cl"><span class="cname">中秋礼包 · 有效期 9.25-10.1</span><span class="code">CHDZQ2026</span></span><button class="btn btn-brand btn-sm" type="button" data-copy="CHDZQ2026">复制兑换码</button></div><p class="items"><b>礼包内容：</b>神佑水晶*20、装备精炼石*20、装备洗练石*10</p><div class="gfoot"><span class="pill pill-live">兑换中</span><span>永恒岛：彩虹回忆</span></div><div class="code-row"><span class="cl"><span class="cname">国庆礼包 · 有效期 10.1-10.7</span><span class="code">CHDGQ2026</span></span><button class="btn btn-brand btn-sm" type="button" data-copy="CHDGQ2026">复制兑换码</button></div><p class="items"><b>礼包内容：</b>幻想羽毛*20、高级坐骑经验药*10、高级翅膀经验药*10</p><div class="gfoot"><span class="pill pill-soon">未开始</span><span>永恒岛：彩虹回忆</span></div></article><article class="gift"><div class="gh"><span class="gn">星辰变：归来</span><span class="gt">普发</span></div><div class="code-row"><span class="cl"><span class="cname">中秋礼包 · 有效期 9.24-9.30</span><span class="code">XCBZQ666</span></span><button class="btn btn-brand btn-sm" type="button" data-copy="XCBZQ666">复制兑换码</button></div><p class="items"><b>礼包内容：</b>还童天书*10、归元石*50、中品灵兽经验丹*10</p><div class="gfoot"><span class="pill pill-live">兑换中</span><span>星辰变：归来</span></div><div class="code-row"><span class="cl"><span class="cname">国庆礼包 · 有效期 9.30-10.7</span><span class="code">XCBGQ888</span></span><button class="btn btn-brand btn-sm" type="button" data-copy="XCBGQ888">复制兑换码</button></div><p class="items"><b>礼包内容：</b>下品灵性丹*10、地劫余烬*100、一级符篆包*10</p><div class="gfoot"><span class="pill pill-soon">未开始</span><span>星辰变：归来</span></div></article></div>
       <div class="steps">
         <h3>兑换码怎么用？三步就好</h3>
         <ol>
@@ -200,13 +200,13 @@
 <div class="modal" id="gameModal" role="dialog" aria-modal="true" aria-labelledby="gmTitle" hidden="">
   <div class="modal-card">
     <button class="x" type="button" data-close="" aria-label="关闭">×</button>
-    <div class="gm-cv"><img id="gmCover" src="assets/images/jizhan_cover.jpg" alt="机战：钢铁巨舰 游戏封面"></div>
+    <div class="gm-cv"><img id="gmCover" src="assets/images/qiannian_cover.jpg" alt="千年盛世：千年传奇版 游戏封面"></div>
     <div class="gm-bd">
-      <h3 id="gmTitle">机战：钢铁巨舰</h3>
-      <div class="gm-tags" id="gmTags"><span>科幻奇幻</span><span>2026 年发行</span><span>手机 / 平板</span><span>近期热门</span></div>
-      <div class="gm-desc" id="gmDesc">《机战：钢铁巨舰》是大型科幻机甲题材MMORPG手游，驾驶钢铁巨舰征战浩渺星际。海量机甲自由改装，星际舰队对决，支持iOS/安卓双端下载及PC模拟器游玩。开服首周登录即送SSR机甲碎片，机甲工坊全面升级，开放50+种改装方案，带你开启属于你的宇宙征途。</div>
-      <div class="gm-facts" id="gmFacts"><div><b>题材</b>科幻奇幻</div><div><b>发行年份</b>2026 年</div><div><b>安装包</b>约 2.3GB</div><div><b>热度</b>95.0万</div></div>
-      <div class="gm-acts" id="gmActs"><button class="btn btn-brand" type="button" data-go="https://sdkn-ldy.zhangyu39.com/?app_id=7609&amp;promote_id=1778">安卓下载 ↗</button><button class="btn btn-ghost" type="button" data-go="https://sdkn-ldy.zhangyu39.com/?app_id=7164&amp;promote_id=1778">苹果下载 ↗</button></div>
+      <h3 id="gmTitle">千年盛世：千年传奇版</h3>
+      <div class="gm-tags" id="gmTags"><span>武侠修仙</span><span>2025 年发行</span><span>手机 / 平板</span></div>
+      <div class="gm-desc" id="gmDesc">《千年盛世：千年传奇版》是经典武侠端游《千年》的正版移植手游，由官方全程直营。游戏完美还原端游核心玩法与经典武侠江湖场景，包含武功修炼、门派争斗、自由交易、装备保值回收等特色，带你重返二十年前的纯粹武侠世界，执剑踏遍江湖万里。</div>
+      <div class="gm-facts" id="gmFacts"><div><b>题材</b>武侠修仙</div><div><b>发行年份</b>2025 年</div><div><b>安装包</b>以官方商店页为准</div><div><b>热度</b>84.0万</div></div>
+      <div class="gm-acts" id="gmActs"><button class="btn btn-brand" type="button" data-go="https://229663.youxin75.com/qudao.php?s=/Download/f/WzUwNzQsNTA3MywyMjk2NjNd">前往官方下载 ↗</button></div>
       <p class="gm-safe">提示：点击下载会先显示官方入口网址，确认后再跳转；下载免费，怀梦不收取任何费用。</p>
     </div>
   </div>

@@ -123,6 +123,49 @@
     } else legacy();
   }
 
+  /* ---------------- 结构自愈 ----------------
+     用可视化编辑器导出的快照会丢掉 display:none 的节点：
+     底部标签栏（桌面端不显示）与下载确认弹窗的内部结构都会消失。
+     这里检测缺失就补回，保证功能不因导出而失效。 */
+  var TABBAR_ITEMS = [
+    ['#top', '首页', '<path d="M3 10.6 12 3.2l9 7.4"/><path d="M5.6 9.4V20.8h12.8V9.4"/>'],
+    ['#games', '游戏库', '<rect x="2" y="6.5" width="20" height="11" rx="5.5"/><path d="M7 10.2v3.6M5.2 12h3.6M15.8 11h.01M18.2 13h.01"/>'],
+    ['#notices', '公告', '<rect x="3.5" y="5" width="17" height="14" rx="2.4"/><path d="M7.5 9.4h9M7.5 13h5.6"/>'],
+    ['#gifts', '兑换码', '<rect x="3.6" y="9.2" width="16.8" height="11" rx="2.2"/><path d="M3.6 13.2h16.8M12 9.2v11"/><path d="M8.4 9.2a2.4 2.4 0 1 1 0-4.8c1.9 0 3.6 4.8 3.6 4.8s1.7-4.8 3.6-4.8a2.4 2.4 0 1 1 0 4.8"/>'],
+    ['#faq', '问答', '<circle cx="12" cy="12" r="9.2"/><path d="M9.6 9.4a2.5 2.5 0 0 1 4.9.6c0 1.6-2.4 2-2.4 3.4"/><path d="M12.1 16.8h.01"/>']
+  ];
+  function ensureShell() {
+    if (!document.querySelector('.tabbar')) {
+      var nav = document.createElement('nav');
+      nav.className = 'tabbar';
+      nav.setAttribute('aria-label', '移动端主导航');
+      nav.innerHTML = TABBAR_ITEMS.map(function (t, i) {
+        return '<a href="' + t[0] + '"' + (i === 0 ? ' class="on"' : '') +
+          '><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+          t[2] + '</svg><span>' + t[1] + '</span></a>';
+      }).join('');
+      document.body.appendChild(nav);
+    }
+    var gm = document.getElementById('goModal');
+    if (gm && !document.getElementById('goLink')) {
+      gm.innerHTML =
+        '<div class="modal-card">' +
+          '<button class="x" type="button" data-close aria-label="关闭">×</button>' +
+          '<div class="go-ic" aria-hidden="true">↗</div>' +
+          '<h3 id="goTitle">即将前往官方下载</h3>' +
+          '<p class="sub">确认目标网站无误，再继续。</p>' +
+          '<div class="go-game"><img id="goCover" src="" alt=""><div>' +
+            '<div class="n" id="goName"></div><div class="h" id="goHost"></div></div></div>' +
+          '<ul class="go-points"><li>该入口来自游戏发行渠道，不是广告中转页</li>' +
+            '<li>怀梦全程免费、不代充，收费的都和我们无关</li></ul>' +
+          '<label class="go-remember"><input type="checkbox" id="goRemember"> 以后直接跳转，不再提示</label>' +
+          '<div class="go-acts"><button class="btn btn-ghost" type="button" data-close>再想想</button>' +
+            '<a class="btn btn-brand" id="goLink" href="#" target="_blank" rel="noopener noreferrer">继续前往下载</a></div>' +
+        '</div>';
+    }
+  }
+  ensureShell();
+
   /* ---------------- 弹窗 ---------------- */
   var lastFocus = null;
   function openModal(el) {
