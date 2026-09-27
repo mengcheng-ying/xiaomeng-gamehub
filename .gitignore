@@ -11,3 +11,7 @@ node_modules/
 
 # 日志
 *.log.github/scripts/node_modules/
+
+# 独立站点：怀梦手游已拆分为单独仓库（mengcheng-ying/huaimeng-site），
+# 本地保留工作副本但不纳入本仓库，避免两个站混在一起。
+huaimeng/
