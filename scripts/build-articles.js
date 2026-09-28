@@ -1426,13 +1426,13 @@ ${sameCat.map((x) => `  <a href="/news/${esc(a.slug)}/${esc(x.key)}"><span class
     <h1 class="ttl">${esc(it.title)}</h1>
     <div class="nmeta">
       <span>${esc(it.date || '官方未标注日期')}</span>
-      <span>来源：三九互娱《${esc(gameName)}》官方专区</span>
+      <span>来源：${a.site ? `三九互娱《${esc(gameName)}》官方专区` : `《${esc(gameName)}》开区通知`}</span>
       <span>本站收录于 ${esc(synced)}</span>
     </div>
     <div class="body">
 ${bodyHtml}
     </div>
-    <div class="src-note">本条内容为《${esc(gameName)}》官方专区公开公告，由本站自动同步收录、未作改写，仅供玩家查阅。原始出处：三九互娱官方专区（3975.com）。本站页面内不设任何站外跳转；如需核对原文，可在官方专区按标题检索。</div>
+    <div class="src-note">${a.site ? `本条内容为《${esc(gameName)}》官方专区公开公告，由本站自动同步收录、未作改写，仅供玩家查阅。原始出处：三九互娱官方专区（3975.com）。本站页面内不设任何站外跳转；如需核对原文，可在官方专区按标题检索。` : '本条开区通知由用户提供，本站仅按原文整理展示，具体时间和内容以游戏内公告为准。'}</div>
   </article>
 ${pnHtml}
 ${moreHtml}

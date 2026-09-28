@@ -1,8 +1,74 @@
-// ⚠️ 本文件由 scripts/fetch-official-news.js 自动生成，请勿手工编辑
-// 数据来源：三九互娱官方专区（3975.com 系列站点）公开公告
-//
-// 2026-09-27 全站清空资讯/公告（用户要求），此文件保持空对象。
-// 需要恢复官方公告同步时，运行：node scripts/fetch-official-news.js
-// 历史内容可从备份分支 backup/before-article-purge-20260927 取回。
+// 资讯/公告数据
+// 本次开区通知由用户提供，按游戏归档。
 const OFFICIAL_NEWS = {
+  "generatedAt": "2026-09-28T18:30:00.000Z",
+  "sourceNote": "用户提供的开区通知",
+  "archives": {
+    "yxnd": {
+      "slug": "yxnd",
+      "official": "《风暴远征：英雄年代联动版》",
+      "site": "",
+      "newsUrl": "",
+      "gameIds": [
+        18
+      ],
+      "items": [
+        {
+          "date": "2026-09-28",
+          "category": "开服公告",
+          "title": "【开区通知】：“S30.御龙在天”2026年10月1日13:00开启！",
+          "key": "manual-20260928-yxnd-s30",
+          "url": "",
+          "summary": "《风暴远征：英雄年代联动版》“S30.御龙在天”将于2026年10月1日13:00开启。"
+        }
+      ]
+    },
+    "dn": {
+      "slug": "dn",
+      "official": "《龙之谷：启程》",
+      "site": "",
+      "newsUrl": "",
+      "gameIds": [
+        1
+      ],
+      "items": [
+        {
+          "date": "2026-09-28",
+          "category": "开服公告",
+          "title": "【开区通知】：“S53.黄金草原”10月2日10:10开启！",
+          "key": "manual-20260928-dn-s53",
+          "url": "",
+          "summary": "《龙之谷启程》“S53.黄金草原”将于2026年10月2日10:10开启。"
+        },
+        {
+          "date": "2026-09-28",
+          "category": "开服公告",
+          "title": "【开区通知】：“S54.青铜残月”10月7日10:10开启！",
+          "key": "manual-20260928-dn-s54",
+          "url": "",
+          "summary": "《龙之谷启程》“S54.青铜残月”将于2026年10月7日10:10开启。"
+        }
+      ]
+    }
+  },
+  "games": {
+    "18": {
+      "slug": "yxnd",
+      "official": "《风暴远征：英雄年代联动版》",
+      "site": "",
+      "newsUrl": "",
+      "gameIds": [
+        18
+      ]
+    },
+    "1": {
+      "slug": "dn",
+      "official": "《龙之谷：启程》",
+      "site": "",
+      "newsUrl": "",
+      "gameIds": [
+        1
+      ]
+    }
+  }
 };
