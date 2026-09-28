@@ -81,7 +81,7 @@ const done = targets.filter((u) => state.pushed[u]).length;
 console.log('站点：' + SITE);
 console.log('');
 console.log('推送范围（2026-09-14 起，规则见 scripts/baidu-push-scope.js）：');
-console.log('  首页 + 游戏独立页 + 以后新发的攻略文章');
+console.log('  首页 + 游戏/攻略/礼包内容页 + 新发攻略文章');
 console.log('  sitemap 内本站 URL 合计：' + all.length + ' 条');
 console.log('  ├─ 在推送范围内：' + targets.length + ' 条');
 console.log('  ├─ 排除 · 官方公告页（/news 系列，不提交收录）：' + excludedNews.length + ' 条');
@@ -91,8 +91,9 @@ if (excludedOther.length) {
   excludedOther.slice(0, 8).forEach((u) => console.log('        ' + SCOPE.pathOf(u)));
 }
 console.log('');
-const counts = { 游戏页: 0, 首页: 0, 攻略: 0 };
-targets.forEach((u) => { const p = SCOPE.priority(u); counts[p === 0 ? '游戏页' : p === 1 ? '首页' : '攻略']++; });
+const counts = { 首页: 0, 攻略: 0, 礼包: 0, 游戏大厅: 0, 游戏页: 0 };
+const countLabel = { 0: '首页', 1: '攻略', 2: '攻略', 3: '礼包', 4: '游戏大厅', 5: '游戏页' };
+targets.forEach((u) => { counts[countLabel[SCOPE.priority(u)] || '攻略']++; });
 console.log('范围内构成：' + Object.entries(counts).map(([k, v]) => k + ' ' + v).join(' / '));
 console.log('');
 console.log('进度：已推送 ' + done + ' / ' + targets.length + ' 条，剩余 ' + todo.length + ' 条'
