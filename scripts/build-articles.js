@@ -288,15 +288,16 @@ const BASE_CSS = `
 
   /* ===== 福利礼包中心（/gift） ===== */
   .gift-notice{background:rgba(245,181,10,.08);border:1px solid rgba(245,181,10,.2);color:var(--muted);padding:7px 10px;border-radius:8px;font-size:11.5px;margin:0 0 14px}
-  .gift-hub{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin:0 0 20px}
-  .gift-hub-card{display:flex;align-items:center;gap:11px;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:inherit;transition:border-color .18s,box-shadow .18s}
-  .gift-hub-card:hover{border-color:rgba(91,140,255,.5);box-shadow:0 5px 16px rgba(0,0,0,.28)}
-  .gift-hub-cover{flex:none;width:88px;aspect-ratio:16/10;border-radius:7px;overflow:hidden;background:#1a2537}
-  .gift-hub-cover img{width:100%;height:100%;object-fit:cover;display:block}
-  .gift-hub-info{min-width:0;flex:1}
-  .gift-hub-name{font-size:13.5px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .gift-hub-meta{font-size:11.5px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .gift-hub-link{font-size:11.5px;color:var(--brand);font-weight:600;margin-top:5px}
+  .gift-hub,.guide-hub{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin:0 0 20px}
+  .gift-hub-card,.guide-hub-card{display:flex;align-items:center;gap:11px;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:inherit;transition:border-color .18s,box-shadow .18s}
+  .gift-hub-card:hover,.guide-hub-card:hover{border-color:rgba(91,140,255,.5);box-shadow:0 5px 16px rgba(0,0,0,.28)}
+  .gift-hub-cover,.guide-hub-cover{flex:none;width:88px;aspect-ratio:16/10;border-radius:7px;overflow:hidden;background:#1a2537}
+  .gift-hub-cover img,.guide-hub-cover img{width:100%;height:100%;object-fit:cover;display:block}
+  .gift-hub-info,.guide-hub-info{min-width:0;flex:1}
+  .gift-hub-name,.guide-hub-name{font-size:13.5px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .gift-hub-meta,.guide-hub-meta{font-size:11.5px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .gift-hub-link,.guide-hub-link{font-size:11.5px;color:var(--brand);font-weight:600;margin-top:5px}
+  .guide-hub-latest{font-size:11px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .gift-detail-head{display:flex;gap:14px;align-items:center;margin:0 0 18px;padding:12px;border:1px solid var(--line);border-radius:11px;background:var(--card)}
   .gift-detail-head img{width:132px;height:82px;border-radius:8px;object-fit:cover;background:#1a2537}
   .gift-detail-head h1{margin:0 0 5px}
@@ -1662,263 +1663,210 @@ ${contentHtml}
   console.log('✅ 生成置顶精选专题独立页 ' + editorials.length + ' 个（/news/feature/*）');
 }
 
-// ===== 7. 生成攻略索引页 guides.html =====
+// ===== 7. 生成攻略中心与游戏攻略页 =====
 const byGame = articlesByGame;
-/* gameId=0 / 无单一游戏归属的文章（例如「N 款游戏月度动态汇总」这类跨游戏长文）单独成组。
-   它们原本混在 gameGroups 里，但 buildCard 里取不到 gameById[0] 会整组 return ''，
-   导致这类文章在攻略中心完全不可达 —— 改成单独渲染一张卡。 */
+const articleDate = (a) => String((a && a.date) || '');
+const guideDateText = (date) => {
+  const m = String(date || '').match(/^\d{4}-(\d{2})-(\d{2})/);
+  return m ? `${m[1]}-${m[2]}` : String(date || '');
+};
+const latestArticleOf = (list) => [...list].sort((a, b) => articleDate(b).localeCompare(articleDate(a)))[0];
 const miscArticles = (byGame.get(0) || []).slice()
-  .sort((m, n) => String(n.date).localeCompare(String(m.date)));
+  .sort((a, b) => articleDate(b).localeCompare(articleDate(a)));
 const gameGroups = [...byGame.entries()]
   .filter(([gid]) => gid !== 0 && gameById[gid])
-  .sort((x, y) => y[1].length - x[1].length);
-const HOT_COUNT = 4;
-const hotGroups = gameGroups.slice(0, HOT_COUNT);
-const restGroups = gameGroups.slice(HOT_COUNT);
+  .sort((a, b) => {
+    const ad = articleDate(latestArticleOf(a[1]));
+    const bd = articleDate(latestArticleOf(b[1]));
+    return bd.localeCompare(ad) || b[1].length - a[1].length;
+  });
 
+const guideCard = (gid, list, misc) => {
+  const g = misc ? null : gameById[gid];
+  const name = misc ? '综合攻略' : g.name;
+  const cover = misc ? 'assets/images/logo_xiaomeng.png' : g.cover;
+  const href = misc ? '/guides/misc' : '/guides/' + gid;
+  const latest = latestArticleOf(list);
+  const searchText = esc([name, ...list.map(a => `${a.title} ${a.summary || ''}`)].join(' '));
+  return `  <article class="guide-hub-card" data-s="${searchText}">
+    <a class="guide-hub-cover" href="${href}" aria-label="查看${esc(name)}">
+      <img src="${esc(assetUrl(cover))}" alt="${esc(name)}" loading="lazy"${sizeAttrs(cover)}>
+    </a>
+    <div class="guide-hub-info">
+      <a class="guide-hub-name" href="${href}">${esc(name)}</a>
+      <div class="guide-hub-meta">${list.length} 篇攻略 · 更新 ${esc(guideDateText(latest && latest.date))}</div>
+      <div class="guide-hub-latest" title="${esc(latest && latest.title || '')}">最新：${esc(latest && latest.title || '')}</div>
+      <a class="guide-hub-link" href="${href}">查看攻略 →</a>
+    </div>
+  </article>`;
+};
+
+const guideCards = [
+  ...gameGroups.map(([gid, list]) => guideCard(gid, list, false)),
+  ...(miscArticles.length ? [guideCard(0, miscArticles, true)] : [])
+].join('\n');
+
+const guideGroups = [
+  ...gameGroups.map(([gid, list]) => ({
+    id: gid,
+    slug: String(gid),
+    name: gameById[gid].name,
+    cover: gameById[gid].cover,
+    articles: list,
+    gameId: gid,
+    misc: false
+  })),
+  ...(miscArticles.length ? [{
+    id: 0,
+    slug: 'misc',
+    name: '综合攻略',
+    cover: 'assets/images/logo_xiaomeng.png',
+    articles: miscArticles,
+    gameId: null,
+    misc: true
+  }] : [])
+];
+
+const guidesUrl = SITE + '/guides';
 const guidesIndexHtml = head(
-  '全部游戏攻略索引 - 小梦怀旧手游',
-  `小梦怀旧手游全部游戏攻略索引，按游戏分类整理：职业加点、开荒路线、打金搬砖、装备获取、版本玩法，一站式查阅，支持站内搜索。`,
-  SITE + '/guides',
-  { prefix: '', ld: [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: '全部游戏攻略索引', url: SITE + '/guides' }] }
-) + (() => {
-  /* 游戏卡片式布局：每张卡片左边是游戏封面+名称，右边是攻略标题列表。
-     点击卡片整体 → 进入游戏详情页；点击单篇攻略 → 进入文章页。
-     只展示热门游戏（攻略数最多的前 HOT_COUNT 个），其余折叠，点击「展开全部」后显示。 */
-  const buildCard = (gid, list, collapsed) => {
-    const g = gameById[gid];
-    if (!g) return '';
-    const gname = g.name;
-    const gcat = g.category || '';
-    const cover = g.cover ? assetUrl(g.cover) : '';
-    const showCount = Math.min(4, list.length);
-    const shown = list.slice(0, showCount);
-    /* 视觉上每张卡只露前 2 篇（CSS nth-child(n+3) 隐藏），所以「还有 N 篇」按 2 计算，
-       这样文案与用户实际看到的一致；DOM 里仍保留 4 篇链接供爬虫跟随。 */
-    const VISIBLE_ON_CARD = 2;
-    const extraCount = Math.max(0, list.length - VISIBLE_ON_CARD);
-
-    const items = shown.map(a => {
-      const catClass = (a.category === '资讯') ? 'cat info' : 'cat';
-      const catLabel = a.category || '攻略';
-      const hay = esc([gname, catLabel, a.title, (a.summary || '')].join(' '));
-      return `    <li><a href="/article/${a.id}" data-s="${hay}"><span class="${catClass}">${esc(catLabel)}</span>${esc(a.title)}</a></li>`;
-    }).join('\n');
-
-    const more = extraCount > 0
-      ? `  <a class="more" href="/game/${gid}">还有 ${extraCount} 篇 →</a>`
-      : `  <a class="more" href="/game/${gid}">查看游戏详情 →</a>`;
-    const cls = collapsed ? 'gcard collapsed' : 'gcard';
-
-    return `<div class="${cls}" data-href="/game/${gid}">
-  <div class="cover">
-    <a href="/game/${gid}"><img src="${esc(cover)}" alt="${esc(gname)}" loading="lazy"></a>
-  </div>
-  <div class="info">
-    <div class="top">
-      <div>
-        <h3 class="gname"><a href="/game/${gid}">${esc(gname)}</a></h3>
-        <div class="gcat">${esc(gcat)}</div>
-      </div>
-      <span class="cnt">${list.length} 篇攻略</span>
-    </div>
-    <ul class="alist">
-${items}
-    </ul>
-${more}
-  </div>
-</div>`;
-  };
-
-  /* 无单一游戏归属的文章渲染成一张「综合汇总」卡。
-     封面用站点 logo —— 与 .gcard .cover img 的 1/1 正方形比例一致。 */
-  const buildMiscCard = (list) => {
-    if (!list || !list.length) return '';
-    const VISIBLE_ON_CARD = 2;
-    const shown = list.slice(0, Math.min(4, list.length));
-    const extraCount = Math.max(0, list.length - VISIBLE_ON_CARD);
-    const items = shown.map(a => {
-      const catLabel = a.category || '资讯';
-      const catClass = (a.category === '资讯') ? 'cat info' : 'cat';
-      const hay = esc(['综合汇总', catLabel, a.title, (a.summary || '')].join(' '));
-      return `    <li><a href="/article/${a.id}" data-s="${hay}"><span class="${catClass}">${esc(catLabel)}</span>${esc(a.title)}</a></li>`;
-    }).join('\n');
-    const more = extraCount > 0
-      ? `  <a class="more" href="/news">还有 ${extraCount} 篇 →</a>`
-      : `  <a class="more" href="/news">查看全部资讯 →</a>`;
-    return `<div class="gcard" data-href="/news">
-  <div class="cover">
-    <a href="/news"><img src="assets/images/logo_xiaomeng.png" alt="综合汇总" loading="lazy"></a>
-  </div>
-  <div class="info">
-    <div class="top">
-      <div>
-        <h3 class="gname"><a href="/news">综合汇总</a></h3>
-        <div class="gcat">多游戏资讯</div>
-      </div>
-      <span class="cnt">${list.length} 篇</span>
-    </div>
-    <ul class="alist">
-${items}
-    </ul>
-${more}
-  </div>
-</div>`;
-  };
-
-  const miscCard = buildMiscCard(miscArticles);
-  const hotCards = hotGroups.map(([gid, list]) => buildCard(gid, list, false)).join('\n');
-  const restCards = restGroups.map(([gid, list]) => buildCard(gid, list, true)).join('\n');
-  const moreBtn = restGroups.length ? `  <button class="more-btn" id="moreBtn" type="button">展开全部 ${restGroups.length} 个游戏攻略 ↓</button>` : '';
-
-  return `<main class="wrap wide">
+  '游戏攻略中心 - 按游戏查看攻略 - 小梦怀旧手游',
+  '小梦怀旧手游攻略中心，按游戏整理新手开荒、职业加点、装备养成与版本玩法，点击游戏卡片查看全部攻略。',
+  guidesUrl,
+  {
+    prefix: '',
+    ld: [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name: '游戏攻略中心',
+        url: guidesUrl,
+        inLanguage: 'zh-CN'
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        name: '怀旧手游攻略索引',
+        numberOfItems: guideGroups.length,
+        itemListElement: guideGroups.map((g, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          name: g.name + '攻略',
+          url: SITE + '/guides/' + g.slug
+        }))
+      }
+    ]
+  }
+) + `<main class="wrap wide">
   <nav class="crumb"><a href="/">首页</a><i>/</i><span>攻略中心</span></nav>
-  <h1 class="ttl">全部游戏攻略索引</h1>
-  <p class="lead"><strong>按游戏分组</strong>整理，点击卡片查看全部攻略，也可以直接搜索游戏名或攻略标题。</p>
+  <h1 class="ttl">游戏攻略</h1>
+  <p class="lead">按游戏查看攻略，先选游戏，再看对应文章。</p>
 
   <div class="srchbar">
     <svg class="srch-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-    <input id="guideSearch" type="search" placeholder="搜索游戏名或攻略标题，例如「龙之谷」「打金」" autocomplete="off" aria-label="搜索攻略">
+    <input id="guideSearch" type="search" placeholder="搜索游戏名或攻略标题" autocomplete="off" aria-label="搜索攻略">
     <span class="hint" id="guideHint">输入即搜</span>
   </div>
-  <div class="srch-res" id="guideRes" hidden></div>
 
-  <div class="gcards" id="guideCards">
-${hotCards}
-${miscCard}
-${(!hotCards && !miscCard) ? `  <p class="gempty">攻略正在整理中，新攻略会陆续上线，敬请期待。</p>` : ''}
-  </div>
-${moreBtn}
-  <div class="gcards" id="guideCardsRest">
-${restCards}
+  <div class="guide-hub" id="guideCards">
+${guideCards || '  <p class="gempty">攻略正在整理中，新攻略会陆续上线。</p>'}
   </div>
 
   <div class="cta">
-    <p>想找更多经典 IP 正版复刻的怀旧手游？回到首页一次看全。</p>
-    <a class="cta-btn" href="/">← 返回小梦怀旧手游首页</a>
+    <p>没有找到想玩的游戏？游戏大厅收录全部怀旧手游。</p>
+    <a class="cta-btn" href="/games">进入游戏大厅</a>
   </div>
 
   <script>
   (function(){
-    var box=document.getElementById('guideSearch'),res=document.getElementById('guideRes'),
-        hint=document.getElementById('guideHint'),moreBtn=document.getElementById('moreBtn');
+    var box=document.getElementById('guideSearch'),hint=document.getElementById('guideHint');
     if(!box)return;
-    var cards=[].slice.call(document.querySelectorAll('.gcard'));
-    var links=[].slice.call(document.querySelectorAll('.gcard .alist a'));
-    var collapsedCards=cards.filter(function(c){return c.classList.contains('collapsed')});
-    var IDLE_HINT='输入即搜';
-    var expanded=false;
-
-    function applyCollapse(){
-      collapsedCards.forEach(function(c){c.classList.toggle('collapsed',!expanded)});
-      if(moreBtn){moreBtn.hidden=expanded;}
-    }
-
-    // 卡片点击跳转（点击内部链接时不触发）
-    cards.forEach(function(card){
-      card.addEventListener('click',function(e){
-        if(e.target.closest('a'))return;
-        var href=card.getAttribute('data-href');
-        if(href)window.location.href=href;
-      });
-    });
-
-    if(moreBtn){
-      moreBtn.addEventListener('click',function(e){
-        e.preventDefault();
-        expanded=!expanded;
-        applyCollapse();
-        if(!expanded && moreBtn){
-          moreBtn.scrollIntoView({behavior:'smooth',block:'center'});
-        }
-      });
-    }
-
-    // 保存原始顺序，清空搜索时恢复
-    var allContainer=document.getElementById('guideCards');
-    var restContainer=document.getElementById('guideCardsRest');
-    var cardOrder=[];
-    cards.forEach(function(c){cardOrder.push(c);});
-
+    var cards=[].slice.call(document.querySelectorAll('.guide-hub-card'));
     function render(){
       var q=String(box.value||'').trim().toLowerCase();
-      var i,j;
-      if(!q){
-        // 恢复原始顺序
-        for(i=0;i<cardOrder.length;i++){
-          var c=cardOrder[i];
-          c.hidden=false;
-          c.classList.remove('srch');
-          var items=c.querySelectorAll('.alist a');
-          for(var k=0;k<items.length;k++){items[k].hidden=false;items[k].classList.remove('hit');}
-          if(c.classList.contains('collapsed')){
-            if(restContainer)restContainer.appendChild(c);
-          }else{
-            if(allContainer)allContainer.appendChild(c);
-          }
-        }
-        applyCollapse();
-        res.hidden=true;res.innerHTML='';
-        hint.textContent=IDLE_HINT;
-        return;
-      }
-      // 多关键词搜索：空格分隔，全部匹配才算命中（AND 逻辑）
-      var keywords=q.split(/\\s+/).filter(function(k){return k.length>0;});
-      // 搜索时展开所有折叠卡片
-      collapsedCards.forEach(function(c){c.classList.remove('collapsed')});
-      var n=0;
-      var hitCards=[],missCards=[];
-      for(i=0;i<cards.length;i++){
-        var items=[].slice.call(cards[i].querySelectorAll('.alist a')),hit=0;
-        for(j=0;j<items.length;j++){
-          var hay=(items[j].getAttribute('data-s')||'').toLowerCase();
-          var ok=true;
-          for(var ki=0;ki<keywords.length;ki++){
-            if(hay.indexOf(keywords[ki])<0){ok=false;break;}
-          }
-          items[j].hidden=!ok;
-          if(ok){hit++;items[j].classList.add('hit');}else{items[j].classList.remove('hit');}
-        }
-        cards[i].hidden=(hit===0);
-        cards[i].classList.toggle('srch',hit>0);
-        if(hit>0)hitCards.push(cards[i]);else missCards.push(cards[i]);
-        n+=hit;
-      }
-      // 匹配的卡片移到最前面
-      var container=allContainer || cards[0].parentElement;
-      for(i=0;i<hitCards.length;i++){
-        container.appendChild(hitCards[i]);
-      }
-      hint.textContent=(n?('命中 '+n+' 篇'):'0 篇');
-      if(n){
-        res.hidden=true;res.innerHTML='';
-        // 滚动到结果区域顶部
-        setTimeout(function(){
-          if(container){
-            container.scrollIntoView({behavior:'smooth',block:'start'});
-          }
-        },50);
-        return;
-      }
-      var d=document.createElement('div');
-      d.textContent=box.value.trim();
-      res.innerHTML='<p class="empty">没有找到与「'+d.innerHTML+'」相关的攻略。换个关键词试试，比如游戏名或「打金」「职业」。</p>';
-      res.hidden=false;
+      var hit=0;
+      cards.forEach(function(card){
+        var ok=!q||(card.getAttribute('data-s')||'').toLowerCase().indexOf(q)>=0;
+        card.hidden=!ok;
+        if(ok)hit++;
+      });
+      hint.textContent=q?('命中 '+hit+' 个游戏'):'输入即搜';
     }
     box.addEventListener('input',render);
-    box.addEventListener('keyup',render);
-    box.addEventListener('change',render);
     box.addEventListener('search',render);
     box.addEventListener('keydown',function(e){if(e.key==='Escape'){box.value='';render();box.blur();}});
   })();
-  </script>
-</main>
-`;
-})() + foot();
+  <\/script>
+</main>` + foot();
 writeFile('guides.html', guidesIndexHtml);
-console.log('✅ 生成 guides.html（' + articles.length + ' 篇 / ' + gameGroups.length + ' 组，含站内搜索）');
+
+guideGroups.forEach((g) => {
+  const url = SITE + '/guides/' + g.slug;
+  const rows = g.articles.map((a) => `    <a href="/article/${a.id}">
+      <span class="cat">${esc(a.category || '攻略')}</span>
+      <span><span class="nm">${esc(a.title)}</span><span class="sm">${esc((a.summary || '').slice(0, 80))}</span></span>
+    </a>`).join('\n');
+  const body = `<main class="wrap">
+  <nav class="crumb"><a href="/">首页</a><i>/</i><a href="/guides">攻略中心</a><i>/</i><span>${esc(g.name)}</span></nav>
+  <div class="gift-detail-head">
+    <img src="../${esc(assetUrl(g.cover))}" alt="${esc(g.name)}"${sizeAttrs(g.cover)}>
+    <div>
+      <h1 class="ttl">${esc(g.name)}攻略</h1>
+      <p>共 ${g.articles.length} 篇${g.gameId ? ` · <a href="/game/${g.gameId}">下载与游戏资料</a>` : ''}</p>
+    </div>
+  </div>
+  <div class="lst">
+${rows}
+  </div>
+  <div class="cta">
+    <p>继续查看其他怀旧手游攻略。</p>
+    <a class="cta-btn" href="/guides">返回攻略中心</a>
+  </div>
+</main>` + foot();
+  writeFile('guides/' + g.slug + '.html', head(
+    `${g.name}攻略大全 - 新手开荒与玩法 - 小梦怀旧手游`,
+    `${g.name}攻略共 ${g.articles.length} 篇，包含新手开荒、职业选择、养成与版本玩法，站内直接阅读。`,
+    url,
+    {
+      prefix: '../',
+      ld: [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'CollectionPage',
+          name: `${g.name}攻略`,
+          url,
+          inLanguage: 'zh-CN'
+        },
+        {
+          '@context': 'https://schema.org',
+          '@type': 'ItemList',
+          name: `${g.name}攻略列表`,
+          numberOfItems: g.articles.length,
+          itemListElement: g.articles.map((a, i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            name: a.title,
+            url: SITE + '/article/' + a.id
+          }))
+        },
+        {
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: '首页', item: SITE + '/' },
+            { '@type': 'ListItem', position: 2, name: '攻略中心', item: guidesUrl },
+            { '@type': 'ListItem', position: 3, name: `${g.name}攻略`, item: url }
+          ]
+        }
+      ]
+    }
+  ) + body);
+  sitemapUrls.push({ loc: url, lastmod: TODAY, priority: '0.7' });
+});
+
+console.log('✅ 生成 guides.html 与 ' + guideGroups.length + ' 个游戏攻略页（' + articles.length + ' 篇攻略）');
 
 // ===== 7b. 生成站内搜索索引 js/search-index.js =====
+
 // 首页顶部搜索框用；随内容自动重建，避免索引与页面脱节。
 const searchGuides = articles.map(a => ({
   k: 'a',

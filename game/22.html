@@ -110,15 +110,16 @@
 
   /* ===== 福利礼包中心（/gift） ===== */
   .gift-notice{background:rgba(245,181,10,.08);border:1px solid rgba(245,181,10,.2);color:var(--muted);padding:7px 10px;border-radius:8px;font-size:11.5px;margin:0 0 14px}
-  .gift-hub{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin:0 0 20px}
-  .gift-hub-card{display:flex;align-items:center;gap:11px;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:inherit;transition:border-color .18s,box-shadow .18s}
-  .gift-hub-card:hover{border-color:rgba(91,140,255,.5);box-shadow:0 5px 16px rgba(0,0,0,.28)}
-  .gift-hub-cover{flex:none;width:88px;aspect-ratio:16/10;border-radius:7px;overflow:hidden;background:#1a2537}
-  .gift-hub-cover img{width:100%;height:100%;object-fit:cover;display:block}
-  .gift-hub-info{min-width:0;flex:1}
-  .gift-hub-name{font-size:13.5px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .gift-hub-meta{font-size:11.5px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .gift-hub-link{font-size:11.5px;color:var(--brand);font-weight:600;margin-top:5px}
+  .gift-hub,.guide-hub{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin:0 0 20px}
+  .gift-hub-card,.guide-hub-card{display:flex;align-items:center;gap:11px;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:inherit;transition:border-color .18s,box-shadow .18s}
+  .gift-hub-card:hover,.guide-hub-card:hover{border-color:rgba(91,140,255,.5);box-shadow:0 5px 16px rgba(0,0,0,.28)}
+  .gift-hub-cover,.guide-hub-cover{flex:none;width:88px;aspect-ratio:16/10;border-radius:7px;overflow:hidden;background:#1a2537}
+  .gift-hub-cover img,.guide-hub-cover img{width:100%;height:100%;object-fit:cover;display:block}
+  .gift-hub-info,.guide-hub-info{min-width:0;flex:1}
+  .gift-hub-name,.guide-hub-name{font-size:13.5px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .gift-hub-meta,.guide-hub-meta{font-size:11.5px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .gift-hub-link,.guide-hub-link{font-size:11.5px;color:var(--brand);font-weight:600;margin-top:5px}
+  .guide-hub-latest{font-size:11px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .gift-detail-head{display:flex;gap:14px;align-items:center;margin:0 0 18px;padding:12px;border:1px solid var(--line);border-radius:11px;background:var(--card)}
   .gift-detail-head img{width:132px;height:82px;border-radius:8px;object-fit:cover;background:#1a2537}
   .gift-detail-head h1{margin:0 0 5px}
