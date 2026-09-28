@@ -77,6 +77,12 @@
   .body figure img{margin:0}
 .body img.wxemoji{display:inline-block;width:1.5em;height:1.5em;vertical-align:-.3em;margin:0 3px;border-radius:5px;background:transparent}
   .body figcaption{font-size:13px;color:var(--muted);text-align:center;margin-top:10px}
+  /* 正文图片网格：用于成组的插画/立绘（单张图仍走上面的满宽规则）。
+     2026-09-28 加，配合《龙之谷启程》新手攻略里的八张转职立绘。 */
+  .body .imgs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:0 0 24px}
+  .body .imgs img{width:100%;height:auto;aspect-ratio:1/1;object-fit:contain;margin:0;
+    border-radius:10px;background:#0e1524}
+  @media(max-width:640px){.body .imgs{grid-template-columns:repeat(2,1fr);gap:8px}}
   .body hr{border:none;border-top:1px solid var(--line);margin:34px 0}
 
   /* ===== 文末返回首页按钮 ===== */
@@ -438,9 +444,26 @@
   <div class="srch-res" id="guideRes" hidden></div>
 
   <div class="gcards" id="guideCards">
+<div class="gcard" data-href="/game/1">
+  <div class="cover">
+    <a href="/game/1"><img src="assets/images/longzhigu_cover.jpg" alt="龙之谷启程" loading="lazy"></a>
+  </div>
+  <div class="info">
+    <div class="top">
+      <div>
+        <h3 class="gname"><a href="/game/1">龙之谷启程</a></h3>
+        <div class="gcat">角色扮演</div>
+      </div>
+      <span class="cnt">1 篇攻略</span>
+    </div>
+    <ul class="alist">
+    <li><a href="/article/1" data-s="龙之谷启程 攻略 龙之谷启程新手开荒全攻略：职业选择、升级路线、养成与每日必做 官服怎么选、四大职业八大转职怎么挑、前三天怎么冲到 40 级、每日必做清单、强化与纹章怎么点、钱该花在哪——公测后入坑与回坑都适用，附避坑清单与速查手册。"><span class="cat">攻略</span>龙之谷启程新手开荒全攻略：职业选择、升级路线、养成与每日必做</a></li>
+    </ul>
+  <a class="more" href="/game/1">查看游戏详情 →</a>
+  </div>
+</div>
 
 
-  <p class="gempty">攻略正在整理中，新攻略会陆续上线，敬请期待。</p>
   </div>
 
   <div class="gcards" id="guideCardsRest">
