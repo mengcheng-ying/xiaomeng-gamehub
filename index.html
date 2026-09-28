@@ -63,10 +63,10 @@
   .nav-cta{padding:8px 18px;border-radius:999px;background:var(--grad);font-size:.85rem;font-weight:600;box-shadow:0 4px 16px rgba(61,123,255,.35);white-space:nowrap}
   .nav-toggle{display:none}
 
-  .hero{position:relative;margin-top:64px;height:560px;overflow:hidden;background:radial-gradient(900px 420px at 12% 0%,rgba(61,123,255,.20),transparent 60%),radial-gradient(800px 400px at 88% 100%,rgba(0,212,255,.16),transparent 60%),var(--bg2)}
+  .hero{position:relative;margin-top:64px;height:620px;overflow:hidden;background:radial-gradient(900px 420px at 12% 0%,rgba(61,123,255,.20),transparent 60%),radial-gradient(800px 400px at 88% 100%,rgba(0,212,255,.16),transparent 60%),var(--bg2)}
   .hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1px);background-size:26px 26px;pointer-events:none}
-  .carousel{position:relative;height:100%;max-width:1200px;margin:0 auto;-webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent)}
-  .card{position:absolute;top:50%;left:calc(50% - 230px);width:460px;background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.55);transform:translateY(-50%);transition:transform .7s cubic-bezier(.4,0,.2,1),opacity .7s ease;backface-visibility:hidden;cursor:pointer}
+  .carousel{position:relative;height:100%;max-width:1120px;margin:0 auto}
+  .card{position:absolute;top:50%;left:50%;width:min(760px,calc(100% - 80px));background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.55);transform:translate(-50%,-50%);transition:transform .55s ease,opacity .45s ease;backface-visibility:hidden;cursor:pointer}
   .card-img{background:var(--bg3);position:relative;aspect-ratio:16/9;overflow:hidden}
   .card-img img{width:100%;height:100%;object-fit:cover}
   .card-img .badge{position:absolute;top:12px;left:12px;padding:4px 12px;border-radius:99px;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);font-size:.8rem;color:#ffc940;font-weight:700;border:1px solid rgba(255,201,64,.4)}
@@ -224,6 +224,8 @@
   @media(max-width:1024px){
     .game-grid{grid-template-columns:repeat(3,1fr)}
     .feat-grid{grid-template-columns:repeat(4,1fr)}
+    .nav-links a{padding:8px 10px;font-size:.82rem}
+    .nav-cta{display:none}
   }
   @media(max-width:768px){
     .tabs{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;gap:8px;margin-bottom:20px;padding:2px 2px 8px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
@@ -452,6 +454,7 @@
       <a href="#games">游戏大厅</a>
       <a href="/news">官网资讯</a>
       <a href="/guides">攻略中心</a>
+      <a href="/gift">福利礼包</a>
     </div>
     <div class="nav-srch">
       <span class="ic" aria-hidden="true">🔍</span>
@@ -657,27 +660,29 @@ function buildSlides(){
 function position(){
   var n=SLIDES.length,isMobile=window.innerWidth<=768;
   var card=carEl.querySelector('.card');
-  var cw=card?card.offsetWidth:460;
-  // 步长：桌面固定300；手机端按卡宽衍生，让左右邻卡露出一角可滑动
-  var step=isMobile?Math.max(Math.round(cw*0.72),90):300;
   document.querySelectorAll('.card').forEach(function(el,i){
     var d=(i-cur+n)%n;if(d>n/2)d-=n;
     var abs=Math.abs(d);
-    var dx=d*step;
-    var scale=isMobile?(d===0?1:0.86):(abs>=2?0.8:0.86);
-    var op,zip;
     if(isMobile){
       // 手机端：中间卡全显，左右相邻卡露出半透明一角，更远隐藏
+      var cw=card?card.offsetWidth:460;
+      var step=Math.max(Math.round(cw*0.72),90);
+      var dx=d*step;
+      var scale=d===0?1:0.86;
+      var op,zip;
       op=abs===0?1:(abs===1?0.5:0);
       zip=abs===0?3:(abs===1?2:1);
+      el.style.zIndex=zip;
+      el.style.pointerEvents=(d===0)?'auto':'none';
+      el.style.opacity=op;
+      el.style.transform='translateY(-50%) translateX('+dx+'px) scale('+scale+')';
     } else {
-      op=abs>=2?0:(abs===1?0.5:1);
-      zip=abs>=2?0:(abs===1?2:3);
+      // 电脑端只显示一张完整的大卡片，避免两侧裁切造成一长一短
+      el.style.zIndex=d===0?3:0;
+      el.style.pointerEvents=d===0?'auto':'none';
+      el.style.opacity=d===0?1:0;
+      el.style.transform='translate(-50%,-50%) scale('+(d===0?1:0.97)+')';
     }
-    el.style.zIndex=zip;
-    el.style.pointerEvents=(d===0)?'auto':'none';
-    el.style.opacity=op;
-    el.style.transform='translateY(-50%) translateX('+dx+'px) scale('+scale+')';
   });
 }
 function goSlide(i){
@@ -927,9 +932,10 @@ document.addEventListener('click',function(e){
 
 
 <nav class="tabbar" aria-label="主导航">
-  <a href="/" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round"><path d="M3 10.6 12 3.2l9 7.4"></path><path d="M5.6 9.4V20.8h12.8V9.4"></path></svg><span>首页</span></a>
-  <a href="/games"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round"><rect x="2" y="6.5" width="20" height="11" rx="5.5"></rect><path d="M7 10.2v3.6M5.2 12h3.6M15.8 11h.01M18.2 13h.01"></path></svg><span>游戏大厅</span></a>
-  <a href="/guides"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round"><path d="M4 4.5h6.2a1.8 1.8 0 0 1 1.8 1.8v13.2a1.8 1.8 0 0 0-1.8-1.8H4z"></path><path d="M20 4.5h-6.2A1.8 1.8 0 0 0 12 6.3v13.2a1.8 1.8 0 0 1 1.8-1.8H20z"></path></svg><span>攻略</span></a>
-  <a href="/news"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="14" rx="2.4"></rect><path d="M7.5 9.4h9M7.5 13h5.6"></path></svg><span>资讯</span></a>
+  <a href="/" data-tab="home" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round"><path d="M3 10.6 12 3.2l9 7.4"></path><path d="M5.6 9.4V20.8h12.8V9.4"></path></svg><span>首页</span></a>
+  <a href="/games" data-tab="games"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round"><rect x="2" y="6.5" width="20" height="11" rx="5.5"></rect><path d="M7 10.2v3.6M5.2 12h3.6M15.8 11h.01M18.2 13h.01"></path></svg><span>游戏大厅</span></a>
+  <a href="/guides" data-tab="guides"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round"><path d="M4 4.5h6.2a1.8 1.8 0 0 1 1.8 1.8v13.2a1.8 1.8 0 0 0-1.8-1.8H4z"></path><path d="M20 4.5h-6.2A1.8 1.8 0 0 0 12 6.3v13.2a1.8 1.8 0 0 1 1.8-1.8H20z"></path></svg><span>攻略</span></a>
+  <a href="/news" data-tab="news"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="14" rx="2.4"></rect><path d="M7.5 9.4h9M7.5 13h5.6"></path></svg><span>资讯</span></a>
+  <a href="/gift" data-tab="gift"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-linecap="round"><rect x="3" y="8" width="18" height="4" rx="1.5"></rect><path d="M5 12v7a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 19v-7"></path><path d="M12 8v12.5"></path><path d="M12 8c-2.6 0-4-1.9-4-4 0-.8.7-1.5 1.5-1.5S11 3.6 11 5v3M12 8c2.6 0 4-1.9 4-4 0-.8.7-1.5-1.5-1.5S13 3.6 13 5v3"></path></svg><span>礼包</span></a>
 </nav>
 </body></html>
