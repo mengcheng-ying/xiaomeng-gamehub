@@ -26,6 +26,15 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
 const SITE = 'https://fmbly.com';
+/* 站点品牌实体（Organization）。给结构化数据当 publisher 用 ——
+   搜索引擎据此把「小梦怀旧手游」认成一个品牌实体，并把各游戏页挂到它名下。
+   2026-09-28 新增，首页 WebSite 结构化数据里也用了同一份信息。 */
+const LD_PUBLISHER = {
+  '@type': 'Organization',
+  name: '小梦怀旧手游',
+  url: SITE + '/',
+  logo: { '@type': 'ImageObject', url: SITE + '/assets/images/logo_xiaomeng.png' }
+};
 const OUT_DIR = path.join(ROOT, 'article');
 const GAME_DIR = path.join(ROOT, 'game');
 const TODAY = new Date().toISOString().slice(0, 10);
@@ -67,6 +76,9 @@ function loadJsObjectSafe(rel, keyword) {
 
 const articles = loadJsArray('data/articles.js', 'ARTICLES_DATA');
 const games = loadJsArray('data/games.js', 'GAMES_DATA');
+/* 按热度降序的「全部游戏」——第 8 段的游戏大厅页与第 10 段的首页都要用，
+   2026-09-28 提到这里统一声明（原先只在第 10 段声明，第 8 段一用就 TDZ 报错）。 */
+const sortedGames = [...games].sort((a, b) => (b.heat || 0) - (a.heat || 0));
 // 福利礼包/兑换码（可选，活动时效内容；缺失或为空时礼包页降级）
 let gifts = [];
 try { gifts = loadJsArray('data/gifts.js', 'GIFTS_DATA'); }
@@ -973,6 +985,7 @@ ${nzArc.items.slice(0, 8).map(it => `  <li>
     '@context': 'https://schema.org',
     '@type': 'VideoGame',
     name: g.name,
+    url,
     description: g.desc || '',
     image: (() => {
       const imgs = [];
@@ -982,8 +995,12 @@ ${nzArc.items.slice(0, 8).map(it => `  <li>
     })(),
     applicationCategory: 'Game',
     operatingSystem: 'Android, iOS',
+    /* 2026-09-28 补：gamePlatform 按数据里的真实情况给（有 iOS 落地页才算双端），
+       不跟着「双端」角标走 —— 那个角标用户已要求全站去掉。 */
+    gamePlatform: (g.iosUrl && g.iosUrl !== '') ? ['Android', 'iOS'] : ['Android'],
     genre: g.category || '角色扮演',
     author: { '@type': 'Organization', name: g.developer || '未知' },
+    publisher: LD_PUBLISHER,
     datePublished: g.year ? String(g.year) : undefined,
     inLanguage: 'zh-CN'
   };
@@ -1860,7 +1877,21 @@ const gamesHtml = head(
   '全部怀旧手游大全 - 小梦怀旧手游',
   `小梦怀旧手游收录 ${games.length} 款经典端游正版复刻怀旧手游：传奇、奇迹MU、仙境传说、龙之谷、武林外传、永恒岛等，点击进入游戏详情页查看官方下载入口与攻略。`,
   SITE + '/games',
-  { prefix: '', ld: [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: '全部怀旧手游大全', url: SITE + '/games' }] }
+  { prefix: '', ld: [
+    { '@context': 'https://schema.org', '@type': 'CollectionPage', name: '全部怀旧手游大全', url: SITE + '/games' },
+    /* 2026-09-28 补 ItemList：把 42 个游戏按热度顺序列成一份清单，
+       让搜索引擎明确「这一页是一个游戏集合、包含哪些条目」，而不是只看到一堆链接。 */
+    {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: '怀旧手游大全',
+      numberOfItems: sortedGames.length,
+      itemListOrder: 'https://schema.org/ItemListOrderDescending',
+      itemListElement: sortedGames.map((g, i) => ({
+        '@type': 'ListItem', position: i + 1, name: g.name, url: SITE + '/game/' + g.id
+      }))
+    }
+  ] }
 ) + `<main class="wrap wide">
   <nav class="crumb"><a href="/">首页</a><i>/</i><span>游戏大厅</span></nav>
   <h1 class="ttl">全部怀旧手游大全</h1>
@@ -1966,7 +1997,6 @@ const HUB_END = '<!-- HOME-HUB:END -->';
 const indexRel = 'index.html';
 let indexSrc = fs.readFileSync(path.join(ROOT, indexRel), 'utf8');
 
-const sortedGames = [...games].sort((a, b) => (b.heat || 0) - (a.heat || 0));
 const sortedArticles = [...articles].sort((a, b) => String(b.date).localeCompare(String(a.date)));
 /* 2026-09-15 用户要求：页脚到版权行为止，下方不再有可见链接区块。
    只保留 <noscript> —— 人看不到，但不执行 JS 的爬虫仍能从这里发现全部内页。 */
@@ -2087,15 +2117,74 @@ if (!hasGamesMark && !hasArticlesMark) {
   console.log("✅ index.html 数量文案已同步（游戏 " + games.length + " 款 / 攻略 " + articles.length + " 篇）");
 }
 
+/* ===== 10d. 首页结构化数据：品牌 Organization + 游戏 ItemList + FAQPage =====
+   2026-09-28 新增。为什么在构建期生成、而不是手写在 index.html 里：
+     1) 游戏清单来自 data/games.js —— 手写必然与数据脱节（改一款游戏就得记得改两处）；
+     2) FAQ 直接从首页已有的 <details class="faq-item"> 里解析，文案只有一个来源：
+        页面改了，结构化数据自动跟着改，不会出现「页面写 A、结构化数据还写 B」。
+   搜索引擎据此能把首页读成：一个品牌 + 一个游戏集合 + 一份常见问题。 */
+const HOME_LD_START = '<!-- HOME-LD:START -->';
+const HOME_LD_END = '<!-- HOME-LD:END -->';
+{
+  const stripTags = (s) => String(s).replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+  const faqRe = /<details class="faq-item"><summary>([\s\S]*?)<\/summary><div class="body">([\s\S]*?)<\/div><\/details>/g;
+  const faq = [];
+  let fm;
+  while ((fm = faqRe.exec(indexSrc)) !== null) {
+    const q = stripTags(fm[1]), a = stripTags(fm[2]);
+    if (q && a) faq.push({ q, a });
+  }
+
+  const ldGraph = [
+    { '@type': 'Organization', name: LD_PUBLISHER.name, url: LD_PUBLISHER.url, logo: LD_PUBLISHER.logo },
+    {
+      '@type': 'ItemList',
+      name: '怀旧手游大全',
+      numberOfItems: sortedGames.length,
+      itemListOrder: 'https://schema.org/ItemListOrderDescending',
+      itemListElement: sortedGames.map((g, i) => ({
+        '@type': 'ListItem', position: i + 1, name: g.name, url: SITE + '/game/' + g.id
+      }))
+    }
+  ];
+  if (faq.length) {
+    ldGraph.push({
+      '@type': 'FAQPage',
+      mainEntity: faq.map((x) => ({
+        '@type': 'Question', name: x.q,
+        acceptedAnswer: { '@type': 'Answer', text: x.a }
+      }))
+    });
+  }
+  const ldBlock = HOME_LD_START + '\n'
+    + '<script type="application/ld+json">'
+    + JSON.stringify({ '@context': 'https://schema.org', '@graph': ldGraph }).replace(/</g, '\\u003c')
+    + '</script>\n' + HOME_LD_END;
+
+  if (indexSrc.includes(HOME_LD_START) && indexSrc.includes(HOME_LD_END)) {
+    indexSrc = indexSrc.replace(new RegExp(HOME_LD_START + '[\\s\\S]*?' + HOME_LD_END), () => ldBlock);
+    console.log('✅ index.html 首页结构化数据已更新（Organization + ' + sortedGames.length +
+      ' 款游戏 ItemList + ' + faq.length + ' 条 FAQ）');
+  } else {
+    console.log('⚠️  跳过：index.html 里找不到 ' + HOME_LD_START + ' 标记，首页结构化数据未生成');
+  }
+}
+
 fs.writeFileSync(path.join(ROOT, indexRel), indexSrc);
 
 // ===== 11. 重建 sitemap.xml =====
+/* 2026-09-28：只提交「有实质内容」的页面。
+   攻略中心是列表页，一篇攻略都没有时它只是那句空态提示（薄页面）—— 把空页面
+   交给搜索引擎会拉低整站质量评估分（百度尤其看重这一点）。所以按有无内容动态
+   决定是否收录：等第一篇文章发布后，/guides 会自动回到 sitemap，无需人工干预。
+   /news 同理，它由第 6.5 段的资讯分支自带收录，没有资讯时天然不会出现。 */
 const sitemapItems = [
   { loc: SITE + '/', lastmod: TODAY, priority: '1.0', changefreq: 'daily' },
   { loc: SITE + '/games', lastmod: TODAY, priority: '0.9', changefreq: 'weekly' },
-  { loc: SITE + '/guides', lastmod: TODAY, priority: '0.9', changefreq: 'weekly' },
+  ...(articles.length ? [{ loc: SITE + '/guides', lastmod: TODAY, priority: '0.9', changefreq: 'weekly' }] : []),
   ...sitemapUrls.map(it => ({ loc: it.loc, lastmod: it.lastmod, priority: it.priority, changefreq: 'weekly' }))
 ];
+if (!articles.length) console.log('ℹ️  攻略数为 0 → /guides 本次不提交 sitemap（有内容后自动恢复）');
 sitemapItems.sort((a, b) => {
   if (a.loc === SITE + '/') return -1;
   if (b.loc === SITE + '/') return 1;
