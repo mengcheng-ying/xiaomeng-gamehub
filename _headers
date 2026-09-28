@@ -4,6 +4,10 @@
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  Strict-Transport-Security: max-age=31536000
+  Content-Security-Policy: frame-ancestors 'self'; base-uri 'self'; form-action 'self'
 
 # 图片资源：2026-09-22 由 30 天改为 10 分钟。
 # 事故：jizhan_cover.jpg 换了两次图，但文件名不变 + 原 30 天强缓存，

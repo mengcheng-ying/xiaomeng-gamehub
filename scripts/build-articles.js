@@ -26,6 +26,7 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
 const SITE = 'https://fmbly.com';
+const ASSET_VERSION = '20260928a';
 /* 站点品牌实体（Organization）。给结构化数据当 publisher 用 ——
    搜索引擎据此把「小梦怀旧手游」认成一个品牌实体，并把各游戏页挂到它名下。
    2026-09-28 新增，首页 WebSite 结构化数据里也用了同一份信息。 */
@@ -198,6 +199,12 @@ function sizeAttrs(rootRel) {
   return d ? ` width="${d.w}" height="${d.h}"` : '';
 }
 
+function assetUrl(src) {
+  const s = String(src || '');
+  if (!s || /^(?:https?:)?\/\//.test(s) || s.endsWith('.html')) return s;
+  return s + (s.includes('?') ? '&' : '?') + 'v=' + ASSET_VERSION;
+}
+
 // ===== 3. 全站统一版式（干净简洁） =====
 const BASE_CSS = `
   :root{
@@ -216,16 +223,16 @@ const BASE_CSS = `
   .nav{display:flex;gap:20px}
   .nav a{color:var(--ink2);font-size:14px}
   .nav a:hover{color:var(--brand)}
-  .wrap{max-width:46rem;margin:0 auto;padding:34px 20px 64px}
+  .wrap{max-width:46rem;margin:0 auto;padding:22px 18px 42px}
   .wrap.wide{max-width:1040px}
-  .crumb{font-size:13px;color:var(--muted);margin-bottom:20px}
+  .crumb{font-size:12.5px;color:var(--muted);margin-bottom:12px}
   .crumb a{color:var(--muted);padding:8px 6px;margin:-8px -6px;display:inline-block}
   .crumb a:hover{color:var(--brand)}
   .crumb i{font-style:normal;margin:0 7px;opacity:.55}
   .tag{display:inline-block;font-size:12px;font-weight:600;color:#241a00;background:var(--accent);border-radius:99px;padding:3px 12px;margin-bottom:14px}
-  h1.ttl{font-size:29px;line-height:1.4;font-weight:700;margin:0 0 14px;letter-spacing:-.2px}
-  .meta{font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px 18px;padding-bottom:20px;margin-bottom:26px;border-bottom:1px solid var(--line)}
-  .cover{width:100%;height:auto;display:block;border-radius:12px;margin:0 0 28px;background:#1a2537;box-shadow:0 6px 22px rgba(0,0,0,.3)}
+  h1.ttl{font-size:25px;line-height:1.35;font-weight:700;margin:0 0 10px;letter-spacing:-.2px}
+  .meta{font-size:12.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 14px;padding-bottom:14px;margin-bottom:18px;border-bottom:1px solid var(--line)}
+  .cover{width:100%;height:auto;display:block;border-radius:10px;margin:0 0 20px;background:#1a2537;box-shadow:0 6px 22px rgba(0,0,0,.3)}
 
   /* ===== 正文排版 ===== */
   .body{font-size:16.5px;line-height:1.95;color:var(--ink2);word-break:break-word}
@@ -280,24 +287,33 @@ const BASE_CSS = `
   @media(max-width:520px){.dlcard{flex-direction:column;align-items:flex-start}.dlc-pic{flex:none;width:100%;height:auto;aspect-ratio:16/10}}
 
   /* ===== 福利礼包中心（/gift） ===== */
-  .gift-notice{background:rgba(245,181,10,.1);border:1px solid rgba(245,181,10,.25);color:var(--ink2);padding:10px 14px;border-radius:10px;font-size:13px;margin:4px 0 8px}
-  .gift-sec{margin-bottom:30px}
-  .gift-sec .sec-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-  .gift-tag{font-size:12px;font-weight:700;color:#f5b50a;background:rgba(245,181,10,.14);padding:2px 9px;border-radius:6px;border:1px solid rgba(245,181,10,.3)}
-  .gift-game-link{font-size:13px;font-weight:400;color:var(--brand);margin-left:auto}
-  .gift-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-  .gift-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
-  .gift-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-  .gift-name{font-size:15px;font-weight:700;color:var(--ink)}
-  .gift-period{font-size:12px;color:var(--muted)}
-  .gift-code{font-family:Consolas,Monaco,monospace;font-size:19px;font-weight:700;color:#00d4ff;letter-spacing:1px;background:rgba(0,212,255,.08);border:1px dashed rgba(0,212,255,.35);border-radius:8px;padding:9px 12px;text-align:center;margin-bottom:9px;word-break:break-all;user-select:all}
-  .gift-copy{display:block;width:100%;font-size:14px;font-weight:600;color:#fff;background:var(--brand-deep);border:none;border-radius:99px;padding:10px;cursor:pointer;margin-bottom:10px;transition:transform .15s}
+  .gift-notice{background:rgba(245,181,10,.08);border:1px solid rgba(245,181,10,.2);color:var(--muted);padding:7px 10px;border-radius:8px;font-size:11.5px;margin:0 0 14px}
+  .gift-hub{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin:0 0 20px}
+  .gift-hub-card{display:flex;align-items:center;gap:11px;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:inherit;transition:border-color .18s,box-shadow .18s}
+  .gift-hub-card:hover{border-color:rgba(91,140,255,.5);box-shadow:0 5px 16px rgba(0,0,0,.28)}
+  .gift-hub-cover{flex:none;width:88px;aspect-ratio:16/10;border-radius:7px;overflow:hidden;background:#1a2537}
+  .gift-hub-cover img{width:100%;height:100%;object-fit:cover;display:block}
+  .gift-hub-info{min-width:0;flex:1}
+  .gift-hub-name{font-size:13.5px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .gift-hub-meta{font-size:11.5px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .gift-hub-link{font-size:11.5px;color:var(--brand);font-weight:600;margin-top:5px}
+  .gift-detail-head{display:flex;gap:14px;align-items:center;margin:0 0 18px;padding:12px;border:1px solid var(--line);border-radius:11px;background:var(--card)}
+  .gift-detail-head img{width:132px;height:82px;border-radius:8px;object-fit:cover;background:#1a2537}
+  .gift-detail-head h1{margin:0 0 5px}
+  .gift-detail-head p{margin:0;color:var(--muted);font-size:12.5px;line-height:1.55}
+  .gift-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .gift-card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
+  .gift-top{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px}
+  .gift-name{font-size:13.5px;font-weight:700;color:var(--ink)}
+  .gift-period{font-size:11.5px;color:var(--muted);white-space:nowrap}
+  .gift-code{font-family:Consolas,Monaco,monospace;font-size:17px;font-weight:700;color:#00d4ff;letter-spacing:.6px;background:rgba(0,212,255,.07);border:1px dashed rgba(0,212,255,.3);border-radius:7px;padding:8px 10px;text-align:center;margin-bottom:8px;word-break:break-all;user-select:all}
+  .gift-copy{display:block;width:100%;font-size:12.5px;font-weight:600;color:#fff;background:var(--brand-deep);border:none;border-radius:99px;padding:8px;cursor:pointer;margin-bottom:8px;transition:transform .15s}
   .gift-copy:active{transform:scale(.97)}
-  .gift-items{font-size:13px;color:var(--ink2);line-height:1.7}
-  @media(max-width:560px){.gift-grid{grid-template-columns:1fr}}
+  .gift-items{font-size:12px;color:var(--ink2);line-height:1.55}
+  @media(max-width:560px){.gift-grid{grid-template-columns:1fr}.gift-detail-head img{width:96px;height:60px}}
 
   /* ===== 相关阅读 ===== */
-  .sec-h{font-size:19px;font-weight:700;margin:46px 0 16px;color:var(--ink)}
+  .sec-h{font-size:17px;font-weight:700;margin:24px 0 10px;color:var(--ink)}
   .rel{display:grid;grid-template-columns:1fr;gap:10px}
   .rel a{display:flex;align-items:center;gap:11px;padding:14px 16px;min-height:48px;border:1px solid var(--line);border-radius:10px;
     background:var(--card);color:var(--ink);transition:box-shadow .18s,border-color .18s}
@@ -327,17 +343,17 @@ const BASE_CSS = `
   .hl{margin:0 0 30px;padding:0;list-style:none}
   .news-src{font-size:13px;color:var(--muted);margin:-4px 0 16px;line-height:1.7}
   .news-src a{color:var(--brand)}
-  .news{list-style:none;margin:0 0 30px;padding:0}
-  .news li{padding:15px 0;border-bottom:1px solid var(--line)}
+  .news{list-style:none;margin:0 0 20px;padding:0}
+  .news li{padding:9px 0;border-bottom:1px solid var(--line)}
   .news li:first-child{padding-top:0}
   .news li:last-child{border-bottom:0;padding-bottom:6px}
   .news .nh{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
-  .news .nd{font-size:13px;color:var(--muted);flex-shrink:0;font-variant-numeric:tabular-nums}
-  .news .nc{font-size:11px;font-weight:600;padding:2px 9px;border-radius:99px;background:var(--brand-soft);color:var(--brand);flex-shrink:0}
-  .news .nh a{font-weight:600;color:var(--ink);font-size:15px;line-height:1.6}
+  .news .nd{font-size:11.5px;color:var(--muted);flex-shrink:0;font-variant-numeric:tabular-nums}
+  .news .nc{font-size:10.5px;font-weight:600;padding:1px 7px;border-radius:99px;background:var(--brand-soft);color:var(--brand);flex-shrink:0}
+  .news .nh a{font-weight:600;color:var(--ink);font-size:13.5px;line-height:1.5}
   .news .nh a:hover{color:var(--brand)}
-  .news .ns{margin:7px 0 0;font-size:14px;line-height:1.75;color:var(--ink2)}
-  .news .nt{font-weight:600;color:var(--ink);font-size:15px;line-height:1.6}
+  .news .ns{margin:4px 0 0;font-size:12px;line-height:1.55;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .news .nt{font-weight:600;color:var(--ink);font-size:13.5px;line-height:1.5}
   /* ===== 公告正文页 ===== */
   .nitem .nmeta{font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px 18px;padding-bottom:18px;margin-bottom:24px;border-bottom:1px solid var(--line)}
   .nitem .body{font-size:16px;line-height:1.9}
@@ -385,25 +401,23 @@ const BASE_CSS = `
   .card .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
   .btn{display:inline-block;font-size:12.5px;font-weight:600;padding:6px 14px;border-radius:7px;background:var(--brand-deep);color:#fff!important}
   .btn.ghost{background:var(--brand-soft);color:var(--brand)!important}
-  .lead{font-size:15px;color:var(--ink2);margin:0 0 32px}
+  .lead{font-size:13.5px;color:var(--muted);line-height:1.65;margin:0 0 18px}
   .grp-h{font-size:19px;font-weight:700;margin:38px 0 14px;padding-bottom:10px;border-bottom:1px solid var(--line);
     display:flex;align-items:baseline;gap:10px;scroll-margin-top:86px}
   .grp-h .cnt{font-size:12px;font-weight:400;color:var(--muted)}
   .lst{display:grid;grid-template-columns:1fr;gap:10px}
-  .lst a{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;min-height:48px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
+  .lst a{display:flex;align-items:flex-start;gap:9px;padding:9px 11px;min-height:38px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
   .lst a:hover{box-shadow:0 4px 16px rgba(0,0,0,.3)}
-  .lst .cat{flex:none;font-size:11px;font-weight:600;color:#fff;background:var(--brand-deep);border-radius:5px;padding:2px 9px;margin-top:2px}
-  .lst .nm{font-size:15px;font-weight:600;line-height:1.6;display:block}
-  .lst .sm{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.6;display:block}
+  .lst .cat{flex:none;font-size:10.5px;font-weight:600;color:#fff;background:var(--brand-deep);border-radius:4px;padding:1px 6px;margin-top:2px}
+  .lst .nm{font-size:13px;font-weight:600;line-height:1.5;display:block}
+  .lst .sm{font-size:11.5px;color:var(--muted);margin-top:2px;line-height:1.5;display:block}
     /* ===== 站内搜索 / 分类芯片（攻略中心 · 资讯中心） ===== */
-  .srchbar{display:flex;gap:12px;align-items:center;margin:0 0 20px}
-  .srchbar input{flex:1;min-width:0;height:48px;padding:0 16px;border-radius:12px;border:1px solid var(--line);
-    background:var(--card);color:var(--ink);font-size:15px;font-family:inherit;outline:none;transition:border-color .18s,box-shadow .18s}
+  .srchbar{position:relative;display:flex;gap:10px;align-items:center;margin:0 0 14px}
+  .srchbar input{flex:1;min-width:0;height:42px;padding:0 42px;border-radius:10px;border:1px solid var(--line);
+    background:var(--card);color:var(--ink);font-size:13.5px;font-family:inherit;outline:none;transition:border-color .18s,box-shadow .18s}
   .srchbar input:focus{border-color:rgba(91,140,255,.55);box-shadow:0 0 0 4px rgba(91,140,255,.14)}
-  .srchbar .srchbtn{display:none;flex:none;width:48px;height:48px;border:none;border-radius:12px;
-    background:var(--brand-deep);color:#fff;cursor:pointer;align-items:center;justify-content:center}
-  .srchbar .srchbtn:hover{opacity:.9}
-  .srchbar .hint{flex:none;font-size:13px;color:var(--muted);white-space:nowrap}
+  .srchbar .srch-ic{position:absolute;left:14px;top:50%;width:17px;height:17px;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+  .srchbar .hint{flex:none;font-size:11.5px;color:var(--muted);white-space:nowrap}
   .srch-res{margin:0 0 26px}
   .srch-res .hd{font-size:13px;color:var(--muted);margin:0 0 10px}
   .srch-res .empty{font-size:14px;color:var(--muted);padding:18px 0;margin:0}
@@ -412,61 +426,60 @@ const BASE_CSS = `
   [hidden]{display:none!important}
   /* 2026-09-21 修：攻略中心卡片统一高度、图文对齐。
      用 div.gcard 作用域，避免和游戏页 .tile 瓦片、首页内联 .gcard 冲突。 */
-  .gcards{display:flex;flex-direction:column;gap:14px;margin:0 0 16px}
+  .gcards{display:flex;flex-direction:column;gap:9px;margin:0 0 12px}
   div.gcard{
-    --row:40px;
-    display:grid;grid-template-columns:112px 1fr;gap:16px;padding:14px;
-    border:1px solid var(--line);border-radius:12px;background:var(--card);
+    --row:32px;
+    display:grid;grid-template-columns:88px 1fr;gap:10px;padding:9px;
+    border:1px solid var(--line);border-radius:9px;background:var(--card);
     transition:box-shadow .2s,border-color .2s;cursor:pointer;color:inherit;
     align-items:center
   }
   div.gcard:hover{border-color:rgba(91,140,255,.5);box-shadow:0 8px 24px rgba(0,0,0,.32)}
-  div.gcard .cover{border-radius:10px;overflow:hidden;background:#1a2537;width:100%;align-self:center}
+  div.gcard .cover{border-radius:7px;overflow:hidden;background:#1a2537;width:100%;align-self:center}
   div.gcard .cover img{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:cover}
-  div.gcard .info{min-width:0;display:flex;flex-direction:column;gap:8px;align-self:stretch;justify-content:center}
-  div.gcard .top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-  div.gcard .gname{font-size:15px;font-weight:700;color:var(--ink);margin:0;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  div.gcard .info{min-width:0;display:flex;flex-direction:column;gap:5px;align-self:stretch;justify-content:center}
+  div.gcard .top{display:flex;align-items:flex-start;justify-content:space-between;gap:7px}
+  div.gcard .gname{font-size:13px;font-weight:700;color:var(--ink);margin:0;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   div.gcard .gname a{color:inherit;text-decoration:none}
-  div.gcard .gcat{font-size:11.5px;color:var(--muted);font-weight:500;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  div.gcard .cnt{font-size:11px;font-weight:600;color:var(--brand);background:var(--brand-soft);
-    padding:2px 8px;border-radius:99px;white-space:nowrap;flex:none}
-  div.gcard .alist{display:flex;flex-direction:column;gap:5px;margin:0;padding:0;list-style:none;min-height:calc(var(--row)*2 + 5px)}
+  div.gcard .gcat{font-size:10.5px;color:var(--muted);font-weight:500;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  div.gcard .cnt{font-size:10px;font-weight:600;color:var(--brand);background:var(--brand-soft);
+    padding:1px 6px;border-radius:99px;white-space:nowrap;flex:none}
+  div.gcard .alist{display:flex;flex-direction:column;gap:3px;margin:0;padding:0;list-style:none;min-height:calc(var(--row)*2 + 3px)}
   div.gcard .alist li{margin:0;padding:0}
-  div.gcard .alist a{display:flex;align-items:center;font-size:13px;color:var(--ink2);padding:8px 10px;border-radius:6px;
+  div.gcard .alist a{display:flex;align-items:center;font-size:12px;color:var(--ink2);padding:5px 7px;border-radius:5px;
     transition:background .15s,color .15s;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:var(--row)}
   div.gcard .alist a:hover{background:var(--brand-soft);color:var(--brand)}
   div.gcard .alist a.hit{background:var(--brand-soft);color:var(--brand);font-weight:600}
-  div.gcard .alist .cat{display:inline-block;font-size:11px;font-weight:600;color:#fff;
-    background:var(--brand-deep);border-radius:4px;padding:1px 5px;margin-right:5px;vertical-align:middle;flex:none}
+  div.gcard .alist .cat{display:inline-block;font-size:10px;font-weight:600;color:#fff;
+    background:var(--brand-deep);border-radius:3px;padding:1px 4px;margin-right:4px;vertical-align:middle;flex:none}
   div.gcard .alist .cat.info{background:var(--accent);color:#241a00}
   /* 右侧默认只展示前 2 篇；搜索命中时展开。 */
   div.gcard .alist li:nth-child(n+3){display:none}
   div.gcard.srch .alist li{display:list-item}
-  div.gcard .more{font-size:11.5px;color:var(--muted);align-self:flex-start;text-decoration:none;display:inline-flex;align-items:center;padding:8px 0;min-height:28px}
+  div.gcard .more{font-size:10.5px;color:var(--muted);align-self:flex-start;text-decoration:none;display:inline-flex;align-items:center;padding:4px 0;min-height:24px}
   div.gcard .more:hover{color:var(--brand)}
   div.gcard.collapsed{display:none}
-  .gempty{margin:0;padding:26px 18px;border:1px dashed rgba(140,160,200,.28);border-radius:12px;
-    color:var(--muted);font-size:14px;line-height:1.8;text-align:center}
-  .more-btn{display:block;width:100%;padding:14px;margin:8px 0 28px;border:1px dashed var(--line);
-    border-radius:12px;background:var(--card);color:var(--ink2);font-size:14px;font-weight:600;
+  .gempty{margin:0;padding:18px 14px;border:1px dashed rgba(140,160,200,.28);border-radius:10px;
+    color:var(--muted);font-size:12.5px;line-height:1.6;text-align:center}
+  .more-btn{display:block;width:100%;padding:10px;margin:6px 0 20px;border:1px dashed var(--line);
+    border-radius:9px;background:var(--card);color:var(--ink2);font-size:12.5px;font-weight:600;
     text-align:center;cursor:pointer;transition:border-color .18s,color .18s;font-family:inherit}
   .more-btn:hover{border-color:var(--brand);color:var(--brand)}
   @media (max-width:760px){
-    div.gcard{--row:44px;grid-template-columns:88px 1fr;gap:12px;padding:12px}
+    div.gcard{--row:32px;grid-template-columns:68px 1fr;gap:8px;padding:8px}
   }
   @media (max-width:640px){
-    .srchbar{position:relative;flex-direction:row;align-items:center;gap:10px;margin-bottom:28px}
-    .srchbar input{flex:1;height:65px;font-size:17px;padding:0 18px;border-radius:16px;background-image:none}
-    .srchbar .srchbtn{display:flex;width:65px;height:65px;border-radius:16px}
-    .srchbar .srchbtn svg{width:26px;height:26px}
-    .srchbar .hint{display:block;position:absolute;top:100%;left:0;right:0;text-align:center;font-size:12px;margin-top:6px}
+    .srchbar{flex-direction:row;align-items:center;gap:8px;margin-bottom:16px}
+    .srchbar input{flex:1;height:42px;font-size:13.5px;padding:0 38px;border-radius:10px}
+    .srchbar .srch-ic{width:16px;height:16px;left:13px}
+    .srchbar .hint{display:block;position:absolute;top:100%;left:0;right:0;text-align:center;font-size:11px;margin-top:4px}
   }
 .foot{text-align:center;padding:34px 20px;border-top:1px solid var(--line);background:transparent;font-size:13px;color:var(--muted)}
   .foot a{color:var(--muted);margin:0 10px;padding:8px 0;display:inline-block}
   .foot a:hover{color:var(--brand)}
   @media (max-width:640px){
-    .wrap{padding:24px 16px 52px}
-    h1.ttl{font-size:23px}
+    .wrap{padding:18px 14px 38px}
+    h1.ttl{font-size:22px}
     .ghero h1{font-size:22px}
     .ghero .pic{width:100%}
     .body{font-size:16px}
@@ -475,17 +488,17 @@ const BASE_CSS = `
   }
 
   /* ===== 资讯中心：原创资讯图文卡片 ===== */
-  .icards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;margin:18px 0 34px}
-  .icard{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:13px;overflow:hidden;background:var(--card);color:var(--ink);transition:box-shadow .2s,border-color .2s;text-decoration:none}
+  .icards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin:12px 0 22px}
+  .icard{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--card);color:var(--ink);transition:box-shadow .2s,border-color .2s;text-decoration:none}
   .icard:hover{border-color:rgba(91,140,255,.5);box-shadow:0 8px 24px rgba(0,0,0,.32)}
   .icard .icv{aspect-ratio:16/9;background:#1a2537;overflow:hidden}
   .icard .icv img{width:100%;height:100%;object-fit:cover;display:block}
   .icard .icv-ph{width:100%;height:100%;background:linear-gradient(135deg,#1c2333,#131b29)}
-  .icard .ibd{padding:13px 14px 15px;display:flex;flex-direction:column;flex:1;min-width:0}
-  .icard .imeta{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:11.5px;color:var(--muted)}
-  .icard .icat{font-size:11px;font-weight:600;color:#fff;background:var(--brand-deep);border-radius:99px;padding:2px 8px;flex:none}
-  .icard .itl{font-size:15px;font-weight:700;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.9em}
-  .icard .ism{margin-top:7px;font-size:12.5px;color:var(--muted);line-height:1.7;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .icard .ibd{padding:9px 10px 11px;display:flex;flex-direction:column;flex:1;min-width:0}
+  .icard .imeta{display:flex;align-items:center;gap:6px;margin-bottom:5px;font-size:10.5px;color:var(--muted)}
+  .icard .icat{font-size:10px;font-weight:600;color:#fff;background:var(--brand-deep);border-radius:99px;padding:1px 7px;flex:none}
+  .icard .itl{font-size:13px;font-weight:700;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.8em}
+  .icard .ism{margin-top:4px;font-size:11px;color:var(--muted);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   /* ===== 资讯中心：置顶精选专题（编辑长文） ===== */
   .feagrid{display:grid;grid-template-columns:1fr;gap:14px;margin:18px 0 34px}
   .fea{position:relative;display:block;padding:22px 24px;border-radius:16px;background:linear-gradient(120deg,#16233f,#101b30);
@@ -508,7 +521,8 @@ const BASE_CSS = `
      ══════════════════════════════════════════════════════════════ */
   @media (max-width:760px){
     /* 顶栏：链接热区 27px → 44px */
-    .topbar{padding:7px 14px;gap:10px;min-height:56px}
+    .topbar{padding:6px 12px;gap:0;min-height:46px;justify-content:flex-start}
+    .topbar .nav{display:none!important}
     .brand{font-size:15px;padding:9px 0;white-space:nowrap}
     .topbar .nav{gap:3px;flex-wrap:nowrap}
     .topbar .nav a{padding:12px 9px;font-size:13.5px;border-radius:9px;
@@ -535,9 +549,9 @@ const BASE_CSS = `
     .pn a{padding:15px 16px}
 
     /* 资讯中心：移动端改为横向小图卡，隐藏摘要缩短页面 */
-    .icards{grid-template-columns:1fr;gap:12px}
-    .icard{flex-direction:row;gap:12px;padding:12px;align-items:center}
-    .icard .icv{flex:0 0 96px;aspect-ratio:1/1;border-radius:9px}
+    .icards{grid-template-columns:1fr;gap:8px;margin:10px 0 18px}
+    .icard{flex-direction:row;gap:9px;padding:8px;align-items:center}
+    .icard .icv{flex:0 0 76px;aspect-ratio:1/1;border-radius:7px}
     .icard .ibd{padding:0}
     .icard .itl{font-size:14.5px;-webkit-line-clamp:2;min-height:0}
     .icard .ism{display:none}
@@ -546,7 +560,7 @@ const BASE_CSS = `
 
     /* 文末按钮 / 搜索框热区 */
     .cta-btn{padding:14px 30px;min-height:48px}
-    .srchbar input{height:44px}
+    .srchbar input{height:42px}
     .more-btn{padding:16px}
 
     /* 标题略放大；正文维持 640px 断点的 16px，避免手机页面被拉长 */
@@ -785,7 +799,7 @@ articles.forEach((a) => {
   const game = a.gameId ? gameById[a.gameId] : null;
   const url = SITE + '/article/' + a.id;
 
-  const cover = a.cover ? a.cover.replace(/^assets\//, '../assets/') : '';
+  const cover = a.cover ? assetUrl(a.cover.replace(/^assets\//, '../assets/')) : '';
   const extra = (guideExtra[a.id] || '') + (guideFaq[a.id] || '');
   const contentHtml = fixRel(a.content || '', '../') + extra;
 
@@ -831,7 +845,7 @@ ${related.map(r => `  <a href="/article/${r.id}"><span class="cat">${esc(r.categ
     '@type': 'Article',
     headline: a.title,
     description: a.summary || '',
-    image: a.cover ? [SITE + '/' + a.cover] : undefined,
+    image: a.cover ? [SITE + '/' + assetUrl(a.cover)] : undefined,
     datePublished: a.date || undefined,
     dateModified: a.date || undefined,
     articleSection: a.category || '攻略',
@@ -856,7 +870,7 @@ ${related.map(r => `  <a href="/article/${r.id}"><span class="cat">${esc(r.categ
 
   const html = head(a.title + ' - 小梦怀旧手游 游戏攻略', a.summary || '', url, {
     ogType: 'article',
-    image: a.cover,
+    image: assetUrl(a.cover),
     published: a.date,
     ld: [ldArticle, ldBreadcrumb]
   }) + `<main class="wrap">
@@ -995,7 +1009,7 @@ ${nzArc.items.slice(0, 8).map(it => `  <li>
     description: g.desc || '',
     image: (() => {
       const imgs = [];
-      if (g.cover) imgs.push(SITE + '/' + g.cover);
+      if (g.cover) imgs.push(SITE + '/' + assetUrl(g.cover));
       artImgs.slice(0, 4).forEach(s => imgs.push(SITE + '/' + s));
       return imgs.length ? imgs : undefined;
     })(),
@@ -1022,12 +1036,12 @@ ${nzArc.items.slice(0, 8).map(it => `  <li>
 
   const html = head(g.name + ' - 官方下载入口与攻略 - 小梦怀旧手游', desc, url, {
     ogType: 'article',
-    image: g.cover,
+    image: assetUrl(g.cover),
     ld: [ldGame, ldBreadcrumb]
   }) + `<main class="wrap">
   <nav class="crumb"><a href="/">首页</a><i>/</i><a href="/games">游戏大厅</a><i>/</i><span>${esc(g.name)}</span></nav>
   <div class="ghero">
-    <div class="pic"><img src="../${esc(g.cover)}" alt="${esc(g.name)}"${sizeAttrs(g.cover)} decoding="async" fetchpriority="high"></div>
+    <div class="pic"><img src="../${esc(assetUrl(g.cover))}" alt="${esc(g.name)}"${sizeAttrs(g.cover)} decoding="async" fetchpriority="high"></div>
     <div class="info">
       ${g.category ? `<span class="tag">${esc(g.category)}</span>` : ''}
       <h1>${esc(g.name)}</h1>
@@ -1093,7 +1107,7 @@ const infoCardsHtml = infoArticles.map(a => {
   const g = (a.gameId && gameById[a.gameId]) ? gameById[a.gameId] : null;
   const gname = g ? g.name : '综合资讯';
   const coverRoot = a.cover || '';
-  const coverRel = coverRoot.replace(/^assets\//, '../assets/');
+  const coverRel = coverRoot ? assetUrl(coverRoot.replace(/^assets\//, '../assets/')) : '';
   const size = coverRoot ? sizeAttrs(coverRoot) : '';
   const sm = a.summary ? `<div class="ism">${esc(a.summary.slice(0, 110))}</div>` : '';
   return `<a class="icard" href="/article/${a.id}">
@@ -1173,11 +1187,11 @@ if (archiveList.length) {
   const newsBody = `<main class="wrap wide">
   <nav class="crumb"><a href="/">首页</a><i>/</i><span>游戏资讯</span></nav>
   <h1>游戏资讯与官方公告</h1>
-  <p class="lead">本页汇总<strong>本站原创资讯</strong>与收录的怀旧手游官方专区公开公告，包含开服、合服、维护、版本更新与活动等。
-  每篇均可站内直接阅读全文，无需跳转任何外部站点。</p>
+  <p class="lead">汇总本站原创资讯与游戏官方公告，按游戏分类，支持搜索。</p>
 
 ${editorialTopHtml}
   <div class="srchbar">
+    <svg class="srch-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
     <input id="newsSearch" type="search" placeholder="搜索游戏名或公告标题，例如「龙之谷」「维护」" autocomplete="off" aria-label="搜索官方资讯">
     <span class="hint" id="newsHint">输入即搜</span>
   </div>
@@ -1235,8 +1249,6 @@ ${newsArchiveHtml}
     box.addEventListener('change',render);
     box.addEventListener('search',render);
     box.addEventListener('keydown',function(e){if(e.key==='Escape'){box.value='';render();box.blur();}});
-    var srchBtn=document.getElementById('guideSrchBtn');
-    if(srchBtn){srchBtn.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();render();box.blur();});}
   })();
   </script>
 </main>
@@ -1455,8 +1467,8 @@ ${moreHtml}
   ) + `<main class="wrap">
   <nav class="crumb"><a href="/">首页</a><i>/</i><span>官网资讯</span></nav>
   <h1 class="ttl">官网资讯中心</h1>
-  <p class="lead">这里汇总本站原创资讯，以及各款怀旧手游的官方公告：开服、合服、维护、版本更新与活动。</p>
-${editorialTopHtml}${infoSectionHtml}  <p class="lead">官方公告内容正在重新整理，整理好会一款一款放上来。</p>
+  <p class="lead">本站原创资讯与游戏官方公告，分类整理，持续更新。</p>
+${editorialTopHtml}${infoSectionHtml}
   <div class="cta">
     <p>想先看看有哪些游戏？游戏大厅里有全部怀旧手游的下载入口和攻略。</p>
     <a class="cta-btn" href="/games">← 去游戏大厅</a>
@@ -1472,39 +1484,60 @@ ${editorialTopHtml}${infoSectionHtml}  <p class="lead">官方公告内容正在�
 // ⚠️ 2026-09-27 从「官方公告」分支里搬出来：礼包是独立内容，不该由公告数量决定生死。
 const giftUrl = SITE + '/gift';
 if (gifts && gifts.length) {
-  const giftSections = gifts.map(g => {
+  const giftGroups = gifts.map(g => {
     const gg = g.gameId ? gameById[g.gameId] : null;
     const gameName = gg ? gg.name : g.game;
-    const tagHtml = g.tag ? `<span class="gift-tag">${esc(g.tag)}</span>` : '';
-    const gameLink = gg ? `<a class="gift-game-link" href="/game/${gg.id}">下载与攻略 →</a>` : '';
-    const cardsHtml = g.gifts.map(gf => `    <div class="gift-card">
-      <div class="gift-top"><span class="gift-name">${esc(gf.name)}</span><span class="gift-period">${esc(gf.period)}</span></div>
-      <div class="gift-code">${esc(gf.code)}</div>
-      <button class="gift-copy" type="button" data-code="${esc(gf.code)}">复制兑换码</button>
-      <div class="gift-items">${esc(gf.items)}</div>
-    </div>`).join('\n');
-    return `  <section class="gift-sec">
-    <h2 class="sec-h">${tagHtml}${esc(gameName)}${gameLink}</h2>
-    <div class="gift-grid">
-${cardsHtml}
-    </div>
-  </section>`;
-  }).join('\n');
+    const cover = gg && gg.cover ? gg.cover : 'assets/images/logo_xiaomeng.png';
+    const periods = [...new Set(g.gifts.map(gf => gf.period).filter(Boolean))].join(' · ');
+    return { ...g, gameName, cover, periods, count: g.gifts.length };
+  });
+  const totalGiftCount = giftGroups.reduce((sum, g) => sum + g.count, 0);
+  const giftCards = giftGroups.map(g => `  <a class="gift-hub-card" href="/gift/${g.gameId}">
+    <span class="gift-hub-cover"><img src="${esc(assetUrl(g.cover))}" alt="${esc(g.gameName)}" loading="lazy"${sizeAttrs(g.cover)}></span>
+    <span class="gift-hub-info">
+      <span class="gift-hub-name">${esc(g.gameName)}</span>
+      <span class="gift-hub-meta">${esc(g.tag || '限时礼包')} · 共 ${g.count} 个${g.periods ? ' · ' + esc(g.periods) : ''}</span>
+      <span class="gift-hub-link">查看礼包 →</span>
+    </span>
+  </a>`).join('\n');
 
-  const giftBody = `<main class="wrap">
+  const giftBody = `<main class="wrap wide">
   <nav class="crumb"><a href="/">首页</a><i>/</i><span>福利礼包</span></nav>
-  <h1>福利礼包兑换中心</h1>
-  <p class="lead">中秋、国庆活动限时礼包码汇总，点击「复制兑换码」后在对应游戏内兑换。礼包码请在有效期内使用，过期失效。</p>
-  <div class="gift-notice">⚠️ 兑换是否成功以游戏内实际为准；若提示无效，可能是已过期或该账号已领取过。</div>
-
-${giftSections}
-
-  <div class="cta">
-    <p>没看到你想玩的游戏？回游戏大厅一次看全。</p>
-    <a class="cta-btn" href="/games">浏览全部游戏</a>
+  <h1 class="ttl">福利礼包兑换中心</h1>
+  <p class="lead">选择游戏查看对应礼包码，兑换结果以游戏内实际为准。</p>
+  <div class="gift-notice">礼包码请在有效期内使用；若提示无效，可能是已过期或该账号已领取过。</div>
+  <div class="gift-hub">
+${giftCards}
   </div>
+  <div class="cta">
+    <p>没找到对应游戏？去游戏大厅查看全部怀旧手游。</p>
+    <a class="cta-btn" href="/games">进入游戏大厅</a>
+  </div>
+</main>` + foot();
 
-  <script>
+  writeFile('gift.html', head(
+    '福利礼包兑换中心 - 怀旧手游礼包码 - 小梦怀旧手游',
+    `收录 ${giftGroups.length} 款怀旧手游的限时礼包码，按游戏查看、一键复制，支持搜索引擎完整收录。`,
+    giftUrl,
+    { prefix: '', ld: [
+      {
+        '@context': 'https://schema.org', '@type': 'CollectionPage',
+        name: '福利礼包兑换中心', url: giftUrl, inLanguage: 'zh-CN',
+        isPartOf: { '@type': 'WebSite', name: '小梦怀旧手游', url: SITE + '/' }
+      },
+      {
+        '@context': 'https://schema.org', '@type': 'ItemList',
+        name: '怀旧手游礼包索引', numberOfItems: giftGroups.length,
+        itemListElement: giftGroups.map((g, i) => ({
+          '@type': 'ListItem', position: i + 1, name: g.gameName + '礼包',
+          url: SITE + '/gift/' + g.gameId
+        }))
+      }
+    ] }
+  ) + giftBody);
+  sitemapUrls.push({ loc: giftUrl, lastmod: TODAY, priority: '0.8' });
+
+  const giftCopyScript = `<script>
   (function(){
     function doCopy(code, cb){
       if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(code).then(function(){cb(true)},function(){cb(false)}); }
@@ -1523,21 +1556,56 @@ ${giftSections}
       });
     }
   })();
-  <\/script>
-</main>` + foot();
+  <\/script>`;
 
-  writeFile('gift.html', head(
-    '福利礼包兑换中心 - 中秋国庆礼包码 - 小梦怀旧手游',
-    '怀旧手游中秋、国庆活动福利礼包码汇总，一键复制兑换，含永恒岛、星辰变等热门游戏。',
-    giftUrl,
-    { prefix: '', ld: [{
-      '@context': 'https://schema.org', '@type': 'CollectionPage',
-      name: '福利礼包兑换中心', url: giftUrl, inLanguage: 'zh-CN',
-      isPartOf: { '@type': 'WebSite', name: '小梦怀旧手游', url: SITE + '/' }
-    }] }
-  ) + giftBody);
-  sitemapUrls.push({ loc: giftUrl, lastmod: TODAY, priority: '0.8' });
-  console.log('✅ 生成 gift.html（' + gifts.length + ' 款游戏 / ' + gifts.reduce(function(s, g) { return s + g.gifts.length; }, 0) + ' 个礼包）');
+  giftGroups.forEach(g => {
+    const detailUrl = SITE + '/gift/' + g.gameId;
+    const cardsHtml = g.gifts.map(gf => `    <div class="gift-card">
+      <div class="gift-top"><span class="gift-name">${esc(gf.name)}</span><span class="gift-period">${esc(gf.period || '')}</span></div>
+      <div class="gift-code">${esc(gf.code)}</div>
+      <button class="gift-copy" type="button" data-code="${esc(gf.code)}">复制兑换码</button>
+      <div class="gift-items">${esc(gf.items)}</div>
+    </div>`).join('\n');
+    const detailBody = `<main class="wrap">
+  <nav class="crumb"><a href="/">首页</a><i>/</i><a href="/gift">福利礼包</a><i>/</i><span>${esc(g.gameName)}</span></nav>
+  <div class="gift-detail-head">
+    <img src="../${esc(assetUrl(g.cover))}" alt="${esc(g.gameName)}"${sizeAttrs(g.cover)}>
+    <div>
+      <h1 class="ttl">${esc(g.gameName)}礼包码</h1>
+      <p>${esc(g.tag || '限时礼包')} · 共 ${g.count} 个${g.periods ? ' · ' + esc(g.periods) : ''} · <a href="/game/${g.gameId}">下载与攻略</a></p>
+    </div>
+  </div>
+  <div class="gift-grid">
+${cardsHtml}
+  </div>
+  <div class="cta">
+    <p>先领取礼包，再进入游戏页面查看下载入口与对应攻略。</p>
+    <a class="cta-btn" href="/game/${g.gameId}">查看 ${esc(g.gameName)}</a>
+  </div>
+</main>${giftCopyScript}` + foot();
+    writeFile('gift/' + g.gameId + '.html', head(
+      `${g.gameName}礼包码 - 兑换码与领取时间 - 小梦怀旧手游`,
+      `${g.gameName}限时礼包码共 ${g.count} 个，包含${g.gifts.map(gf => gf.name).join('、')}，可在本站一键复制后在游戏内兑换。`,
+      detailUrl,
+      { prefix: '../', ld: [
+        {
+          '@context': 'https://schema.org', '@type': 'CollectionPage',
+          name: `${g.gameName}礼包码`, url: detailUrl, inLanguage: 'zh-CN',
+          isPartOf: { '@type': 'WebSite', name: '小梦怀旧手游', url: SITE + '/' }
+        },
+        {
+          '@context': 'https://schema.org', '@type': 'ItemList',
+          name: `${g.gameName}礼包列表`, numberOfItems: g.count,
+          itemListElement: g.gifts.map((gf, i) => ({
+            '@type': 'ListItem', position: i + 1, name: gf.name,
+            description: `${gf.code}（${gf.period || ''}）`
+          }))
+        }
+      ] }
+    ) + detailBody);
+    sitemapUrls.push({ loc: detailUrl, lastmod: TODAY, priority: '0.6' });
+  });
+  console.log('✅ 生成礼包索引与 ' + giftGroups.length + ' 个游戏礼包页（共 ' + totalGiftCount + ' 个礼包）');
 } else {
   console.log('ℹ️  无礼包数据，跳过 gift.html');
 }
@@ -1622,7 +1690,7 @@ const guidesIndexHtml = head(
     if (!g) return '';
     const gname = g.name;
     const gcat = g.category || '';
-    const cover = g.cover || '';
+    const cover = g.cover ? assetUrl(g.cover) : '';
     const showCount = Math.min(4, list.length);
     const shown = list.slice(0, showCount);
     /* 视觉上每张卡只露前 2 篇（CSS nth-child(n+3) 隐藏），所以「还有 N 篇」按 2 计算，
@@ -1709,10 +1777,8 @@ ${more}
   <p class="lead"><strong>按游戏分组</strong>整理，点击卡片查看全部攻略，也可以直接搜索游戏名或攻略标题。</p>
 
   <div class="srchbar">
+    <svg class="srch-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
     <input id="guideSearch" type="search" placeholder="搜索游戏名或攻略标题，例如「龙之谷」「打金」" autocomplete="off" aria-label="搜索攻略">
-    <button class="srchbtn" id="guideSrchBtn" type="button" aria-label="搜索">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-    </button>
     <span class="hint" id="guideHint">输入即搜</span>
   </div>
   <div class="srch-res" id="guideRes" hidden></div>
@@ -1844,8 +1910,6 @@ ${restCards}
     box.addEventListener('change',render);
     box.addEventListener('search',render);
     box.addEventListener('keydown',function(e){if(e.key==='Escape'){box.value='';render();box.blur();}});
-    var srchBtn=document.getElementById('guideSrchBtn');
-    if(srchBtn){srchBtn.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();render();box.blur();});}
   })();
   </script>
 </main>
@@ -1868,7 +1932,8 @@ const searchGames = games.map(g => ({
   t: g.name,
   s: [g.category, g.year].filter(Boolean).join(' · '),
   u: '/game/' + g.id,
-  g: ''
+  g: '',
+  c: g.cover ? assetUrl(g.cover) : ''
 }));
 const searchIndexSrc = '/* 站内搜索索引 · 由 scripts/build-articles.js 自动生成，请勿手改 */\n' +
   'var SEARCH_INDEX=' +
@@ -1906,7 +1971,7 @@ const gamesHtml = head(
 ${[...games].sort((a, b) => (b.heat || 0) - (a.heat || 0)).map(g => {
   const cnt = (byGame.get(g.id) || []).length;
   return `    <a class="card" href="/game/${g.id}" id="g-${g.id}">
-      <img src="${esc(g.cover)}" alt="${esc(g.name)}" loading="lazy"${sizeAttrs(g.cover)}>
+      <img src="${esc(assetUrl(g.cover))}" alt="${esc(g.name)}" loading="lazy"${sizeAttrs(g.cover)}>
       <div class="bd">
         <div class="nm">${esc(g.name)}</div>
         <div class="ds">${esc((g.desc || '').slice(0, 42))}</div>
@@ -2051,7 +2116,7 @@ if (Array.isArray(inlineGames) && inlineGames.length) {
        导致爬虫和首屏看到的是带角标的版本、JS 接管后又消失（同一张卡片两副面孔）。
        故一并去掉，与 JS 渲染保持一致。 */
     return '<a class="gcard" href="/game/' + g.id + '">' +
-      '<div class="cv"><img src="' + g.cover + '" alt="' + esc(g.name) + '" loading="lazy"></div>' +
+      '<div class="cv"><img src="' + assetUrl(g.cover) + '" alt="' + esc(g.name) + '" loading="lazy"></div>' +
       '<div class="bd"><div class="nm">' + esc(g.name) + '</div>' +
       '<div class="meta"><span class="score">★ ' + esc(g.sc) + '</span></div>' +
       '<div class="ft"><span class="heat">🔥 ' + fmtHeat(g.heat) + '</span><span class="go">查看详情 ↗</span></div>' +
