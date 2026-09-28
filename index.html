@@ -194,6 +194,26 @@
   .foot .logo{font-weight:800;font-size:1.05rem}
   .foot p{font-size:.78rem;color:var(--dim)}
 
+  /* #hub 的上下 48px 内边距原先写在标签的 style 属性里 —— inline 会盖掉样式表，
+     想按断点收放就改不动，2026-09-28 把它搬到 CSS（手机端数值保持不变）。 */
+  #hub{padding-top:48px;padding-bottom:48px}
+
+  /* ===== 首页下半部分垂直节奏收紧（仅电脑端） =====
+     2026-09-28 用户要求「下面整体紧凑一点」。
+     下半部分（游戏大厅尾部 → 资讯/攻略入口 → FAQ → 结尾 CTA）原本的留白合计约 288px，
+     下面这些改动合计收回约 150px，各区块本身内容与字号一律不动。
+     ⚠️ 只作用于 >768px：手机端走 @media(max-width:768px) 的 44px 节奏，另有专门调优，不要在这里动。 */
+  @media(min-width:769px){
+    #games{padding-bottom:48px}
+    #hub{padding-top:32px;padding-bottom:32px}
+    #hub .hub-card{padding:20px}
+    #hub .hub-latest{margin-top:12px}
+    #faq{padding-bottom:40px}
+    #faq .faq-item{margin-bottom:10px}
+    #cta{padding-bottom:40px}
+    #cta .cta{padding:44px 40px}
+  }
+
   @media(max-width:1024px){
     .game-grid{grid-template-columns:repeat(3,1fr)}
     .feat-grid{grid-template-columns:repeat(4,1fr)}
@@ -465,7 +485,7 @@
 </section>
 
 <!-- ===== 资讯 / 攻略 入口（内容已独立成页） ===== -->
-<section class="sec" id="hub" style="background:linear-gradient(180deg,var(--bg1) 0%,var(--bg2) 100%);padding-top:48px;padding-bottom:48px">
+<section class="sec" id="hub" style="background:linear-gradient(180deg,var(--bg1) 0%,var(--bg2) 100%)">
   <div class="wrap">
 <!-- HOME-HUB:START -->
     <div class="hub-grid">
@@ -504,7 +524,7 @@
   </div>
 </section>
 
-<section class="sec" style="padding-top:0">
+<section class="sec" id="cta" style="padding-top:0">
   <div class="wrap">
     <div class="cta">
       <h2>开启你的怀旧游戏之旅</h2>
