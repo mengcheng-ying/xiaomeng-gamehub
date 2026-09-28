@@ -2009,12 +2009,15 @@ try {
 }
 if (Array.isArray(inlineGames) && inlineGames.length) {
   const gridCards = [...inlineGames].sort((a, b) => (b.heat || 0) - (a.heat || 0)).map((g) => {
-    const hasPlatform = (g.androidUrl && g.androidUrl !== '') || (g.iosUrl && g.iosUrl !== '');
+    /* 2026-09-28：这里原本还会给「有安卓/iOS 分版本下载」的游戏补一个
+       <span class="plat">📱 双端</span> 角标。但用户早前已明确要求全站去掉双端标注，
+       首页 JS 渲染（renderGames）也早已不输出它 —— 只有这份「构建期预渲染」还在输出，
+       导致爬虫和首屏看到的是带角标的版本、JS 接管后又消失（同一张卡片两副面孔）。
+       故一并去掉，与 JS 渲染保持一致。 */
     return '<a class="gcard" href="/game/' + g.id + '">' +
       '<div class="cv"><img src="' + g.cover + '" alt="' + esc(g.name) + '" loading="lazy"></div>' +
       '<div class="bd"><div class="nm">' + esc(g.name) + '</div>' +
-      '<div class="meta"><span class="score">★ ' + esc(g.sc) + '</span>' +
-      (hasPlatform ? '<span class="plat" title="支持安卓/iOS分版本下载">📱 双端</span>' : '') + '</div>' +
+      '<div class="meta"><span class="score">★ ' + esc(g.sc) + '</span></div>' +
       '<div class="ft"><span class="heat">🔥 ' + fmtHeat(g.heat) + '</span><span class="go">查看详情 ↗</span></div>' +
       '</div></a>';
   }).join('');
