@@ -45,7 +45,13 @@ jobs:
         run: |
           git config user.name "gamehub-bot"
           git config user.email "actions@github.com"
-          git add -A article game news guides.html games.html news.html 404.html index.html sitemap.xml assets/images data js/search-index.js js/news-index.js
+          # 2026-09-28 改为 add -A：原来写死了 article/game/news/... 一串路径，
+          # 而 git 对「存在但一个文件都没有」的目录会报
+          #   fatal: pathspec 'news' did not match any files（退出码 128）
+          # 清空全部文章与公告后 article/、news/ 双双落空，这一步直接把工作流跑挂。
+          # 构建产物是脚本全量重写的，用 -A 收全部改动既等价又不会再被目录增删搞崩。
+          # （IDE 生成的 .trae-html-share-packages 已在 .gitignore 里，不会被带上）
+          git add -A
           if git diff --cached --quiet; then
             echo "本次构建没有产生变化，无需提交"
             exit 0
