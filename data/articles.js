@@ -293,7 +293,7 @@ const ARTICLES_DATA = [
     author: "小梦攻略组",
     date: "2026-09-28",
     category: "攻略",
-    cover: "assets/images/longzhigu_cover.jpg",
+    cover: "assets/images/wx/lzg-cover.jpg",
     views: 2600
   }
 ];
