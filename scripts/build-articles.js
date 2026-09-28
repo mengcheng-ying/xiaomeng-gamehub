@@ -1233,78 +1233,10 @@ ${newsArchiveHtml}
   ) + newsBody);
   sitemapUrls.push({ loc: newsUrl, lastmod: TODAY, priority: '0.7' });
 
-  // ===== 6.6 福利礼包 / 兑换码中心（活动时效内容，数据来自 data/gifts.js） =====
-  const giftUrl = SITE + '/gift';
-  if (gifts && gifts.length) {
-    const giftSections = gifts.map(g => {
-      const gg = g.gameId ? gameById[g.gameId] : null;
-      const gameName = gg ? gg.name : g.game;
-      const tagHtml = g.tag ? `<span class="gift-tag">${esc(g.tag)}</span>` : '';
-      const gameLink = gg ? `<a class="gift-game-link" href="/game/${gg.id}">下载与攻略 →</a>` : '';
-      const cardsHtml = g.gifts.map(gf => `    <div class="gift-card">
-      <div class="gift-top"><span class="gift-name">${esc(gf.name)}</span><span class="gift-period">${esc(gf.period)}</span></div>
-      <div class="gift-code">${esc(gf.code)}</div>
-      <button class="gift-copy" type="button" data-code="${esc(gf.code)}">复制兑换码</button>
-      <div class="gift-items">${esc(gf.items)}</div>
-    </div>`).join('\n');
-      return `  <section class="gift-sec">
-    <h2 class="sec-h">${tagHtml}${esc(gameName)}${gameLink}</h2>
-    <div class="gift-grid">
-${cardsHtml}
-    </div>
-  </section>`;
-    }).join('\n');
-
-    const giftBody = `<main class="wrap">
-  <nav class="crumb"><a href="/">首页</a><i>/</i><span>福利礼包</span></nav>
-  <h1>福利礼包兑换中心</h1>
-  <p class="lead">中秋、国庆活动限时礼包码汇总，点击「复制兑换码」后在对应游戏内兑换。礼包码请在有效期内使用，过期失效。</p>
-  <div class="gift-notice">⚠️ 兑换是否成功以游戏内实际为准；若提示无效，可能是已过期或该账号已领取过。</div>
-
-${giftSections}
-
-  <div class="cta">
-    <p>没看到你想玩的游戏？回游戏大厅一次看全。</p>
-    <a class="cta-btn" href="/games">浏览全部游戏</a>
-  </div>
-
-  <script>
-  (function(){
-    function doCopy(code, cb){
-      if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(code).then(function(){cb(true)},function(){cb(false)}); }
-      else{
-        var ta=document.createElement('textarea'); ta.value=code; ta.style.position='fixed'; ta.style.opacity='0';
-        document.body.appendChild(ta); ta.select();
-        var ok=false; try{ ok=document.execCommand('copy'); }catch(e){}
-        document.body.removeChild(ta); cb(ok);
-      }
-    }
-    var btns=document.querySelectorAll('.gift-copy');
-    for(var i=0;i<btns.length;i++){
-      btns[i].addEventListener('click', function(){
-        var self=this, code=this.getAttribute('data-code');
-        doCopy(code, function(ok){ self.textContent = ok ? '已复制 ✓' : '复制失败'; setTimeout(function(){ self.textContent='复制兑换码'; },1600); });
-      });
-    }
-  })();
-  <\/script>
-</main>` + foot();
-
-    writeFile('gift.html', head(
-      '福利礼包兑换中心 - 中秋国庆礼包码 - 小梦怀旧手游',
-      '怀旧手游中秋、国庆活动福利礼包码汇总，一键复制兑换，含永恒岛、星辰变等热门游戏。',
-      giftUrl,
-      { prefix: '', ld: [{
-        '@context': 'https://schema.org', '@type': 'CollectionPage',
-        name: '福利礼包兑换中心', url: giftUrl, inLanguage: 'zh-CN',
-        isPartOf: { '@type': 'WebSite', name: '小梦怀旧手游', url: SITE + '/' }
-      }] }
-    ) + giftBody);
-    sitemapUrls.push({ loc: giftUrl, lastmod: TODAY, priority: '0.8' });
-    console.log('✅ 生成 gift.html（' + gifts.length + ' 款游戏 / ' + gifts.reduce(function(s, g) { return s + g.gifts.length; }, 0) + ' 个礼包）');
-  } else {
-    console.log('ℹ️  无礼包数据，跳过 gift.html');
-  }
+  /* 2026-09-27：福利礼包页（gift.html）的生成整块已移出本分支 ——
+     它原先嵌在「官方公告」的 if 里，一旦公告为空就整块不执行，
+     gift.html 会冻结在旧版本、并从 sitemap 里消失（实测已发生）。
+     现移到资讯 if/else 之后的「6.6b」段无条件执行。 */
 
   // --- 站内搜索索引 /js/news-index.js（资讯中心用；随每日公告自动重建） ---
   const newsIndexArr = [];
@@ -1511,6 +1443,80 @@ ${editorialTopHtml}${infoSectionHtml}  <p class="lead">官方公告内容正在�
   fs.writeFileSync(path.join(ROOT, 'js', 'news-index.js'),
     '/* 资讯搜索索引 · 由 scripts/build-articles.js 自动生成，请勿手改 */\nvar NEWS_INDEX=[];\n');
   console.log('✅ 生成 news.html（空态）与空的 js/news-index.js');
+}
+
+// ===== 6.6b 福利礼包 / 兑换码中心（活动时效内容，数据来自 data/gifts.js） =====
+// ⚠️ 2026-09-27 从「官方公告」分支里搬出来：礼包是独立内容，不该由公告数量决定生死。
+const giftUrl = SITE + '/gift';
+if (gifts && gifts.length) {
+  const giftSections = gifts.map(g => {
+    const gg = g.gameId ? gameById[g.gameId] : null;
+    const gameName = gg ? gg.name : g.game;
+    const tagHtml = g.tag ? `<span class="gift-tag">${esc(g.tag)}</span>` : '';
+    const gameLink = gg ? `<a class="gift-game-link" href="/game/${gg.id}">下载与攻略 →</a>` : '';
+    const cardsHtml = g.gifts.map(gf => `    <div class="gift-card">
+      <div class="gift-top"><span class="gift-name">${esc(gf.name)}</span><span class="gift-period">${esc(gf.period)}</span></div>
+      <div class="gift-code">${esc(gf.code)}</div>
+      <button class="gift-copy" type="button" data-code="${esc(gf.code)}">复制兑换码</button>
+      <div class="gift-items">${esc(gf.items)}</div>
+    </div>`).join('\n');
+    return `  <section class="gift-sec">
+    <h2 class="sec-h">${tagHtml}${esc(gameName)}${gameLink}</h2>
+    <div class="gift-grid">
+${cardsHtml}
+    </div>
+  </section>`;
+  }).join('\n');
+
+  const giftBody = `<main class="wrap">
+  <nav class="crumb"><a href="/">首页</a><i>/</i><span>福利礼包</span></nav>
+  <h1>福利礼包兑换中心</h1>
+  <p class="lead">中秋、国庆活动限时礼包码汇总，点击「复制兑换码」后在对应游戏内兑换。礼包码请在有效期内使用，过期失效。</p>
+  <div class="gift-notice">⚠️ 兑换是否成功以游戏内实际为准；若提示无效，可能是已过期或该账号已领取过。</div>
+
+${giftSections}
+
+  <div class="cta">
+    <p>没看到你想玩的游戏？回游戏大厅一次看全。</p>
+    <a class="cta-btn" href="/games">浏览全部游戏</a>
+  </div>
+
+  <script>
+  (function(){
+    function doCopy(code, cb){
+      if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(code).then(function(){cb(true)},function(){cb(false)}); }
+      else{
+        var ta=document.createElement('textarea'); ta.value=code; ta.style.position='fixed'; ta.style.opacity='0';
+        document.body.appendChild(ta); ta.select();
+        var ok=false; try{ ok=document.execCommand('copy'); }catch(e){}
+        document.body.removeChild(ta); cb(ok);
+      }
+    }
+    var btns=document.querySelectorAll('.gift-copy');
+    for(var i=0;i<btns.length;i++){
+      btns[i].addEventListener('click', function(){
+        var self=this, code=this.getAttribute('data-code');
+        doCopy(code, function(ok){ self.textContent = ok ? '已复制 ✓' : '复制失败'; setTimeout(function(){ self.textContent='复制兑换码'; },1600); });
+      });
+    }
+  })();
+  <\/script>
+</main>` + foot();
+
+  writeFile('gift.html', head(
+    '福利礼包兑换中心 - 中秋国庆礼包码 - 小梦怀旧手游',
+    '怀旧手游中秋、国庆活动福利礼包码汇总，一键复制兑换，含永恒岛、星辰变等热门游戏。',
+    giftUrl,
+    { prefix: '', ld: [{
+      '@context': 'https://schema.org', '@type': 'CollectionPage',
+      name: '福利礼包兑换中心', url: giftUrl, inLanguage: 'zh-CN',
+      isPartOf: { '@type': 'WebSite', name: '小梦怀旧手游', url: SITE + '/' }
+    }] }
+  ) + giftBody);
+  sitemapUrls.push({ loc: giftUrl, lastmod: TODAY, priority: '0.8' });
+  console.log('✅ 生成 gift.html（' + gifts.length + ' 款游戏 / ' + gifts.reduce(function(s, g) { return s + g.gifts.length; }, 0) + ' 个礼包）');
+} else {
+  console.log('ℹ️  无礼包数据，跳过 gift.html');
 }
 
 // ===== 6.6 生成置顶精选专题独立页 /news/feature/<slug>.html =====
