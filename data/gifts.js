@@ -1,7 +1,7 @@
 /**
- * 福利礼包 / 兑换码数据（2026 中秋 + 国庆活动）
- * 由梦尘提供，小满入库。礼包码 / 物品 / 有效期一字未改；物品清单分隔符统一为顿号（纯排版）。
- * ⚠️ 活动结束后（约 10.7 之后）礼包码失效，应从本数组移除对应条目并重新构建，避免站内留存无效码。
+ * 福利礼包 / 兑换码数据
+ * 礼包码和物品内容按提供内容入库，物品清单分隔符统一为顿号（仅排版）。
+ * 活动类礼包码失效后，应从本数组移除对应条目并重新构建。
  */
 const GIFTS_DATA = [
   {
@@ -28,6 +28,76 @@ const GIFTS_DATA = [
     gifts: [
       { name: "中秋礼包", code: "XCBZQ666", items: "还童天书*10、归元石*50、中品灵兽经验丹*10", period: "9.24-9.30" },
       { name: "国庆礼包", code: "XCBGQ888", items: "下品灵性丹*10、地劫余烬*100、一级符篆包*10", period: "9.30-10.7" }
+    ]
+  },
+  {
+    gameId: 45,
+    game: "热血江湖2.0",
+    tag: "礼包码",
+    gifts: [
+      { name: "通用礼包", code: "RDLJH666", items: "土灵符x10/重生符x10/九转(小)x1/千年(小)x1", period: "" }
+    ]
+  },
+  {
+    gameId: 47,
+    game: "屠龙世界：再战沙巴克",
+    tag: "礼包码",
+    gifts: [
+      { name: "通用礼包", code: "CP23Y7", items: "", period: "" }
+    ]
+  },
+  {
+    gameId: 46,
+    game: "机战：钢铁巨舰",
+    tag: "礼包码",
+    gifts: [
+      { name: "礼包码 1", code: "JZ2026", items: "高级能源石*1、流星*1、银河币*10W", period: "" },
+      { name: "礼包码 2", code: "JZ2007", items: "高级幸运模组*2、高级移速模组*2、高级经验模组*2、银河币*5W", period: "" },
+      { name: "礼包码 3", code: "JZBACK", items: "乔氏粒子*10、传说改造石*10、超级金属*10、载具能量*10", period: "" },
+      { name: "礼包码 4", code: "JZ666", items: "超级金属*10、4星维能晶片*2、银河币*1W", period: "" },
+      { name: "礼包码 5", code: "JZVIP", items: "随机宝石箱（2级）*1、幸运核心包*1、银河币*1W", period: "" },
+      { name: "礼包码 6", code: "VIP888", items: "一阶精品改造石*10、改造稳定仪*2、银河币*1W", period: "" },
+      { name: "礼包码 7", code: "VIP777", items: "乔氏粒子*10、加固模组*2、银河币*1W", period: "" },
+      { name: "礼包码 8", code: "VIP666", items: "增幅充能剂*2、高级经验模组*2、银河币*1W", period: "" },
+      { name: "礼包码 9", code: "JZTW2026", items: "高级能源石*1、流星*1、银河币*10W", period: "" },
+      { name: "礼包码 10", code: "jizhan99", items: "初级能源石*5、1阶传说改造石*50、银河币*50W", period: "" },
+      { name: "礼包码 11", code: "66jizhan", items: "中级能源石*2、乔氏粒子*30、银河币*50W", period: "" },
+      { name: "礼包码 12", code: "77jizhan", items: "进击宝石箱（2级）*2、防护宝石箱（2级）*2、银河币*500000", period: "" }
+    ]
+  },
+  {
+    gameId: 1,
+    game: "龙之谷启程",
+    tag: "礼包码",
+    gifts: [
+      { name: "礼包码 1", code: "lzg6666", items: "龙蛋*2、龙爪*2、金币*30000", period: "" },
+      { name: "礼包码 2", code: "lzg7777", items: "纹章碎片*50、秘传纹章*10、金币*20000", period: "" },
+      { name: "礼包码 3", code: "lzg8888", items: "橙色纹章随机礼包*1、水晶代码*10", period: "" },
+      { name: "礼包码 4", code: "vip9999", items: "武器强化石*50、中级保护魔法药*1", period: "" },
+      { name: "礼包码 5", code: "lzg2026", items: "水晶代码*5、幸运符*5", period: "" },
+      { name: "礼包码 6", code: "LZGWXGZ", items: "猎犬*1、复古书*5、金币*50000", period: "" }
+    ]
+  },
+  {
+    gameId: 8,
+    game: "龙城秘境：凤凰沉默",
+    tag: "礼包码",
+    gifts: [
+      { name: "礼包码 555", code: "555", items: "化魔珠*100、天师符*100、100W经验卷*60", period: "" },
+      { name: "礼包码 666", code: "666", items: "闪翼削月刃(限时3天)、霸主特权激活卡", period: "" },
+      { name: "礼包码 777", code: "777", items: "生肖自选箱*50、天绝剑残片*5、心法残卷*70", period: "" },
+      { name: "礼包码 888", code: "888", items: "江湖侠客章、1W绑定元宝*5", period: "" },
+      { name: "礼包码 999", code: "999", items: "30万绑定灵符、1W绑定元宝*60、元素精华*100", period: "" }
+    ]
+  },
+  {
+    gameId: 2,
+    game: "墨香情",
+    tag: "礼包码",
+    gifts: [
+      { name: "礼包码 1", code: "10os48zf3o", items: "原石*10、墨币20W", period: "" },
+      { name: "礼包码 2", code: "85f9o5555z", items: "力量护符(1小时)*1、敏捷护符(1小时)*1、墨币*10w", period: "" },
+      { name: "礼包码 3", code: "413cgls00d", items: "高级逍遥符(3小时)*1、高级快活符(3小时)*1、高级自在符(3小时)*1、护魂卷(1天)*1", period: "" }
     ]
   }
 ];
