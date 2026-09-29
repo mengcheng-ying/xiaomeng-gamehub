@@ -46,7 +46,10 @@ process.argv.slice(2).forEach((a) => {
   if (m) argv[m[1]] = m[2] === undefined ? true : m[2];
 });
 const DRY = !!argv.dry;
-const MAX = argv.max ? Math.max(1, parseInt(argv.max, 10) || 10) : 10;
+/* 单次上限：默认 10（与百度每日配额量级匹配），最多 50。
+   上限的意义是别一次把配额和日志撑爆；非数字（含空、带命令的字符串）一律回退 10。 */
+const MAX_PARSED = argv.max ? parseInt(argv.max, 10) : 10;
+const MAX = Math.max(1, Math.min(50, Number.isFinite(MAX_PARSED) ? MAX_PARSED : 10));
 
 if (!TOKEN && !DRY) {
   console.log('⏭ 未配置 BAIDU_TOKEN / BAIDU_PUSH_TOKEN，跳过本次推送。');
@@ -114,6 +117,38 @@ if (!batch.length) {
   process.exit(0);
 }
 
+// ---------- 并发保护（2026-09-29 加）----------
+/* 状态文件是「读 → 推 → 写」三段式：两个实例同时跑会**双推同一批 URL**，
+   而且后写的那个会把另一个的成果覆盖掉（状态回退）。
+   CI 里由 workflow 的 concurrency: main-writer 串行化，但手动/本地跑没有这层保护，
+   所以脚本自己也上一把锁。锁超过 10 分钟视为进程被 kill 留下的陈旧锁，自动接管。 */
+const LOCK = path.join(ROOT, '.github', 'baidu-push.lock');
+const LOCK_STALE_MS = 10 * 60 * 1000;
+
+function acquireLock() {
+  if (DRY) return true;                    // 演练不写状态文件，不需要锁
+  try {
+    const st = fs.statSync(LOCK);
+    if (Date.now() - st.mtimeMs > LOCK_STALE_MS) {
+      console.log('⚠️  发现超过 10 分钟的陈旧锁，接管并继续。');
+      fs.unlinkSync(LOCK);
+    } else {
+      return false;
+    }
+  } catch (e) { /* 没有锁文件 = 正常，继续往下抢 */ }
+  try {
+    fs.writeFileSync(LOCK, String(process.pid) + ' ' + new Date().toISOString(), { flag: 'wx' });  // wx = 原子独占创建
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+function releaseLock() {
+  if (DRY) return;
+  try { fs.unlinkSync(LOCK); } catch (e) { /* 已不存在 */ }
+}
+process.on('exit', releaseLock);
+
 // ---------- 推送 ----------
 const ENDPOINT = 'http://data.zz.baidu.com/urls?site=' + SITE + '&token=' + TOKEN;
 
@@ -143,6 +178,12 @@ function pushOne(url) {
   let ok = 0, quotaHit = false;
   const failReasons = {};
   const newlyPushed = [];
+
+  if (!acquireLock()) {
+    console.log('⏭ 已有另一次推送在运行（.github/baidu-push.lock 存在），本次直接跳过：');
+    console.log('   状态文件是「读-推-写」，两个实例同时跑会双推同一批 URL、并互相覆盖状态文件。');
+    process.exit(0);
+  }
 
   for (let i = 0; i < batch.length; i++) {
     const url = batch[i];
@@ -193,6 +234,7 @@ function pushOne(url) {
     errors: failReasons
   };
   fs.writeFileSync(STATE, JSON.stringify(state, null, 2), 'utf8');
+  releaseLock();
 
   const doneNow = targets.filter((u) => state.pushed[u]).length;
   console.log('\n========== 汇总 ==========');
