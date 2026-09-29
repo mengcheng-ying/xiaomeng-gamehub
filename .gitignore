@@ -10,7 +10,15 @@ Thumbs.db
 node_modules/
 
 # 日志
-*.log.github/scripts/node_modules/
+*.log
+
+# 工单发布脚本的依赖（CI 里 npm ci 按 lockfile 生成，不入库）。
+# 这里原来是「*.log.github/scripts/node_modules/」—— 两行粘在一起了，
+# 结果是 *.log 和这个目录两件事都没被忽略（目录靠上面的 node_modules/ 兜住才没出事）。
+.github/scripts/node_modules/
+
+# 百度推送的并发锁（运行时生成，跑完自动删；万一被 kill 留下也不该入库）
+.github/baidu-push.lock
 
 # 独立站点：怀梦手游已拆分为单独仓库（mengcheng-ying/huaimeng-site），
 # 本地保留工作副本但不纳入本仓库，避免两个站混在一起。
