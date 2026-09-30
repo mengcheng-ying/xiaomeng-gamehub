@@ -825,7 +825,7 @@ ${related.map(r => `  <a href="/article/${r.id}"><span class="cat">${esc(r.categ
       <p class="dlc-d">${esc((game.desc || '').replace(/\s+/g, ' ').slice(0, 72))}</p>
       <div class="dl">
         <a class="and" href="${esc(game.androidUrl ? game.androidUrl : game.url)}" target="_blank" rel="sponsored noopener noreferrer">安卓下载</a>
-        <a class="ios" href="${esc(game.iosUrl ? game.iosUrl : game.url)}" target="_blank" rel="sponsored noopener noreferrer">苹果下载</a>
+        ${!game.iosPending ? `<a class="ios" href="${esc(game.iosUrl ? game.iosUrl : game.url)}" target="_blank" rel="sponsored noopener noreferrer">苹果下载</a>` : ''}
       </div>
       <a class="dlc-more" href="/game/${game.id}">查看《${esc(game.name)}》详情与全部攻略 →</a>
     </div>
@@ -922,6 +922,11 @@ games.forEach((g) => {
   // ⚠️ href 必须是 data/games.js 里的原值，不得改写。
   const androidHref = (g.androidUrl && g.androidUrl !== '') ? g.androidUrl : g.url;
   const iosHref = (g.iosUrl && g.iosUrl !== '') ? g.iosUrl : g.url;
+  // 苹果按钮的显示条件：有链接，且未被 games.js 标记 iosPending。
+  //   为什么不直接判断 iosUrl 是否为空：平台落地页（?app_id= 那类）本身按 UA 分平台，
+  //   回退到 url 对 iOS 是有效入口，隐藏反而砍掉可用通道；只有 url 是纯安卓包端点
+  //   （如 index/downGame）且 iOS 尚未上线时，才用 iosPending 显式隐藏。
+  const showIos = iosHref !== '' && !g.iosPending;
 
   // 结构化参数表
   const baseFacts = [
@@ -1050,7 +1055,7 @@ ${nzArc.items.slice(0, 8).map(it => `  <li>
       <div class="score">${g.rating ? '★ ' + g.rating + '.0 / 5.0' : ''}</div>
       <div class="dl">
         <a class="and" href="${esc(androidHref)}" target="_blank" rel="sponsored noopener noreferrer">安卓下载</a>
-        <a class="ios" href="${esc(iosHref)}" target="_blank" rel="sponsored noopener noreferrer">苹果下载</a>
+        ${showIos ? `<a class="ios" href="${esc(iosHref)}" target="_blank" rel="sponsored noopener noreferrer">苹果下载</a>` : ''}
       </div>
     </div>
   </div>

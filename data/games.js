@@ -7,6 +7,11 @@
  *   url        - 通用官网链接（兜底/默认）
  *   androidUrl - 安卓版专用链接（可选，留空则回退到 url）
  *   iosUrl     - iOS/苹果版专用链接（可选，留空则回退到 url）
+ *   iosPending - 可选。为 true 时【不显示】苹果下载按钮，用于「iOS 版尚未上线」的游戏：
+ *                此时 url 是纯安卓包下载端点，若按「留空回退 url」处理，
+ *                iOS 用户点「苹果下载」会拿到安卓包，故显式隐藏。
+ *                （注意：不能只按 iosUrl 为空就隐藏 —— 平台落地页如 ?app_id= 那类本身就按
+ *                 UA 分平台，回退到 url 对 iOS 是有效的，隐藏反而会砍掉可用入口。）
  *   platform   - 平台       year      - 发行年份
  *   category   - 分类       size/sizeText - 大小
  *   rating     - 评分(1-5)  developer - 开发商
@@ -55,4 +60,5 @@ const GAMES_DATA = [
   { id:44, name:"热血传说：复古传奇", desc:"《热血传说：复古传奇》是安徽游昕正版运营的复古传奇手游，以1.76经典版本为核心，还原战法道三职业、PK爆装、沙巴克攻城等经典玩法。游戏采用复古画风，无VIP特权，装备全靠打，打造最纯粹的复古传奇体验，带你重回热血沸腾的玛法大陆。", cover:"assets/images/rexuechuanshuo_cover.jpg", url:"https://229663.youxin75.com/qudao.php?s=/Download/f/WzM2OCwzNjcsMjI5NjYzXQ==", platform:"手游", year:2026, category:"角色扮演", size:2048, rating:4, developer:"安徽游昕", heat:500000 , androidUrl:"", iosUrl:""},
   { id:46, name:"机战：钢铁巨舰", desc:"《机战：钢铁巨舰》是大型科幻机甲题材MMORPG手游，驾驶钢铁巨舰征战浩渺星际。海量机甲自由改装，星际舰队对决，支持iOS/安卓双端下载及PC模拟器游玩。开服首周登录即送SSR机甲碎片，机甲工坊全面升级，开放50+种改装方案，带你开启属于你的宇宙征途。", cover:"assets/images/jizhan_cover.jpg", url:"https://sdkn-ldy.zhangyu39.com/?app_id=7609&promote_id=1778", platform:"手游", year:2026, category:"角色扮演", sizeText:"2.3GB", rating:5, developer:"三九互娱", heat:950000, androidUrl:"https://sdkn-ldy.zhangyu39.com/?app_id=7609&promote_id=1778", iosUrl:"https://sdkn-ldy.zhangyu39.com/?app_id=7164&promote_id=1778"},
   { id:47, name:"屠龙世界：再战沙巴克", desc:"《屠龙世界：再战沙巴克》（又名《沙巴克传奇》）是由安徽游昕联合运营的复古传奇MMORPG手游，于2026年9月15日全平台公测。游戏以经典1.76版本为蓝本，完整还原战士、法师、道士三大职业体系与玛法大陆经典场景，复刻千人同屏沙巴克攻城、野外打宝、行会团战等传奇核心玩法。装备以怪物掉落为主，开放自由交易，主打公平打宝与散人友好。", cover:"assets/images/tulongshijie_cover.jpg", url:"https://229663.youxin75.com/qudao.php?s=/Download/f/WzUwNjEsNTA2MCwyMjk2NjNd", platform:"手游", year:2026, category:"角色扮演", rating:4, developer:"安徽游昕", heat:918000 , androidUrl:"", iosUrl:""},
+  { id:48, name:"精灵永恒", desc:"《精灵永恒》由创天与三九互娱联合运营，安卓版现已开放下载，苹果版尚未上线。本站收录其官方下载入口与全部礼包兑换码。", cover:"assets/images/jinglingyongheng_cover.jpg", url:"https://sdkn-ldy.zhangyu39.com/index/downGame?app=39381", platform:"手游", category:"角色扮演", rating:4, heat:960000, androidUrl:"https://sdkn-ldy.zhangyu39.com/index/downGame?app=39381", iosUrl:"", iosPending:true},
   ];
