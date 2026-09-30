@@ -103,12 +103,14 @@
       ]
     }
   ],
-  "lastRun": "2026-09-30T11:12:31.697Z",
+  "lastRun": "2026-09-30T14:14:33.689Z",
   "lastResult": {
-    "at": "2026-09-30T11:12:31.697Z",
+    "at": "2026-09-30T14:14:33.689Z",
     "attempted": 10,
     "success": 0,
     "outcome": "over_quota",
-    "errors": {}
+    "errors": {
+      "network_error": 1
+    }
   }
 }
