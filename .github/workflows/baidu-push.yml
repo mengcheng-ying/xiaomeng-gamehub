@@ -17,8 +17,13 @@ name: 百度链接自动推送
 #   同一次推送会**同时**触发「站点重建」和本工作流，而新页面的 URL 是重建完才写进
 #   sitemap 的，抢跑的那次会读到旧 sitemap、漏推新页。现在等重建成功完成后再推。
 #   「多次触发互抢配额」这个当年的顾虑已被脚本自身化解：只推状态文件里没有的 URL、
-#   单次上限 10 条、撞到 over quota 立刻停手 —— 多跑几次最多是空跑，既不重复提交
-#   也不抢配额（百度明确说高频重复提交会拉低站点评级）。
+#   单次上限 10 条、撞到 over quota 立刻停手 —— 多跑几次最多是空跑，不会重复提交。
+# 2026-09-30：但 ③ 会抢走当天额度 —— 配额是 10 条/天的硬上限，若上午那次小更新
+#   把额度花在「还历史积压」上，下午新发的文章当天一条都推不进去、要等到第二天，
+#   而新内容恰恰最需要抢时效。故拆成两条道（脚本侧对应 --new-today）：
+#     ③ 发布即推（workflow_run）→ 只推 lastmod 是今天的页面（通常 1~3 条），保住时效
+#     ①② 每日定时            → 负责还历史积压，每次最多 10 条
+#   两条道不互相顶掉：新页面 lastmod 即当天，老积压停在旧日期，各取各的。
 
 on:
   schedule:
@@ -75,6 +80,7 @@ jobs:
           #    dispatch 的输入是字符串，直接拼接等于把不可信字符串拼进 shell 脚本。
           INPUT_MAX: ${{ inputs.max }}
           INPUT_DRY: ${{ inputs.dry }}
+          EVENT_NAME: ${{ github.event_name }}
         run: |
           MAX="$INPUT_MAX"
           case "$MAX" in
@@ -84,6 +90,9 @@ jobs:
           if [ "$MAX" -gt 50 ]; then MAX=50; fi   # 上限 50：别一次把配额和日志撑爆
           ARGS="--max=$MAX"
           if [ "$INPUT_DRY" = "true" ]; then ARGS="$ARGS --dry"; fi
+          # 发布即推只推「今天新产生的页面」，把当天额度留给新内容；
+          # 定时任务不带这个参数，整批还历史积压（见文件头 2026-09-30 说明）。
+          if [ "$EVENT_NAME" = "workflow_run" ]; then ARGS="$ARGS --new-today"; fi
           echo "运行参数：$ARGS"
           node scripts/baidu-push-priority.js $ARGS
 
