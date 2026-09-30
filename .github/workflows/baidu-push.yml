@@ -6,17 +6,24 @@ name: 百度链接自动推送
 #   后 4 次全撞 over quota 空跑）；旧脚本还固定从 sitemap 第 1 条开始推、
 #   遇上限就 break、没有任何状态记录，于是每天重复推同一批「首页/列表页」，
 #   排在后半段的游戏页永远轮不到。
-#   → 改为「只在每日 13:00 定时推一次」+ 状态文件记录已推 URL。
+#   → 改为「只在每日定时推一次」+ 状态文件记录已推 URL。
 # 2026-09-29：实测发现定时从 09-20 起就再没触发过 —— 全仓库唯一一次 schedule
 #   运行停在 09-20（仓库设置正常、Actions 未禁用、默认分支正常），头号嫌疑是
-#   这个仓库的历史被反复重写。单押一个定时不可靠，故改为三层叠加：
+#   这个仓库的历史被反复重写。单押一个定时不可靠，故改为多层叠加：
 #     ① 定时挪离整点（GitHub 的定时器在整点最容易被延迟甚至跳过）
 #     ② 再加一条晚些的兜底定时
-#     ③ 内容更新即推（on: push），不依赖定时
-#   「多次推送互抢配额」这个当年的顾虑现在已被脚本自身化解，所以 ③ 是安全的：
-#   scripts/baidu-push-priority.js 只推状态文件里没推过的 URL、单次上限 10 条、
-#   撞到 over quota 立刻停手 —— 一天里多跑几次最多是空跑，既不会重复提交，
-#   也不会互相抢配额（百度明确说高频重复提交会拉低站点评级）。
+#     ③ 内容更新即推
+# 2026-09-29（本版）：把 ③ 从 on: push 改为 workflow_run ——
+#   同一次推送会**同时**触发「站点重建」和本工作流，而新页面的 URL 是重建完才写进
+#   sitemap 的，抢跑的那次会读到旧 sitemap、漏推新页。现在等重建成功完成后再推。
+#   「多次触发互抢配额」这个当年的顾虑已被脚本自身化解：只推状态文件里没有的 URL、
+#   单次上限 10 条、撞到 over quota 立刻停手 —— 多跑几次最多是空跑，不会重复提交。
+# 2026-09-30：但 ③ 会抢走当天额度 —— 配额是 10 条/天的硬上限，若上午那次小更新
+#   把额度花在「还历史积压」上，下午新发的文章当天一条都推不进去、要等到第二天，
+#   而新内容恰恰最需要抢时效。故拆成两条道（脚本侧对应 --new-today）：
+#     ③ 发布即推（workflow_run）→ 只推 lastmod 是今天的页面（通常 1~3 条），保住时效
+#     ①② 每日定时            → 负责还历史积压，每次最多 10 条
+#   两条道不互相顶掉：新页面 lastmod 即当天，老积压停在旧日期，各取各的。
 
 on:
   schedule:
@@ -26,22 +33,14 @@ on:
     # 兜底定时：北京时间 15:41（UTC 07:41）。主定时被跳过时由这条补上；
     # 已推过的 URL 由状态文件挡住，配额用尽脚本自己会停，不会重复提交。
     - cron: '41 7 * * *'
-  # 发布即推：内容一更新就推新页面，不必等第二天的定时。
-  # 只列内容路径、不含 .github/** —— 本工作流自己提交的状态文件不会反过来触发自己。
-  push:
-    branches: [main]
-    paths:
-      - 'data/articles.js'
-      - 'sitemap.xml'
-      - 'index.html'
-      - 'article/**'
-      - 'guides/**'
-      - 'gift/**'
-      - 'game/**'
+  # 发布即推：等「站点重建」成功跑完再推，保证读到的是生成后的新 sitemap。
+  workflow_run:
+    workflows: ["站点重建（攻略静态页 / 索引页 / 图片压缩）"]
+    types: [completed]
   workflow_dispatch:
     inputs:
       max:
-        description: '本次最多推送条数（默认 10，与每日配额量级匹配）'
+        description: '本次最多推送条数（默认 10，与每日配额量级匹配，上限 50）'
         required: false
         default: '10'
         type: string
@@ -51,30 +50,53 @@ on:
         default: false
         type: boolean
 
+# 与「工单发布文章」「站点重建」共用同一把锁：三者都要往 main 提交，串行执行避免 push 冲突。
+concurrency:
+  group: main-writer
+  cancel-in-progress: false
+
 jobs:
   baidu-push:
+    # workflow_run 触发时只在重建成功时执行；失败/取消的那次不推（避免读到半截 sitemap）。
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: write          # 提交推送状态文件需要
     steps:
-      - uses: actions/checkout@v4
+      # action 固定到 commit SHA（供应链加固），升级时换对应 tag 的 SHA 即可
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4
+        with:
+          ref: main
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020  # v4
         with:
           node-version: '20'
 
       - name: 推送链接到百度（带状态与优先级）
         env:
           BAIDU_TOKEN: ${{ secrets.BAIDU_PUSH_TOKEN }}
+          # ⚠️ 输入一律经 env 传入，不把 ${{ inputs.* }} 直接插进 run：
+          #    dispatch 的输入是字符串，直接拼接等于把不可信字符串拼进 shell 脚本。
+          INPUT_MAX: ${{ inputs.max }}
+          INPUT_DRY: ${{ inputs.dry }}
+          EVENT_NAME: ${{ github.event_name }}
         run: |
-          MAX="${{ inputs.max }}"
-          if [ -z "$MAX" ]; then MAX=10; fi
+          MAX="$INPUT_MAX"
+          case "$MAX" in
+            ''|*[!0-9]*) MAX=10 ;;   # 空 / 非纯数字（含小数、负数、夹带命令）一律回退 10
+          esac
+          if [ "$MAX" -lt 1 ]; then MAX=1; fi
+          if [ "$MAX" -gt 50 ]; then MAX=50; fi   # 上限 50：别一次把配额和日志撑爆
           ARGS="--max=$MAX"
-          if [ "${{ inputs.dry }}" = "true" ]; then ARGS="$ARGS --dry"; fi
+          if [ "$INPUT_DRY" = "true" ]; then ARGS="$ARGS --dry"; fi
+          # 发布即推只推「今天新产生的页面」，把当天额度留给新内容；
+          # 定时任务不带这个参数，整批还历史积压（见文件头 2026-09-30 说明）。
+          if [ "$EVENT_NAME" = "workflow_run" ]; then ARGS="$ARGS --new-today"; fi
           echo "运行参数：$ARGS"
           node scripts/baidu-push-priority.js $ARGS
 
-      - name: 提交推送状态（让明天的运行接着往下推）
+      - name: 提交推送状态（让下次运行接着往下推）
         run: |
           if [ ! -f .github/baidu-push-state.json ]; then
             echo "没有状态文件，跳过"
@@ -88,4 +110,18 @@ jobs:
             exit 0
           fi
           git commit -m "chore(baidu): 记录本次已推送 URL"
-          git push
+          ok=0
+          for i in 1 2 3; do
+            echo "第 $i 次尝试：先 rebase 再 push"
+            if ! git pull --rebase origin main; then
+              git rebase --abort || true
+              sleep 5
+              continue
+            fi
+            if git push; then ok=1; break; fi
+            sleep 5
+          done
+          if [ "$ok" != "1" ]; then
+            echo "✖ 推送失败：3 次重试后仍未成功"
+            exit 1
+          fi

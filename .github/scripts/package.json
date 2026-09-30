@@ -1,0 +1,10 @@
+{
+  "name": "gamehub-publish-scripts",
+  "private": true,
+  "version": "1.0.0",
+  "description": "工单发文脚本依赖：版本精确锁定，CI 用 npm ci 安装（不把浮动版本装进主分支）",
+  "dependencies": {
+    "marked": "12.0.2",
+    "sanitize-html": "2.17.7"
+  }
+}

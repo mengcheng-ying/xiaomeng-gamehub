@@ -19,13 +19,26 @@ on:
       - 'sitemap.xml'
   workflow_dispatch:
 
+# 只读权限：本工作流只需要读 sitemap 后对外发请求，不需要写仓库。
+# 原来没声明 permissions，会拿到仓库默认的写权限，属于不必要的授权。
+permissions:
+  contents: read
+
+# 独立并发组：IndexNow 不写 main，不必和三个写 main 的工作流抢同一把锁。
+# cancel-in-progress: false —— 提交动作不中途取消，避免只推了一半 URL。
+concurrency:
+  group: indexnow
+  cancel-in-progress: false
+
 jobs:
   indexnow:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      # action 固定到 commit SHA（供应链加固），升级时换对应 tag 的 SHA 即可
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020  # v4
         with:
           node-version: '20'
 

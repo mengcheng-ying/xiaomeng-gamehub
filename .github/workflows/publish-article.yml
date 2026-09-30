@@ -1,5 +1,13 @@
 name: 工单发布文章
 
+# ⚠️ 安全说明（2026-09-29 加固，改前先读）
+# 本仓库是**公开仓库**，Issue 是任何人都能提交的**不可信输入**。原配置只看正文里有没有
+# 「### 游戏名」，于是外部用户开一个格式相同的 Issue 就能触发发布、把任意内容写进主分支
+# 并上线（正文里的 <script> 实测能原样穿透 marked）。现在加固三层：
+#   1) job 守卫加 author_association 白名单 —— 外部用户开的工单直接跳过本 job；
+#   2) 正文经 sanitize-html 白名单净化（见 .github/scripts/publish-article.js）；
+#   3) 与其它要写 main 的工作流共用 concurrency 组，串行化避免 push 互相踩。
+
 on:
   issues:
     types: [opened]
@@ -8,20 +16,38 @@ permissions:
   contents: write
   issues: write
 
+# 与「站点重建」「百度推送」共用同一把锁：三者都要往 main 提交，串行执行避免冲突。
+# cancel-in-progress: false —— 发布流程绝不中途取消，否则会留下半截提交。
+concurrency:
+  group: main-writer
+  cancel-in-progress: false
+
 jobs:
   publish:
-    # 只处理"发布文章"表单提交的工单（表单正文必含 "### 游戏名" 标题）
-    if: contains(github.event.issue.body, '### 游戏名')
+    # ⚠️ 只处理「发布文章」表单提交的工单（正文必含 "### 游戏名"），
+    #    且**必须是仓库自己人**开的：OWNER / MEMBER / COLLABORATOR。
+    if: |
+      contains(github.event.issue.body, '### 游戏名') &&
+      (github.event.issue.author_association == 'OWNER' ||
+       github.event.issue.author_association == 'MEMBER' ||
+       github.event.issue.author_association == 'COLLABORATOR')
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
+      # action 固定到 commit SHA（供应链加固）：tag 可以被上游改写，SHA 不会。
+      # 代价是上游发新版不会再自动生效，需要人工升级 —— 升级时把 SHA 换成新 tag 对应的即可。
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4
         with:
-          node-version: 20
+          ref: main
 
-      - name: 安装 Markdown 转换库
-        run: npm install marked@12 --prefix .github/scripts --silent
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020  # v4
+        with:
+          node-version: '20'
+
+      # 依赖版本锁在 .github/scripts/package-lock.json 里（marked 12.0.2 / sanitize-html 2.17.7），
+      # 用 npm ci 按锁文件安装，不把浮动版本装进主分支。
+      - name: 安装依赖（按 lockfile，锁定版本）
+        run: npm ci --prefix .github/scripts --silent
 
       - name: 解析工单并生成文章
         env:
@@ -33,13 +59,35 @@ jobs:
       - name: 生成独立攻略页并重建 sitemap
         run: node scripts/build-articles.js
 
+      # 用 git add -A 而不是列举路径：原来只加了 article/ 等少数几个，
+      # 漏了 guides/（子目录）、game/、js/search-index.js、gift*.html、news*.html，
+      # 导致每次工单发文后游戏页的「相关攻略」和站内搜索索引都不更新。
+      # .github/scripts/node_modules 已被 .gitignore 的 node_modules/ 规则忽略，不会误提交。
       - name: 提交并推送（触发网站自动部署）
         run: |
           git config user.name "gamehub-bot"
           git config user.email "actions@github.com"
-          git add data/articles.js sitemap.xml article/ scripts/ index.html guides.html games.html 404.html
+          git add -A
+          if git diff --cached --quiet; then
+            echo "✔ 没有文件变化（重复发布同一工单），正常退出，不报错"
+            exit 0
+          fi
           git commit -m "发文：${ARTICLE_TITLE}"
-          git push
+          ok=0
+          for i in 1 2 3; do
+            echo "第 $i 次尝试：先 rebase 再 push"
+            if ! git pull --rebase origin main; then
+              git rebase --abort || true
+              sleep 5
+              continue
+            fi
+            if git push; then ok=1; break; fi
+            sleep 5
+          done
+          if [ "$ok" != "1" ]; then
+            echo "✖ 推送失败：3 次重试后仍未成功"
+            exit 1
+          fi
 
       - name: 评论并关闭工单
         env:
@@ -52,3 +100,15 @@ jobs:
           站内浏览：https://fmbly.com/#guide/${ARTICLE_ID}
           约 2 分钟后可在网站看到。"
           gh issue close "$ISSUE_NUM"
+
+      # 失败时在工单里说明原因（校验不通过、构建失败、推送失败都算），
+      # 比原来「job 静默失败、工单没人管」好排查。工单不自动关闭，留着改完重发。
+      - name: 失败时回复工单说明原因
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUM: ${{ github.event.issue.number }}
+        run: |
+          REASON="${PUBLISH_ERROR:-发布流程执行失败（可能是构建或推送环节），请查看 Actions 日志。}"
+          gh issue comment "$ISSUE_NUM" --body "❌ 这篇没有发布成功，原因：${REASON}
+          工单保持打开，按上面的原因修改后重新提交一份即可。" || true

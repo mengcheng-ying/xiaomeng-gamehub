@@ -23,6 +23,7 @@
  */
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const ROOT = path.resolve(__dirname, '..');
 const SITE = 'https://fmbly.com';
@@ -788,11 +789,78 @@ fs.mkdirSync(GAME_DIR, { recursive: true });
 
 const sitemapUrls = [];
 let writtenCount = 0;
+
+/* ===== 4.5 sitemap lastmod 真实化（2026-09-29 加） =====
+   问题：改动前，sitemap 里绝大多数 URL 的 lastmod 一律写 TODAY（本文件里就有 12 处），
+   外加 publish-article.js 还会把 sitemap 里全部 lastmod 批量改成当天 —— 等于每天宣告
+   全站更新。搜索引擎只在 lastmod「一贯准确」时才采信它，天天变等于让它彻底失效。
+
+   做法：按**输出文件内容的 SHA-256** 判断页面是否真的变了。
+     - 哈希没变   → 沿用上次记录的日期，不动
+     - 哈希变了   → 记成当天
+     - 第一次见到 → 优先沿用「现有 sitemap.xml 里已发布的日期」（避免这套机制第一次
+                    上线时，把全部 69 条一次性标成"今天更新"）；旧 sitemap 里也没有
+                    才用当天。
+
+   状态存在 .github/sitemap-lastmod.json，随构建产物一起提交（rebuild / publish 都是
+   git add -A，会自动带上）。
+
+   ⚠️ 这套机制成立的前提（已核对）：页面 HTML 里没有注入构建日期，图片版本号
+   ASSET_VERSION 是手写常量 —— 所以内容哈希是稳定的。若哪天改成"每次构建写当天日期"，
+   哈希就会天天变、lastmod 又退回失真状态，等于白做。 */
+const LASTMOD_STATE = path.join(ROOT, '.github', 'sitemap-lastmod.json');
+let lastmodState = {};
+try {
+  lastmodState = JSON.parse(fs.readFileSync(LASTMOD_STATE, 'utf8')).pages || {};
+} catch (e) { lastmodState = {}; }
+
+/** 现有 sitemap 里每个 URL 已发布的 lastmod，用作"第一次见到这个页面"时的种子 */
+const publishedLastmod = {};
+try {
+  const oldXml = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
+  for (const m of oldXml.matchAll(/<loc>([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g)) {
+    publishedLastmod[m[1].trim()] = m[2].trim();
+  }
+} catch (e) { /* 首次生成，没有旧 sitemap 可作种子 */ }
+
+const nextLastmodState = {};
+let lastmodKept = 0, lastmodUpdated = 0;
+
+/** 站点 URL → 仓库内相对文件路径：'/'→index.html、'/games'→games.html、'/game/1'→game/1.html */
+function relOfUrl(loc) {
+  const p = String(loc).startsWith(SITE) ? String(loc).slice(SITE.length) : String(loc);
+  const clean = p.replace(/^\//, '');
+  if (!clean) return 'index.html';
+  return clean.endsWith('.html') ? clean : clean + '.html';
+}
+
+/** 记一次页面写盘：算内容哈希、定这次该给这个页面什么 lastmod */
+function computeLastmod(rel) {
+  const buf = fs.readFileSync(path.join(ROOT, rel));
+  const h = crypto.createHash('sha256').update(buf).digest('hex').slice(0, 16);
+  const prev = lastmodState[rel];
+  const url = SITE + '/' + (rel === 'index.html' ? '' : rel.replace(/\.html$/, ''));
+  let d;
+  if (prev && prev.h === h) {
+    d = prev.d;                     // 内容没变：沿用上次的日期
+    lastmodKept++;
+  } else if (prev) {
+    d = TODAY;                      // 内容变了：记当天
+    lastmodUpdated++;
+  } else {
+    d = publishedLastmod[url] || TODAY;   // 第一次见到：沿用旧 sitemap 的日期，没有才用当天
+    lastmodUpdated++;
+  }
+  nextLastmodState[rel] = { h: h, d: d };
+  return d;
+}
+
 function writeFile(rel, content) {
   const full = path.join(ROOT, rel);
   fs.mkdirSync(path.dirname(full), { recursive: true });   // 公告独立页在 news/<专区>/ 下，需逐级建目录
   fs.writeFileSync(full, content);
   writtenCount++;
+  computeLastmod(rel);        // 记录哈希，决定该页面这次进 sitemap 的 lastmod
 }
 
 // ===== 5. 生成每篇攻略页面 =====
@@ -2189,7 +2257,8 @@ const HOME_LD_END = '<!-- HOME-LD:END -->';
   }
 }
 
-fs.writeFileSync(path.join(ROOT, indexRel), indexSrc);
+// 走统一的 writeFile 入口：首页也要记内容哈希，否则它的 lastmod 永远拿不到真实日期
+writeFile(indexRel, indexSrc);
 
 // ===== 11. 重建 sitemap.xml =====
 /* 2026-09-28：只提交「有实质内容」的页面。
@@ -2197,13 +2266,25 @@ fs.writeFileSync(path.join(ROOT, indexRel), indexSrc);
    交给搜索引擎会拉低整站质量评估分（百度尤其看重这一点）。所以按有无内容动态
    决定是否收录：等第一篇文章发布后，/guides 会自动回到 sitemap，无需人工干预。
    /news 同理，它由第 6.5 段的资讯分支自带收录，没有资讯时天然不会出现。 */
-const sitemapItems = [
+const rawSitemapItems = [
   { loc: SITE + '/', lastmod: TODAY, priority: '1.0', changefreq: 'daily' },
   { loc: SITE + '/games', lastmod: TODAY, priority: '0.9', changefreq: 'weekly' },
   ...(articles.length ? [{ loc: SITE + '/guides', lastmod: TODAY, priority: '0.9', changefreq: 'weekly' }] : []),
   ...sitemapUrls.map(it => ({ loc: it.loc, lastmod: it.lastmod, priority: it.priority, changefreq: 'weekly' }))
 ];
 if (!articles.length) console.log('ℹ️  攻略数为 0 → /guides 本次不提交 sitemap（有内容后自动恢复）');
+
+/* lastmod 一律以「该页面对应输出文件的内容哈希」为准（见第 4.5 段）。
+   上面那些 lastmod: TODAY / a.date 只作为兜底：找不到对应文件时（例如页面不由本脚本
+   生成）才沿用原值，避免漏掉条目。 */
+let lastmodMissing = 0;
+const sitemapItems = rawSitemapItems.map(it => {
+  const rel = relOfUrl(it.loc);
+  const rec = nextLastmodState[rel];
+  if (!rec) { lastmodMissing++; return it; }
+  return Object.assign({}, it, { lastmod: rec.d });
+});
+if (lastmodMissing) console.log('⚠️  有 ' + lastmodMissing + ' 条 URL 没找到对应输出文件，lastmod 沿用原值');
 sitemapItems.sort((a, b) => {
   if (a.loc === SITE + '/') return -1;
   if (b.loc === SITE + '/') return 1;
@@ -2224,3 +2305,14 @@ ${sitemapItems.map(it => `  <url>
 fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), sitemap);
 console.log('✅ sitemap.xml 已重建，共 ' + sitemapItems.length + ' 条可索引 URL');
 console.log('   本次写入 ' + writtenCount + ' 个页面文件 + 1 个 sitemap');
+console.log('   sitemap lastmod：沿用上次日期 ' + lastmodKept + ' 条，记为 ' + TODAY + ' 的 ' + lastmodUpdated + ' 条');
+
+/* 落盘 lastmod 状态（页面哈希 → 日期）。
+   只在 CI 里写：本地跑构建不该改动这个文件 —— 本地工作副本可能不是最新的，
+   写进去会把 CI 记录的真实日期覆盖成"由旧内容算出的哈希"，反而让 lastmod 乱跳。
+   CI 里由 rebuild / publish 的 git add -A 一并提交。 */
+if (process.env.GITHUB_ACTIONS) {
+  fs.writeFileSync(LASTMOD_STATE, JSON.stringify({ pages: nextLastmodState }, null, 2) + '\n');
+} else {
+  console.log('   （本地运行，未写 .github/sitemap-lastmod.json）');
+}

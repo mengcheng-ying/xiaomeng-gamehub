@@ -18,10 +18,23 @@
  *   - ⚠️ 已成功推送过的 URL **不会被再推第二次**（百度明确说高频重复提交会拉低站点评级）
  *   - 逐条推送，遇到配额上限立即停止，把当天剩余配额用在真正没推过的 URL 上
  *
+ * 2026-09-30 加：--new-today（「发布即推」专用，与 baidu-push.yml 的「两条道」配套）
+ *   百度配额是「每天 10 条」的硬上限。以前任何一次内容更新都会从积压队列里取走
+ *   最多 10 条 —— 如果上午那次小更新把当天额度花在还旧债上，下午新发的文章当天
+ *   就一条都推不进去、要等到第二天，而新内容恰恰最需要抢时效。故拆成两条道：
+ *     发布即推（workflow_run）→ 带 --new-today，只推 lastmod 是今天的页面（通常 1~3 条）
+ *     定时任务（schedule）    → 不带该参数，负责还历史积压，每次最多 10 条
+ *   判定依据是 sitemap 里的 lastmod：新页面首次写盘时 lastmod 即当天
+ *   （见 build-articles.js 第 4.5 段），积压的老页面 lastmod 停在旧日期，
+ *   所以不会被「发布即推」抢走额度。日期统一用 UTC，与本脚本记录已推日期的口径、
+ *   以及构建脚本 TODAY 的口径一致；北京时间 00:00~08:00 发的页面当天不走这条道，
+ *   由 13:23 那次定时补上（每天仍有 10 条额度可用，不会漏）。
+ *
  * 用法：
  *   node scripts/baidu-push-priority.js --dry        # 只打印计划与进度，不消耗配额
  *   node scripts/baidu-push-priority.js              # 默认最多推 10 条
  *   node scripts/baidu-push-priority.js --max=5      # 自定义单次上限
+ *   node scripts/baidu-push-priority.js --new-today  # 只推今天新产生的页面（发布即推用）
  *
  * token 来源：环境变量 BAIDU_TOKEN 或 BAIDU_PUSH_TOKEN
  *   ⚠️ site= 参数绝不能 URL 编码（编码后百度返回 400 site init fail）
@@ -46,7 +59,14 @@ process.argv.slice(2).forEach((a) => {
   if (m) argv[m[1]] = m[2] === undefined ? true : m[2];
 });
 const DRY = !!argv.dry;
-const MAX = argv.max ? Math.max(1, parseInt(argv.max, 10) || 10) : 10;
+/* 只推「今天新产生的页面」——给「发布即推」用，避免把当天的 10 条额度花在历史积压上 */
+const NEW_TODAY = !!argv['new-today'];
+/* 日期口径：与 build-articles.js 的 TODAY、以及本脚本记录已推日期一致（都是 UTC 日期） */
+const TODAY = new Date().toISOString().slice(0, 10);
+/* 单次上限：默认 10（与百度每日配额量级匹配），最多 50。
+   上限的意义是别一次把配额和日志撑爆；非数字（含空、带命令的字符串）一律回退 10。 */
+const MAX_PARSED = argv.max ? parseInt(argv.max, 10) : 10;
+const MAX = Math.max(1, Math.min(50, Number.isFinite(MAX_PARSED) ? MAX_PARSED : 10));
 
 if (!TOKEN && !DRY) {
   console.log('⏭ 未配置 BAIDU_TOKEN / BAIDU_PUSH_TOKEN，跳过本次推送。');
@@ -59,6 +79,11 @@ if (!fs.existsSync(SITEMAP)) {
   process.exit(1);
 }
 const xml = fs.readFileSync(SITEMAP, 'utf8');
+/* sitemap 里每个 URL 的 lastmod（只取日期部分），供 --new-today 判定「今天新产生的页面」 */
+const lastmodOf = {};
+for (const m of xml.matchAll(/<loc>([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g)) {
+  lastmodOf[m[1].trim()] = m[2].trim().slice(0, 10);
+}
 const all = SCOPE.sitemapUrls(xml);
 const targets = SCOPE.targetsFromSitemap(xml);
 const excluded = SCOPE.excludedFromSitemap(xml);
@@ -74,7 +99,8 @@ try {
 } catch (e) { /* 首次运行（或本地镜像没有状态文件，属正常） */ }
 state.pushed = state.pushed || {};
 
-const todo = targets.filter((u) => !state.pushed[u]);
+const backlog = targets.filter((u) => !state.pushed[u]);
+const todo = NEW_TODAY ? backlog.filter((u) => lastmodOf[u] === TODAY) : backlog;
 const batch = todo.slice(0, MAX);
 const done = targets.filter((u) => state.pushed[u]).length;
 
@@ -96,8 +122,12 @@ const countLabel = { 0: '首页', 1: '攻略', 2: '攻略', 3: '礼包', 4: '游
 targets.forEach((u) => { counts[countLabel[SCOPE.priority(u)] || '攻略']++; });
 console.log('范围内构成：' + Object.entries(counts).map(([k, v]) => k + ' ' + v).join(' / '));
 console.log('');
-console.log('进度：已推送 ' + done + ' / ' + targets.length + ' 条，剩余 ' + todo.length + ' 条'
-  + (todo.length ? '（按每天 10 条约 ' + Math.ceil(todo.length / 10) + ' 天推完）' : ''));
+console.log('进度：已推送 ' + done + ' / ' + targets.length + ' 条，仍有 ' + backlog.length + ' 条从未推送过'
+  + (backlog.length ? '（按每天 10 条约 ' + Math.ceil(backlog.length / 10) + ' 天推完）' : ''));
+if (NEW_TODAY) {
+  console.log('模式：只推「今天（' + TODAY + ' UTC）新产生的页面」——候选 ' + todo.length + ' 条'
+    + '，另有 ' + (backlog.length - todo.length) + ' 条历史积压留给每日定时任务（不占当天额度）');
+}
 console.log('本次计划推送：' + batch.length + ' 条（上限 ' + MAX + '）' + (DRY ? '  [DRY RUN，不会真的发送]' : ''));
 console.log('');
 batch.forEach((u, i) => console.log('  ' + (i + 1) + '. ' + u));
@@ -110,9 +140,45 @@ if (DRY) {
   process.exit(0);
 }
 if (!batch.length) {
-  console.log('\n✅ 推送范围内所有 URL 都已推送过一轮。');
+  if (NEW_TODAY && backlog.length) {
+    console.log('\n✅ 今天没有新产生的页面需要推送；' + backlog.length + ' 条历史积压留给每日定时任务（当天额度不被占用，留给新内容）。');
+  } else {
+    console.log('\n✅ 推送范围内所有 URL 都已推送过一轮。');
+  }
   process.exit(0);
 }
+
+// ---------- 并发保护（2026-09-29 加）----------
+/* 状态文件是「读 → 推 → 写」三段式：两个实例同时跑会**双推同一批 URL**，
+   而且后写的那个会把另一个的成果覆盖掉（状态回退）。
+   CI 里由 workflow 的 concurrency: main-writer 串行化，但手动/本地跑没有这层保护，
+   所以脚本自己也上一把锁。锁超过 10 分钟视为进程被 kill 留下的陈旧锁，自动接管。 */
+const LOCK = path.join(ROOT, '.github', 'baidu-push.lock');
+const LOCK_STALE_MS = 10 * 60 * 1000;
+
+function acquireLock() {
+  if (DRY) return true;                    // 演练不写状态文件，不需要锁
+  try {
+    const st = fs.statSync(LOCK);
+    if (Date.now() - st.mtimeMs > LOCK_STALE_MS) {
+      console.log('⚠️  发现超过 10 分钟的陈旧锁，接管并继续。');
+      fs.unlinkSync(LOCK);
+    } else {
+      return false;
+    }
+  } catch (e) { /* 没有锁文件 = 正常，继续往下抢 */ }
+  try {
+    fs.writeFileSync(LOCK, String(process.pid) + ' ' + new Date().toISOString(), { flag: 'wx' });  // wx = 原子独占创建
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+function releaseLock() {
+  if (DRY) return;
+  try { fs.unlinkSync(LOCK); } catch (e) { /* 已不存在 */ }
+}
+process.on('exit', releaseLock);
 
 // ---------- 推送 ----------
 const ENDPOINT = 'http://data.zz.baidu.com/urls?site=' + SITE + '&token=' + TOKEN;
@@ -143,6 +209,12 @@ function pushOne(url) {
   let ok = 0, quotaHit = false;
   const failReasons = {};
   const newlyPushed = [];
+
+  if (!acquireLock()) {
+    console.log('⏭ 已有另一次推送在运行（.github/baidu-push.lock 存在），本次直接跳过：');
+    console.log('   状态文件是「读-推-写」，两个实例同时跑会双推同一批 URL、并互相覆盖状态文件。');
+    process.exit(0);
+  }
 
   for (let i = 0; i < batch.length; i++) {
     const url = batch[i];
@@ -193,6 +265,7 @@ function pushOne(url) {
     errors: failReasons
   };
   fs.writeFileSync(STATE, JSON.stringify(state, null, 2), 'utf8');
+  releaseLock();
 
   const doneNow = targets.filter((u) => state.pushed[u]).length;
   console.log('\n========== 汇总 ==========');

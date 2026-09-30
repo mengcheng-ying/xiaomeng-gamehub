@@ -46,3 +46,44 @@
 
 /robots.txt
   Cache-Control: public, max-age=1800
+
+# ══════════════════════════════════════════════════════════════
+# 源码与上传文件：不让搜索引擎收录（2026-09-29 加）
+#
+# 背景：Cloudflare Pages 把仓库根目录**原样发布**，所以下面这些都能被
+#       https://fmbly.com/... 直接下载（2026-09-29 线上实测：/data/articles.js、
+#       /scripts/build-articles.js、/LINKS.md、/.baseline-links.tsv 全部返回 200）：
+#         /data/*        站点数据（文章、游戏、礼包、资讯）
+#         /scripts/*     构建脚本
+#         /.uploads/*    上传的素材（含被误提交进仓库的 docx/图片）
+#         /.baseline-*   改动核对用的文件清单
+#         /LINKS.md      内部文档
+#
+# 做法：只加 X-Robots-Tag: noindex。
+#   ⚠️ 刻意**不在 robots.txt 里 Disallow** —— 爬虫一旦被 robots 禁止抓取，就读不到
+#      这个 noindex 头，已经收录的条目反而清不掉。要"移除收录"必须让它能抓、抓到 noindex。
+#      只有永远不需要被任何爬虫访问的（如 .baseline-*）才适合 Disallow + noindex 双保险。
+#
+# ⚠️ 边界说明：这只解决"别出现在搜索结果里"，**解决不了"文件本身公开"** ——
+#    本仓库是公开仓库，这些文件在 GitHub 上本来就人人可读。根因治理只有两条：
+#    ① 只部署站点文件（改 Pages 的构建输出目录）；② 仓库转私有。都是单独的事，不在本次改动内。
+# ══════════════════════════════════════════════════════════════
+/data/*
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: public, max-age=300
+
+/scripts/*
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: public, max-age=300
+
+/.uploads/*
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: public, max-age=300
+
+/.baseline-*
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: public, max-age=300
+
+/LINKS.md
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: public, max-age=300

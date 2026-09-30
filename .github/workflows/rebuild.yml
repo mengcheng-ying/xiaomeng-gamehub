@@ -12,7 +12,9 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: site-rebuild
+  # 与「工单发布文章」「百度推送」共用 main-writer 锁：三者都要往 main 提交，
+  # 串行执行避免 push 互相踩（原来这里单独用 site-rebuild 组，锁不住另外两个）。
+  group: main-writer
   cancel-in-progress: false
 
 permissions:
@@ -21,19 +23,23 @@ permissions:
 jobs:
   rebuild:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      # action 固定到 commit SHA（供应链加固），升级时换对应 tag 的 SHA 即可
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020  # v4
         with:
           node-version: 20
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5
         with:
           python-version: '3.12'
 
-      - name: 安装 Pillow（图片压缩依赖）
-        run: pip install --quiet pillow
+      # 锁死版本：原来是不带版本的 pip install pillow，每次构建都可能装上不同的最新版，
+      # 图片压缩是可复现的产物，不该随上游发版而变。12.3.0 支持 Python >=3.10，含 cp312 wheel。
+      - name: 安装 Pillow（图片压缩依赖，版本锁定）
+        run: pip install --quiet pillow==12.3.0
 
       - name: 压缩图片体积（幂等，已达标的图片自动跳过）
         run: python scripts/optimize-images.py
@@ -57,4 +63,18 @@ jobs:
             exit 0
           fi
           git commit -m "build: 重建攻略静态页与索引页并压缩图片体积"
-          git push
+          ok=0
+          for i in 1 2 3; do
+            echo "第 $i 次尝试：先 rebase 再 push"
+            if ! git pull --rebase origin main; then
+              git rebase --abort || true
+              sleep 5
+              continue
+            fi
+            if git push; then ok=1; break; fi
+            sleep 5
+          done
+          if [ "$ok" != "1" ]; then
+            echo "✖ 推送失败：3 次重试后仍未成功"
+            exit 1
+          fi
