@@ -29,7 +29,17 @@
     "https://fmbly.com/guides/2": "2026-09-29",
     "https://fmbly.com/guides/6": "2026-09-29",
     "https://fmbly.com/guides/21": "2026-09-29",
-    "https://fmbly.com/guides": "2026-09-29"
+    "https://fmbly.com/guides": "2026-09-29",
+    "https://fmbly.com/gift/1": "2026-09-30",
+    "https://fmbly.com/gift/2": "2026-09-30",
+    "https://fmbly.com/gift/3": "2026-09-30",
+    "https://fmbly.com/gift/8": "2026-09-30",
+    "https://fmbly.com/gift/19": "2026-09-30",
+    "https://fmbly.com/gift/41": "2026-09-30",
+    "https://fmbly.com/gift/45": "2026-09-30",
+    "https://fmbly.com/gift/46": "2026-09-30",
+    "https://fmbly.com/gift/47": "2026-09-30",
+    "https://fmbly.com/gift": "2026-09-30"
   },
   "history": [
     {
@@ -76,11 +86,26 @@
         "https://fmbly.com/guides/21",
         "https://fmbly.com/guides"
       ]
+    },
+    {
+      "at": "2026-09-30T02:14:39.398Z",
+      "urls": [
+        "https://fmbly.com/gift/1",
+        "https://fmbly.com/gift/2",
+        "https://fmbly.com/gift/3",
+        "https://fmbly.com/gift/8",
+        "https://fmbly.com/gift/19",
+        "https://fmbly.com/gift/41",
+        "https://fmbly.com/gift/45",
+        "https://fmbly.com/gift/46",
+        "https://fmbly.com/gift/47",
+        "https://fmbly.com/gift"
+      ]
     }
   ],
-  "lastRun": "2026-09-29T06:16:54.505Z",
+  "lastRun": "2026-09-30T02:14:39.398Z",
   "lastResult": {
-    "at": "2026-09-29T06:16:54.505Z",
+    "at": "2026-09-30T02:14:39.398Z",
     "attempted": 10,
     "success": 10,
     "outcome": "pushed",
