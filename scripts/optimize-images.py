@@ -92,10 +92,11 @@ def main():
         print('\n所有图片都已在目标尺寸内，无需处理。')
 
     # 轮播首屏相关图片的合计体积（用于人工核对）
-    carousel = ['jizhan_cover.jpg', 'rxjianghu2_cover.jpg',
+    # ⚠️ 这份清单要跟 index.html 里的 SLIDES 保持一致（顺序无所谓，漏一个就不准）
+    carousel = ['hero/hero_jingling.webp', 'jizhan_cover.jpg', 'rxjianghu2_cover.jpg',
                 'hero/hero_longzhigu_hd.webp', 'hero/hero_wulin.webp',
                 'hero/hero_moxiangqing.webp', 'hero/hero_rongyao.webp',
-                'hero/hero_xingchenbian.webp', 'hero/hero_qiannian.webp']
+                'hero/hero_xingchenbian.webp']
     total = sum(kb(IMG / c) for c in carousel if (IMG / c).is_file())
     print('轮播 8 张图当前合计：%.1f KB' % total)
 
