@@ -138,12 +138,12 @@
       ]
     }
   ],
-  "lastRun": "2026-10-02T11:09:29.179Z",
+  "lastRun": "2026-10-02T14:08:53.928Z",
   "lastResult": {
-    "at": "2026-10-02T11:09:29.179Z",
-    "attempted": 10,
-    "success": 10,
-    "outcome": "pushed",
+    "at": "2026-10-02T14:08:53.928Z",
+    "attempted": 5,
+    "success": 0,
+    "outcome": "over_quota",
     "errors": {}
   }
 }
