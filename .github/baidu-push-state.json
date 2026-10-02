@@ -49,7 +49,17 @@
     "https://fmbly.com/game/31": "2026-10-01",
     "https://fmbly.com/game/32": "2026-10-01",
     "https://fmbly.com/game/33": "2026-10-01",
-    "https://fmbly.com/game/34": "2026-10-01"
+    "https://fmbly.com/game/34": "2026-10-01",
+    "https://fmbly.com/gift/48": "2026-10-02",
+    "https://fmbly.com/game/35": "2026-10-02",
+    "https://fmbly.com/game/36": "2026-10-02",
+    "https://fmbly.com/game/37": "2026-10-02",
+    "https://fmbly.com/game/38": "2026-10-02",
+    "https://fmbly.com/game/39": "2026-10-02",
+    "https://fmbly.com/game/40": "2026-10-02",
+    "https://fmbly.com/game/41": "2026-10-02",
+    "https://fmbly.com/game/42": "2026-10-02",
+    "https://fmbly.com/game/43": "2026-10-02"
   },
   "history": [
     {
@@ -111,14 +121,29 @@
         "https://fmbly.com/gift/47",
         "https://fmbly.com/gift"
       ]
+    },
+    {
+      "at": "2026-10-02T11:09:29.179Z",
+      "urls": [
+        "https://fmbly.com/gift/48",
+        "https://fmbly.com/game/35",
+        "https://fmbly.com/game/36",
+        "https://fmbly.com/game/37",
+        "https://fmbly.com/game/38",
+        "https://fmbly.com/game/39",
+        "https://fmbly.com/game/40",
+        "https://fmbly.com/game/41",
+        "https://fmbly.com/game/42",
+        "https://fmbly.com/game/43"
+      ]
     }
   ],
-  "lastRun": "2026-10-01T14:46:33.692Z",
+  "lastRun": "2026-10-02T11:09:29.179Z",
   "lastResult": {
-    "at": "2026-10-01T14:46:33.692Z",
+    "at": "2026-10-02T11:09:29.179Z",
     "attempted": 10,
-    "success": 0,
-    "outcome": "over_quota",
+    "success": 10,
+    "outcome": "pushed",
     "errors": {}
   }
 }
