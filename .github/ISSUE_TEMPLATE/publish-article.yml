@@ -54,6 +54,10 @@ body:
         - 金装裁决
         - 屠龙决战沙城：传奇三光通版
         - 热血传说：复古传奇
+        - 热血江湖2.0
+        - 机战：钢铁巨舰
+        - 屠龙世界：再战沙巴克
+        - 精灵永恒
     validations:
       required: true
   - type: dropdown
