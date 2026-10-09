@@ -91,10 +91,46 @@ const guideExtra = loadJsObjectSafe('data/guide-extra.js', 'GUIDE_EXTRA');
 const guideFaq = loadJsObjectSafe('data/guide-faq.js', 'GUIDE_FAQ');
 // 游戏页补充资料（可选）：{ 游戏id: { facts:[{k,v}], intro:'…', highlights:['…'] } }
 const gameExtra = loadJsObjectSafe('data/game-extra.js', 'GAME_EXTRA');
-/* 各游戏「官方网站」内容（可选，2026-10-09 由原游戏子域名官网合并而来）：
-   { 游戏id: { slug, kv, kvSlogan, features:[…], group:{title,items:[…]}, news:[…] } }
-   只有原官网存在的那几款有数据，其余游戏照常渲染。 */
-const officialData = loadJsObjectSafe('data/official.js', 'OFFICIAL_DATA');
+/* ===== 游戏「官方网站」（2026-10-09）=====
+   原来挂在 fmbly.com 子域名上的 7 个游戏官网已整体并入本站 /official/<slug>/（原文件原样搬运）。
+   从此这些游戏的入口一律直接指向官网；/game/<id> 只保留一个跳转页，老链接不失效。
+   另外 37 款没有独立官网的游戏不受影响，仍走 /game/<id>。 */
+const OFFICIAL_SITES = {
+  46: 'jizhan',           // 机战：钢铁巨舰
+  1: 'longzhigu',         // 龙之谷启程
+  45: 'rexuejianghu2',    // 热血江湖2.0
+  6: 'rongyao',           // 荣耀出征卡点服
+  2: 'moxiangqing',       // 墨香情
+  21: 'wulinwaizhuan',    // 武林外传：十年之约
+  36: 'xiuxianjiazu2'     // 修仙家族模拟器2
+};
+const officialPath = (id) => (OFFICIAL_SITES[id] ? '/official/' + OFFICIAL_SITES[id] + '/' : '');
+/** 某个游戏的入口地址：有官网就进官网，否则进站内游戏页 */
+const gameUrl = (id) => officialPath(id) || '/game/' + id;
+/** /game/<id> 的跳转页（有官网时用）；保持极简，只负责把人和爬虫送到官网 */
+function redirectPage(name, target) {
+  return `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>正在进入《${name}》官方网站</title>
+<link rel="canonical" href="${SITE}${target}">
+<meta http-equiv="refresh" content="0; url=${target}">
+<style>body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
+background:#0b101a;color:#eef2f7;font:15px/1.7 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;text-align:center}
+a{color:#5b8cff}</style>
+</head>
+<body>
+  <div>
+    <p>正在进入《${esc(name)}》官方网站…</p>
+    <p><a href="${target}">如果没有自动跳转，点这里</a></p>
+  </div>
+  <script>location.replace(${JSON.stringify(target)} + location.hash);</script>
+</body>
+</html>
+`;
+}
 // 官方动态（由 scripts/fetch-official-news.js 自动同步，来源：三九互娱官方专区）
 // 结构：{ generatedAt, games: { 游戏id: { official, site, newsUrl, items:[{date,category,title,url,key,summary}] } } }
 const officialNews = loadJsObjectSafe('data/official-news.js', 'OFFICIAL_NEWS');
@@ -344,24 +380,6 @@ const BASE_CSS = `
   .facts th,.facts td{border:1px solid var(--line);padding:11px 14px;text-align:left}
   .facts th{background:#1c2333;width:118px;font-weight:600;color:var(--ink)}
   .facts td{color:var(--ink2)}
-  /* ===== 游戏「官方网站」区块（2026-10-09 由原游戏子域名官网合并而来） =====
-     只有 data/official.js 里配了内容的游戏会渲染这些类名，其余游戏页不受影响。 */
-  .ogkv{position:relative;height:264px;border-radius:14px;overflow:hidden;margin:0 0 22px;
-    background-size:cover;background-position:center;border:1px solid var(--line)}
-  .ogkv::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,10,18,.88),rgba(6,10,18,.22))}
-  .ogkv-in{position:relative;z-index:1;height:100%;max-width:72%;display:flex;flex-direction:column;justify-content:center;gap:10px;padding:0 30px}
-  .ogkv-in p{margin:0;font-size:21px;font-weight:800;line-height:1.42;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.45)}
-  .ogkv-in span{align-self:flex-start;font-size:11px;letter-spacing:2.5px;color:#cfe0ff;
-    border:1px solid rgba(255,255,255,.38);border-radius:999px;padding:3px 11px}
-  .oggrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:30px}
-  .ogcard{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
-  .ogcard .pic img{display:block;width:100%;height:152px;object-fit:cover}
-  .ogcard .bd{padding:13px 15px}
-  .ogcard h3{margin:0 0 6px;font-size:15px;color:var(--ink)}
-  .ogcard p{margin:0;font-size:13px;line-height:1.68;color:var(--ink2)}
-  .ognews{list-style:none;margin:0 0 30px;padding:0}
-  .ognews li{padding:12px 15px;background:var(--card);border:1px solid var(--line);border-radius:10px;
-    margin-bottom:8px;font-size:13.5px;line-height:1.6;color:var(--ink)}
   .prose{font-size:16px;line-height:1.95;color:var(--ink2);margin-bottom:30px}
   .prose p{margin:0 0 16px}
   .hl{margin:0 0 30px;padding:0;list-style:none}
@@ -509,13 +527,6 @@ const BASE_CSS = `
     .body{font-size:16px}
     .body h2{font-size:19px}
     .nav{gap:14px}
-    /* 官网区块：手机端主视觉压矮、卡片改单列 */
-    .ogkv{height:196px}
-    .ogkv::after{background:linear-gradient(180deg,rgba(6,10,18,.55),rgba(6,10,18,.86))}
-    .ogkv-in{max-width:100%;padding:0 18px}
-    .ogkv-in p{font-size:17px}
-    .oggrid{grid-template-columns:1fr}
-    .ogcard .pic img{height:170px}
   }
 
   /* ===== 资讯中心：原创资讯图文卡片 ===== */
@@ -849,7 +860,7 @@ ${related.map(r => `  <a href="/article/${r.id}"><span class="cat">${esc(r.categ
   // 文末下载卡：有归属游戏时直达联运落地页（链接取 games.js 原值，与游戏页同款回退规则），
   // 无归属（综合/汇总文）时给「浏览全部游戏」出口，保证孤岛页也有站内出口。
   const ctaHtml = game ? `<div class="cta dlcard">
-    <a class="dlc-pic" href="/game/${game.id}"><img src="../${esc(game.cover)}" alt="${esc(game.name)}"${sizeAttrs(game.cover)} loading="lazy"></a>
+    <a class="dlc-pic" href="${gameUrl(game.id)}"><img src="../${esc(game.cover)}" alt="${esc(game.name)}"${sizeAttrs(game.cover)} loading="lazy"></a>
     <div class="dlc-info">
       <div class="dlc-t">🎮 ${esc(game.name)}</div>
       <p class="dlc-d">${esc((game.desc || '').replace(/\s+/g, ' ').slice(0, 72))}</p>
@@ -857,7 +868,7 @@ ${related.map(r => `  <a href="/article/${r.id}"><span class="cat">${esc(r.categ
         <a class="and" href="${esc(game.androidUrl ? game.androidUrl : game.url)}" target="_blank" rel="sponsored noopener noreferrer">安卓下载</a>
         ${!game.iosPending ? `<a class="ios" href="${esc(game.iosUrl ? game.iosUrl : game.url)}" target="_blank" rel="sponsored noopener noreferrer">苹果下载</a>` : ''}
       </div>
-      <a class="dlc-more" href="/game/${game.id}">查看《${esc(game.name)}》详情与全部攻略 →</a>
+      <a class="dlc-more" href="${gameUrl(game.id)}">查看《${esc(game.name)}》详情与全部攻略 →</a>
     </div>
   </div>` : `<div class="cta">
     <p>这篇攻略对你有帮助吗？站内还有多款怀旧手游与攻略，一次看全。</p>
@@ -868,7 +879,7 @@ ${related.map(r => `  <a href="/article/${r.id}"><span class="cat">${esc(r.categ
   const crumbs = [
     `<a href="/">首页</a>`,
     `<a href="/guides">攻略中心</a>`,
-    game ? `<a href="/game/${game.id}">${esc(game.name)}</a>` : ''
+    game ? `<a href="${gameUrl(game.id)}">${esc(game.name)}</a>` : ''
   ].filter(Boolean).join('<i>/</i>');
 
   const ldArticle = {
@@ -895,7 +906,7 @@ ${related.map(r => `  <a href="/article/${r.id}"><span class="cat">${esc(r.categ
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: '首页', item: SITE + '/' },
       { '@type': 'ListItem', position: 2, name: '攻略中心', item: SITE + '/guides' },
-      ...(game ? [{ '@type': 'ListItem', position: 3, name: game.name, item: SITE + '/game/' + game.id }] : [])
+      ...(game ? [{ '@type': 'ListItem', position: 3, name: game.name, item: SITE + gameUrl(game.id) }] : [])
     ]
   };
 
@@ -912,7 +923,7 @@ ${related.map(r => `  <a href="/article/${r.id}"><span class="cat">${esc(r.categ
     <div class="meta">
       <span>${esc(a.author || '小梦攻略组')}</span>
       <span>${esc(a.date || '')}</span>
-      ${game ? `<span><a href="/game/${game.id}">${esc(game.name)}</a></span>` : ''}
+      ${game ? `<span><a href="${gameUrl(game.id)}">${esc(game.name)}</a></span>` : ''}
     </div>
     ${cover ? `<img class="cover" src="${esc(cover)}" alt="${esc(a.title)}"${sizeAttrs(a.cover)} decoding="async" fetchpriority="high">` : ''}
     <div class="body">
@@ -943,7 +954,7 @@ articles.forEach(a => {
 });
 
 games.forEach((g) => {
-  const url = SITE + '/game/' + g.id;
+  const url = SITE + gameUrl(g.id);
   const ext = gameExtra[g.id] || {};
   const mine = (articlesByGame.get(g.id) || []).slice().sort((m, n) => String(n.date).localeCompare(String(m.date)));
 
@@ -1012,7 +1023,7 @@ ${mine.map(a => `  <a href="/article/${a.id}"><span class="cat">${esc(a.category
 
   const othersHtml = `<h2 class="sec-h">同类怀旧手游推荐</h2>
 <div class="tiles">
-${others.map(o => `  <a class="tile" href="/game/${o.id}">
+${others.map(o => `  <a class="tile" href="${gameUrl(o.id)}">
     <img src="../${esc(o.cover)}" alt="${esc(o.name)}" loading="lazy"${sizeAttrs(o.cover)}>
     <div class="bd"><div class="nm">${esc(o.name)}</div><div class="ds">${esc((o.desc || '').slice(0, 34))}</div></div>
   </a>`).join('\n')}
@@ -1070,38 +1081,15 @@ ${nzArc.items.slice(0, 8).map(it => `  <li>
     ]
   };
 
-  /* ===== 游戏「官方网站」区块（2026-10-09）
-     原 fmbly.com 下的 7 个游戏子域名官网作废，首页内容并进对应游戏页。
-     内容取自 data/official.js；没有配数据的游戏输出空串，页面与以前完全一致。 */
-  const og = officialData[g.id];
-  const ogCard = (it) => `    <div class="ogcard">
-${it.img ? `      <div class="pic"><img src="../${esc(assetUrl(it.img))}" alt="${esc(it.t)}" loading="lazy" decoding="async"></div>\n` : ''}      <div class="bd"><h3>${esc(it.t)}</h3><p>${esc(it.d)}</p></div>
-    </div>`;
-  const ogGroup = (group) => (group && group.items && group.items.length) ? `
-  <h2 class="sec-h">${esc(group.title || '更多特色')}</h2>
-  <div class="oggrid">
-${group.items.map(ogCard).join('\n')}
-  </div>` : '';
-  const ogHeroHtml = (og && og.kv) ? `
-  <div class="ogkv" style="background-image:url('../${esc(assetUrl(og.kv))}')">
-    <div class="ogkv-in">
-      <span>官方网站</span>
-      ${og.kvSlogan ? `<p>${esc(og.kvSlogan)}</p>` : ''}
-    </div>
-  </div>` : '';
-  const ogBodyHtml = og ? [
-    (og.features && og.features.length) ? `
-  <h2 class="sec-h">游戏特色</h2>
-  <div class="oggrid">
-${og.features.map(ogCard).join('\n')}
-  </div>` : '',
-    ogGroup(og.group),
-    (og.news && og.news.length) ? `
-  <h2 class="sec-h">官方公告</h2>
-  <ul class="ognews">
-${og.news.map(n => `    <li>${esc(n)}</li>`).join('\n')}
-  </ul>` : ''
-  ].join('') : '';
+  /* ===== 官网已并入本站的游戏：/game/<id> 只留跳转页（2026-10-09）=====
+     玩家点游戏应当直接进官网，而不是先落到整合站的详情页。
+     老链接（百度已收录的 /game/46 等）用跳转页接管，不产生死链。 */
+  const offPath = officialPath(g.id);
+  if (offPath) {
+    writeFile('game/' + g.id + '.html', redirectPage(g.name, offPath));
+    sitemapUrls.push({ loc: SITE + offPath, lastmod: TODAY, priority: '0.8' });
+    return;
+  }
 
   const html = head(g.name + '官方网站', desc, url, {
     ogType: 'article',
@@ -1109,7 +1097,6 @@ ${og.news.map(n => `    <li>${esc(n)}</li>`).join('\n')}
     ld: [ldGame, ldBreadcrumb]
   }) + `<main class="wrap">
   <nav class="crumb"><a href="/">首页</a><i>/</i><a href="/games">游戏大厅</a><i>/</i><span>${esc(g.name)}</span></nav>
-${ogHeroHtml}
   <div class="ghero">
     <div class="pic"><img src="../${esc(assetUrl(g.cover))}" alt="${esc(g.name)}"${sizeAttrs(g.cover)} decoding="async" fetchpriority="high"></div>
     <div class="info">
@@ -1130,7 +1117,6 @@ ${factsHtml}
   </table>
 
 ${introHtml}
-${ogBodyHtml}
 
 ${galleryHtml}
 
@@ -1402,7 +1388,7 @@ ${groups[c].map(it => `    <li>
 
   <h2 class="sec-h">这款游戏的其他内容</h2>
   <div class="lst">
-${a.gameIds.filter(id => gameById[id]).map(id => `    <a href="/game/${id}"><span class="cat">下载</span><span><span class="nm">《${esc(gameById[id].name)}》下载入口与攻略</span><span class="sm">${esc((gameById[id].desc || '').slice(0, 60))}</span></span></a>`).join('\n')}
+${a.gameIds.filter(id => gameById[id]).map(id => `    <a href="${gameUrl(id)}"><span class="cat">下载</span><span><span class="nm">《${esc(gameById[id].name)}》下载入口与攻略</span><span class="sm">${esc((gameById[id].desc || '').slice(0, 60))}</span></span></a>`).join('\n')}
     <a href="/news"><span class="cat">公告</span><span><span class="nm">全部游戏官方公告合集</span><span class="sm">按分类查看 ${archiveList.length} 款游戏的官方公告</span></span></a>
   </div>
 
@@ -1643,7 +1629,7 @@ ${giftCards}
     <img src="../${esc(assetUrl(g.cover))}" alt="${esc(g.gameName)}"${sizeAttrs(g.cover)}>
     <div>
       <h1 class="ttl">${esc(g.gameName)}礼包码</h1>
-      <p>${esc(g.tag || '限时礼包')} · 共 ${g.count} 个${g.periods ? ' · ' + esc(g.periods) : ''} · <a href="/game/${g.gameId}">下载与攻略</a></p>
+      <p>${esc(g.tag || '限时礼包')} · 共 ${g.count} 个${g.periods ? ' · ' + esc(g.periods) : ''} · <a href="${gameUrl(g.gameId)}">下载与攻略</a></p>
     </div>
   </div>
   <div class="gift-grid">
@@ -1651,7 +1637,7 @@ ${cardsHtml}
   </div>
   <div class="cta">
     <p>先领取礼包，再进入游戏页面查看下载入口与对应攻略。</p>
-    <a class="cta-btn" href="/game/${g.gameId}">查看 ${esc(g.gameName)}</a>
+    <a class="cta-btn" href="${gameUrl(g.gameId)}">查看 ${esc(g.gameName)}</a>
   </div>
 </main>${giftCopyScript}` + foot();
     writeFile('gift/' + g.gameId + '.html', head(
@@ -1885,7 +1871,7 @@ guideGroups.forEach((g) => {
     <img src="../${esc(assetUrl(g.cover))}" alt="${esc(g.name)}"${sizeAttrs(g.cover)}>
     <div>
       <h1 class="ttl">${esc(g.name)}攻略</h1>
-      <p>共 ${g.articles.length} 篇${g.gameId ? ` · <a href="/game/${g.gameId}">下载与游戏资料</a>` : ''}</p>
+      <p>共 ${g.articles.length} 篇${g.gameId ? ` · <a href="${gameUrl(g.gameId)}">下载与游戏资料</a>` : ''}</p>
     </div>
   </div>
   <div class="lst">
@@ -1953,7 +1939,7 @@ const searchGames = games.map(g => ({
   k: 'g',
   t: g.name,
   s: [g.category, g.year].filter(Boolean).join(' · '),
-  u: '/game/' + g.id,
+  u: gameUrl(g.id),
   g: '',
   c: g.cover ? assetUrl(g.cover) : ''
 }));
@@ -1981,7 +1967,7 @@ const gamesHtml = head(
       numberOfItems: sortedGames.length,
       itemListOrder: 'https://schema.org/ItemListOrderDescending',
       itemListElement: sortedGames.map((g, i) => ({
-        '@type': 'ListItem', position: i + 1, name: g.name, url: SITE + '/game/' + g.id
+        '@type': 'ListItem', position: i + 1, name: g.name, url: SITE + gameUrl(g.id)
       }))
     }
   ] }
@@ -1992,7 +1978,7 @@ const gamesHtml = head(
   <div class="grid">
 ${[...games].sort((a, b) => (b.heat || 0) - (a.heat || 0)).map(g => {
   const cnt = (byGame.get(g.id) || []).length;
-  return `    <a class="card" href="/game/${g.id}" id="g-${g.id}">
+  return `    <a class="card" href="${gameUrl(g.id)}" id="g-${g.id}">
       <img src="${esc(assetUrl(g.cover))}" alt="${esc(g.name)}" loading="lazy"${sizeAttrs(g.cover)}>
       <div class="bd">
         <div class="nm">${esc(g.name)}</div>
@@ -2116,7 +2102,7 @@ const seoBlock = `${SEO_START}
     <p><a href="/games">全部游戏（${games.length} 款）</a> · <a href="/guides">全部攻略</a></p>
     <h2>全部游戏（${games.length} 款）</h2>
     <ul>
-${sortedGames.map(g => `      <li><a href="/game/${g.id}">${esc(g.name)}</a></li>`).join('\n')}
+${sortedGames.map(g => `      <li><a href="${gameUrl(g.id)}">${esc(g.name)}</a></li>`).join('\n')}
     </ul>
 ${sortedArticles.length ? `    <h2>全部攻略</h2>
     <ul>
@@ -2154,7 +2140,7 @@ if (Array.isArray(inlineGames) && inlineGames.length) {
        首页 JS 渲染（renderGames）也早已不输出它 —— 只有这份「构建期预渲染」还在输出，
        导致爬虫和首屏看到的是带角标的版本、JS 接管后又消失（同一张卡片两副面孔）。
        故一并去掉，与 JS 渲染保持一致。 */
-    return '<a class="gcard" href="/game/' + g.id + '">' +
+    return '<a class="gcard" href="' + gameUrl(g.id) + '">' +
       '<div class="cv"><img src="' + assetUrl(g.cover) + '" alt="' + esc(g.name) + '" loading="lazy"></div>' +
       '<div class="bd"><div class="nm">' + esc(g.name) + '</div>' +
       '<div class="meta"><span class="score">★ ' + esc(g.sc) + '</span></div>' +
@@ -2253,7 +2239,7 @@ const HOME_LD_END = '<!-- HOME-LD:END -->';
       numberOfItems: sortedGames.length,
       itemListOrder: 'https://schema.org/ItemListOrderDescending',
       itemListElement: sortedGames.map((g, i) => ({
-        '@type': 'ListItem', position: i + 1, name: g.name, url: SITE + '/game/' + g.id
+        '@type': 'ListItem', position: i + 1, name: g.name, url: SITE + gameUrl(g.id)
       }))
     }
   ];
@@ -2314,4 +2300,20 @@ ${sitemapItems.map(it => `  <url>
 `;
 fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), sitemap);
 console.log('✅ sitemap.xml 已重建，共 ' + sitemapItems.length + ' 条可索引 URL');
+
+/* ===== 11b. 生成 _redirects（2026-10-09）=====
+   官网已并入本站的游戏，其旧地址 /game/<id> 用 301 永久跳转到对应官网。
+   同时 /game/<id>.html 也留了一份 HTML 跳转页（redirectPage 生成）——
+   两道保险：Cloudflare Pages 若对 _redirects 判定优先，访客拿到的是真 301；
+   即便静态文件优先，跳转页也会立刻把人送到官网，不会出现死链。
+   站点其它路径不受影响。 */
+const redirectLines = games
+  .filter(g => officialPath(g.id))
+  .map(g => '/game/' + g.id + '    ' + officialPath(g.id) + '    301');
+fs.writeFileSync(path.join(ROOT, '_redirects'),
+  '# 2026-10-09 由 scripts/build-articles.js 生成，请勿手改\n' +
+  '# 官网已并入本站的游戏：旧游戏页 301 到对应官网\n' +
+  redirectLines.join('\n') + '\n');
+console.log('✅ _redirects 已生成（' + redirectLines.length + ' 条 301）');
+
 console.log('   本次写入 ' + writtenCount + ' 个页面文件 + 1 个 sitemap');

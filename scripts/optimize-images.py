@@ -75,11 +75,11 @@ def main():
     if logo.is_file():
         targets.append((logo, LOGO_MAX_W, 'PNG', None))
 
-    # 2026-10-09 新增：原游戏子域名官网合并进来的图片（assets/images/official/**）。
-    # 这些是各游戏官网的主视觉与特色配图，原始宽度 1024~1896、单张最大 840KB，
-    # 不压的话一个游戏页要多下 2~3MB，又会把首屏拖过百度爬虫的渲染超时。
-    # 上面那些 glob 只扫 assets/images 顶层与 hero/，所以这里单独递归一遍。
-    official = IMG / 'official'
+    # 2026-10-09：原 7 个游戏子域名官网整体并入本站 /official/<slug>/**，
+    # 里面的主视觉/立绘/特色图原始宽度 960~1896、单张最大 840KB，
+    # 不压的话一个官网页要多下 4MB。上面的 glob 只扫 assets/images 顶层与 hero/，
+    # 这里对 official/ 递归一遍，规则口径与站内保持一致（宽 ≤960）。
+    official = ROOT / 'official'
     if official.is_dir():
         targets += [(p, COVER_MAX_W, 'JPEG', JPG_Q) for p in sorted(official.rglob('*.jpg'))]
         targets += [(p, COVER_MAX_W, 'JPEG', JPG_Q) for p in sorted(official.rglob('*.jpeg'))]

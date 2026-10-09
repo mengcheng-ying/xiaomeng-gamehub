@@ -161,24 +161,6 @@
   .facts th,.facts td{border:1px solid var(--line);padding:11px 14px;text-align:left}
   .facts th{background:#1c2333;width:118px;font-weight:600;color:var(--ink)}
   .facts td{color:var(--ink2)}
-  /* ===== 游戏「官方网站」区块（2026-10-09 由原游戏子域名官网合并而来） =====
-     只有 data/official.js 里配了内容的游戏会渲染这些类名，其余游戏页不受影响。 */
-  .ogkv{position:relative;height:264px;border-radius:14px;overflow:hidden;margin:0 0 22px;
-    background-size:cover;background-position:center;border:1px solid var(--line)}
-  .ogkv::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,10,18,.88),rgba(6,10,18,.22))}
-  .ogkv-in{position:relative;z-index:1;height:100%;max-width:72%;display:flex;flex-direction:column;justify-content:center;gap:10px;padding:0 30px}
-  .ogkv-in p{margin:0;font-size:21px;font-weight:800;line-height:1.42;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.45)}
-  .ogkv-in span{align-self:flex-start;font-size:11px;letter-spacing:2.5px;color:#cfe0ff;
-    border:1px solid rgba(255,255,255,.38);border-radius:999px;padding:3px 11px}
-  .oggrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:30px}
-  .ogcard{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
-  .ogcard .pic img{display:block;width:100%;height:152px;object-fit:cover}
-  .ogcard .bd{padding:13px 15px}
-  .ogcard h3{margin:0 0 6px;font-size:15px;color:var(--ink)}
-  .ogcard p{margin:0;font-size:13px;line-height:1.68;color:var(--ink2)}
-  .ognews{list-style:none;margin:0 0 30px;padding:0}
-  .ognews li{padding:12px 15px;background:var(--card);border:1px solid var(--line);border-radius:10px;
-    margin-bottom:8px;font-size:13.5px;line-height:1.6;color:var(--ink)}
   .prose{font-size:16px;line-height:1.95;color:var(--ink2);margin-bottom:30px}
   .prose p{margin:0 0 16px}
   .hl{margin:0 0 30px;padding:0;list-style:none}
@@ -326,13 +308,6 @@
     .body{font-size:16px}
     .body h2{font-size:19px}
     .nav{gap:14px}
-    /* 官网区块：手机端主视觉压矮、卡片改单列 */
-    .ogkv{height:196px}
-    .ogkv::after{background:linear-gradient(180deg,rgba(6,10,18,.55),rgba(6,10,18,.86))}
-    .ogkv-in{max-width:100%;padding:0 18px}
-    .ogkv-in p{font-size:17px}
-    .oggrid{grid-template-columns:1fr}
-    .ogcard .pic img{height:170px}
   }
 
   /* ===== 资讯中心：原创资讯图文卡片 ===== */
@@ -469,7 +444,7 @@
     <img src="../assets/images/moxiangqing_cover.jpg?v=20260928a" alt="墨香情" width="640" height="400">
     <div>
       <h1 class="ttl">墨香情礼包码</h1>
-      <p>礼包码 · 共 3 个 · <a href="/game/2">下载与攻略</a></p>
+      <p>礼包码 · 共 3 个 · <a href="/official/moxiangqing/">下载与攻略</a></p>
     </div>
   </div>
   <div class="gift-grid">
@@ -494,7 +469,7 @@
   </div>
   <div class="cta">
     <p>先领取礼包，再进入游戏页面查看下载入口与对应攻略。</p>
-    <a class="cta-btn" href="/game/2">查看 墨香情</a>
+    <a class="cta-btn" href="/official/moxiangqing/">查看 墨香情</a>
   </div>
 </main><script>
   (function(){

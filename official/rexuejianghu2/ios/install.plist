@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>metadata</key>
+			<dict>
+				<key>bundle-identifier</key>
+				<string>com.rxjhios.a4513303</string>
+				<key>bundle-version</key>
+				<string>1.1.1</string>
+				<key>kind</key>
+				<string>software</string>
+				<key>title</key>
+				<string>贰点零江湖</string>
+			</dict>
+			<key>assets</key>
+			<array>
+				<dict>
+					<key>kind</key>
+					<string>software-package</string>
+					<key>url</key>
+					<string>https://res-engine-rxyqcy.cyltc.com/package/rx/4510454/promote/4510454_4516185_22eaed0fb5c093bfb82498e703929a85.ipa?v=1788665710</string>
+				</dict>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>
