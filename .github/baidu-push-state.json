@@ -76,7 +76,17 @@
     "https://fmbly.com/article/12": "2026-10-08",
     "https://fmbly.com/article/13": "2026-10-08",
     "https://fmbly.com/article/14": "2026-10-08",
-    "https://fmbly.com/article/15": "2026-10-08"
+    "https://fmbly.com/article/15": "2026-10-08",
+    "https://fmbly.com/article/16": "2026-10-09",
+    "https://fmbly.com/guides/4": "2026-10-09",
+    "https://fmbly.com/guides/5": "2026-10-09",
+    "https://fmbly.com/guides/14": "2026-10-09",
+    "https://fmbly.com/guides/22": "2026-10-09",
+    "https://fmbly.com/guides/23": "2026-10-09",
+    "https://fmbly.com/guides/24": "2026-10-09",
+    "https://fmbly.com/guides/25": "2026-10-09",
+    "https://fmbly.com/guides/31": "2026-10-09",
+    "https://fmbly.com/guides/32": "2026-10-09"
   },
   "history": [
     {
@@ -185,14 +195,29 @@
         "https://fmbly.com/article/14",
         "https://fmbly.com/article/15"
       ]
+    },
+    {
+      "at": "2026-10-09T04:37:54.636Z",
+      "urls": [
+        "https://fmbly.com/article/16",
+        "https://fmbly.com/guides/4",
+        "https://fmbly.com/guides/5",
+        "https://fmbly.com/guides/14",
+        "https://fmbly.com/guides/22",
+        "https://fmbly.com/guides/23",
+        "https://fmbly.com/guides/24",
+        "https://fmbly.com/guides/25",
+        "https://fmbly.com/guides/31",
+        "https://fmbly.com/guides/32"
+      ]
     }
   ],
-  "lastRun": "2026-10-08T14:56:59.255Z",
+  "lastRun": "2026-10-09T04:37:54.636Z",
   "lastResult": {
-    "at": "2026-10-08T14:56:59.255Z",
+    "at": "2026-10-09T04:37:54.636Z",
     "attempted": 10,
-    "success": 0,
-    "outcome": "over_quota",
+    "success": 10,
+    "outcome": "pushed",
     "errors": {}
   }
 }

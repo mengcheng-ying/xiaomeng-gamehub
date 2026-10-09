@@ -51,6 +51,18 @@ on:
         default: false
         type: boolean
 
+# 2026-10-09：本工作流与「站点重建」抢推 main，状态文件丢过一次。
+#   新游戏上线那个 commit 同时触发了 rebuild 和本工作流；本工作流推完 10 条链接后
+#   要提交状态文件，rebuild 这时刚好把构建产物推上 main，于是本工作流被拒：
+#     ! [rejected]  main -> main (fetch first)
+#   本地那个 commit 随 runner 一起销毁 → 白推一天：状态文件仍停在旧记录，
+#   第二天会把同一批 URL 再推一遍，白白吃掉当天配额，新页面还得往后排。
+#   两道防线：① 与 rebuild 共用同一个 concurrency 组，两边串行，不再并行 push；
+#             ② 提交状态前先 rebase 一次，万一还有其它 push 插入也能自动跟上。
+concurrency:
+  group: site-rebuild
+  cancel-in-progress: false
+
 jobs:
   baidu-push:
     runs-on: ubuntu-latest
@@ -88,4 +100,6 @@ jobs:
             exit 0
           fi
           git commit -m "chore(baidu): 记录本次已推送 URL"
+          # 并发兜底：先把远端新提交收进来再推（正常被 concurrency 串行化后不会走到这一步）
+          git pull --rebase --autostash
           git push
