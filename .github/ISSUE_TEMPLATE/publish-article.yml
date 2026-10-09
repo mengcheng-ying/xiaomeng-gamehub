@@ -58,7 +58,7 @@ body:
         - 机战：钢铁巨舰
         - 屠龙世界：再战沙巴克
         - 精灵永恒
-        - 独步武林
+        - 独步武林2.0江湖
     validations:
       required: true
   - type: dropdown

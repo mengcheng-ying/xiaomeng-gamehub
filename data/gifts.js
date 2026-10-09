@@ -117,7 +117,7 @@ const GIFTS_DATA = [
   },
   {
     gameId: 49,
-    game: "独步武林",
+    game: "独步武林2.0江湖",
     tag: "礼包码",
     gifts: [
       { name: "成长礼包", code: "VIP666", items: "强化石*10、大培元丹*3、太极神丹*3、白银宝盒*1", period: "" },
