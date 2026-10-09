@@ -23,6 +23,7 @@
  */
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const ROOT = path.resolve(__dirname, '..');
 const SITE = 'https://fmbly.com';
@@ -2006,6 +2007,23 @@ function ensureIndexHooks() {
   if (!src.includes('.seo-crawl-links{')) {
     src = src.replace('</style>', INDEX_EXTRA_CSS + '</style>');
     notes.push('已补爬虫链接区样式');
+  }
+
+  /* 2026-10-09：站内搜索索引 js/search-index.js 之前是个「没有版本号的脚本」，
+     而 _headers 给 /js/* 设的是 7 天强缓存（改文件时手动改 ?v= 的那套约定，
+     对这份每次构建都重写的文件并不适用）—— 结果新上线的游戏在老访客浏览器里
+     最长 7 天搜不到，线上实测就是这么表现：首页/轮播/网格都有「独步武林2.0江湖」，
+     搜索框里搜「独步」却返回空。
+     这里改成按索引内容算内容哈希拼到 URL 上：索引一变，URL 就变，缓存立即失效；
+     内容没变时 URL 不变，缓存照旧命中，不浪费带宽。 */
+  const siPath = path.join(ROOT, 'js', 'search-index.js');
+  if (fs.existsSync(siPath)) {
+    const siHash = crypto.createHash('md5').update(fs.readFileSync(siPath)).digest('hex').slice(0, 8);
+    const next = src.replace(/(js\/search-index\.js)(\?v=[0-9a-f]+)?/, '$1?v=' + siHash);
+    if (next !== src) {
+      src = next;
+      notes.push('搜索索引引用已加内容版本号 ?v=' + siHash);
+    }
   }
 
   if (notes.length) {
