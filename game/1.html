@@ -3,19 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=3.0">
-<title>龙之谷启程 - 官方下载入口与攻略 - 小梦怀旧手游</title>
+<title>龙之谷启程官方网站</title>
 <meta name="description" content="《龙之谷：启程》是由三九互娱发行的3D动作冒险MMORPG手游，作为经典端游《龙之谷》IP的正统续作，于2026年7月正式公测。游戏延续了端游无锁定战斗、多人副本协作等核心玩法，画面全面升级，支持千人同屏激战，带你重返阿尔特里亚大陆，开启全新冒险篇章。">
 <meta name="robots" content="index, follow">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="canonical" href="https://fmbly.com/game/1">
 <meta property="og:type" content="article">
-<meta property="og:title" content="龙之谷启程 - 官方下载入口与攻略 - 小梦怀旧手游">
+<meta property="og:title" content="龙之谷启程官方网站">
 <meta property="og:description" content="《龙之谷：启程》是由三九互娱发行的3D动作冒险MMORPG手游，作为经典端游《龙之谷》IP的正统续作，于2026年7月正式公测。游戏延续了端游无锁定战斗、多人副本协作等核心玩法，画面全面升级，支持千人同屏激战，带你重返阿尔特里亚大陆，开启全新冒险篇章。">
 <meta property="og:url" content="https://fmbly.com/game/1">
 <meta property="og:site_name" content="小梦怀旧手游">
 <meta property="og:image" content="https://fmbly.com/assets/images/longzhigu_cover.jpg?v=20260928a">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="龙之谷启程 - 官方下载入口与攻略 - 小梦怀旧手游">
+<meta name="twitter:title" content="龙之谷启程官方网站">
 <meta name="twitter:description" content="《龙之谷：启程》是由三九互娱发行的3D动作冒险MMORPG手游，作为经典端游《龙之谷》IP的正统续作，于2026年7月正式公测。游戏延续了端游无锁定战斗、多人副本协作等核心玩法，画面全面升级，支持千人同屏激战，带你重返阿尔特里亚大陆，开启全新冒险篇章。">
 <meta name="twitter:image" content="https://fmbly.com/assets/images/longzhigu_cover.jpg?v=20260928a">
 
@@ -161,6 +161,24 @@
   .facts th,.facts td{border:1px solid var(--line);padding:11px 14px;text-align:left}
   .facts th{background:#1c2333;width:118px;font-weight:600;color:var(--ink)}
   .facts td{color:var(--ink2)}
+  /* ===== 游戏「官方网站」区块（2026-10-09 由原游戏子域名官网合并而来） =====
+     只有 data/official.js 里配了内容的游戏会渲染这些类名，其余游戏页不受影响。 */
+  .ogkv{position:relative;height:264px;border-radius:14px;overflow:hidden;margin:0 0 22px;
+    background-size:cover;background-position:center;border:1px solid var(--line)}
+  .ogkv::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,10,18,.88),rgba(6,10,18,.22))}
+  .ogkv-in{position:relative;z-index:1;height:100%;max-width:72%;display:flex;flex-direction:column;justify-content:center;gap:10px;padding:0 30px}
+  .ogkv-in p{margin:0;font-size:21px;font-weight:800;line-height:1.42;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.45)}
+  .ogkv-in span{align-self:flex-start;font-size:11px;letter-spacing:2.5px;color:#cfe0ff;
+    border:1px solid rgba(255,255,255,.38);border-radius:999px;padding:3px 11px}
+  .oggrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:30px}
+  .ogcard{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .ogcard .pic img{display:block;width:100%;height:152px;object-fit:cover}
+  .ogcard .bd{padding:13px 15px}
+  .ogcard h3{margin:0 0 6px;font-size:15px;color:var(--ink)}
+  .ogcard p{margin:0;font-size:13px;line-height:1.68;color:var(--ink2)}
+  .ognews{list-style:none;margin:0 0 30px;padding:0}
+  .ognews li{padding:12px 15px;background:var(--card);border:1px solid var(--line);border-radius:10px;
+    margin-bottom:8px;font-size:13.5px;line-height:1.6;color:var(--ink)}
   .prose{font-size:16px;line-height:1.95;color:var(--ink2);margin-bottom:30px}
   .prose p{margin:0 0 16px}
   .hl{margin:0 0 30px;padding:0;list-style:none}
@@ -308,6 +326,13 @@
     .body{font-size:16px}
     .body h2{font-size:19px}
     .nav{gap:14px}
+    /* 官网区块：手机端主视觉压矮、卡片改单列 */
+    .ogkv{height:196px}
+    .ogkv::after{background:linear-gradient(180deg,rgba(6,10,18,.55),rgba(6,10,18,.86))}
+    .ogkv-in{max-width:100%;padding:0 18px}
+    .ogkv-in p{font-size:17px}
+    .oggrid{grid-template-columns:1fr}
+    .ogcard .pic img{height:170px}
   }
 
   /* ===== 资讯中心：原创资讯图文卡片 ===== */
@@ -440,6 +465,13 @@
 </header>
 <main class="wrap">
   <nav class="crumb"><a href="/">首页</a><i>/</i><a href="/games">游戏大厅</a><i>/</i><span>龙之谷启程</span></nav>
+
+  <div class="ogkv" style="background-image:url('../assets/images/official/lzgqc/hero-bg-2.jpg?v=20260928a')">
+    <div class="ogkv-in">
+      <span>官方网站</span>
+      <p>龙之谷·启程 重返阿尔特里亚</p>
+    </div>
+  </div>
   <div class="ghero">
     <div class="pic"><img src="../assets/images/longzhigu_cover.jpg?v=20260928a" alt="龙之谷启程" width="560" height="315" decoding="async" fetchpriority="high"></div>
     <div class="info">
@@ -479,6 +511,49 @@
 <p>职业方面，游戏初始开放战士、弓箭手、魔法师、牧师四大基础职业，每个职业拥有两条专精分支共八大流派，覆盖近战承伤、远程爆发、法术群攻与辅助治疗等不同定位；两套天赋体系可随时切换，适配副本与 PVP 场景。</p>
 </div>
 
+  <h2 class="sec-h">游戏特色</h2>
+  <div class="oggrid">
+    <div class="ogcard">
+      <div class="bd"><h3>无锁定战斗</h3><p>延续端游经典无锁定战斗机制，自由走位、技能连招，躲避、打断、反击全凭操作，尽享指尖动作快感。</p></div>
+    </div>
+    <div class="ogcard">
+      <div class="bd"><h3>千人同屏激战</h3><p>画面全面升级，支持千人同屏大型团战，史诗级战场流畅不卡顿，体验热血沸腾的群战爽感。</p></div>
+    </div>
+    <div class="ogcard">
+      <div class="bd"><h3>多人副本协作</h3><p>经典多人副本回归，与好友组队开荒挑战强力BOSS，职业搭配、战术配合，重现并肩作战的乐趣。</p></div>
+    </div>
+    <div class="ogcard">
+      <div class="bd"><h3>重返阿尔特里亚</h3><p>经典端游《龙之谷》IP正统续作，原汁原味还原阿尔特里亚大陆，熟悉的场景与剧情，开启全新冒险篇章。</p></div>
+    </div>
+  </div>
+  <h2 class="sec-h">八大职业</h2>
+  <div class="oggrid">
+    <div class="ogcard">
+      <div class="bd"><h3>战神</h3><p>血量防御双高，旋风斩强力聚怪，自带团队增伤，副本容错高，开荒非常舒服。</p></div>
+    </div>
+    <div class="ogcard">
+      <div class="bd"><h3>剑圣</h3><p>多段位移连招丝滑，单刷BOSS伤害极高，PVP表现优秀；身板偏脆，群怪能力弱。</p></div>
+    </div>
+    <div class="ogcard">
+      <div class="bd"><h3>箭神</h3><p>全游戏最远射程，箭雨风暴范围清怪，操作简单，PVE刷图巢穴极稳；惧怕贴脸近身。</p></div>
+    </div>
+    <div class="ogcard">
+      <div class="bd"><h3>游侠</h3><p>大量位移闪避，浮空连击破霸体强，竞技场1v1强势；需贴脸输出，操作门槛高。</p></div>
+    </div>
+    <div class="ogcard">
+      <div class="bd"><h3>元素师</h3><p>冰火双系大范围清怪，升级搬砖效率顶尖，团队核心输出位；身板极脆很吃走位。</p></div>
+    </div>
+    <div class="ogcard">
+      <div class="bd"><h3>魔导师</h3><p>减速定身重力场，时间加速全队减CD，高难巢穴刚需；单刷乏力，适合固定队。</p></div>
+    </div>
+    <div class="ogcard">
+      <div class="bd"><h3>贤者</h3><p>高格挡护盾嘲讽，能拉BOSS仇恨保护队友，能抗能打；高难副本必备主T。</p></div>
+    </div>
+    <div class="ogcard">
+      <div class="bd"><h3>祭司</h3><p>治愈之手持续回血，提供攻击增益，团队续航核心；高难副本组队刚需。</p></div>
+    </div>
+  </div>
+
 <h2 class="sec-h">《龙之谷启程》精彩图集</h2>
 <div class="gallery">
   <img src="../assets/images/art/longzhigu-1.jpg" alt="龙之谷启程 游戏截图 1" loading="lazy" width="800" height="450">
@@ -488,7 +563,7 @@
   <img src="../assets/images/art/longzhigu-5.jpg" alt="龙之谷启程 游戏截图 5" loading="lazy" width="800" height="450">
 </div>
 
-<h2 class="sec-h">游戏特色</h2>
+<h2 class="sec-h">游戏亮点</h2>
 <ul class="hl">
   <li>无锁定浮空连击战斗：普攻衔接多段技能压制敌人，精准走位闪避 BOSS 致命技能，手动操作不自动挂机</li>
   <li>四大基础职业八大专精流派：战神、剑圣、箭神、游侠、元素师、魔导师、祭司、贤者</li>

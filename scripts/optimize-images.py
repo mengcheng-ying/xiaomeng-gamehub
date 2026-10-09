@@ -75,6 +75,16 @@ def main():
     if logo.is_file():
         targets.append((logo, LOGO_MAX_W, 'PNG', None))
 
+    # 2026-10-09 新增：原游戏子域名官网合并进来的图片（assets/images/official/**）。
+    # 这些是各游戏官网的主视觉与特色配图，原始宽度 1024~1896、单张最大 840KB，
+    # 不压的话一个游戏页要多下 2~3MB，又会把首屏拖过百度爬虫的渲染超时。
+    # 上面那些 glob 只扫 assets/images 顶层与 hero/，所以这里单独递归一遍。
+    official = IMG / 'official'
+    if official.is_dir():
+        targets += [(p, COVER_MAX_W, 'JPEG', JPG_Q) for p in sorted(official.rglob('*.jpg'))]
+        targets += [(p, COVER_MAX_W, 'JPEG', JPG_Q) for p in sorted(official.rglob('*.jpeg'))]
+        targets += [(p, HERO_MAX_W, 'WEBP', WEBP_Q) for p in sorted(official.rglob('*.webp'))]
+
     print('检查 %d 个图片文件（只有宽度超阈值才会被处理）' % len(targets))
     total_before = total_after = 0.0
     changed = 0

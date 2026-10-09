@@ -3,19 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=3.0">
-<title>武林外传：十年之约 - 官方下载入口与攻略 - 小梦怀旧手游</title>
+<title>武林外传：十年之约官方网站</title>
 <meta name="description" content="《武林外传：十年之约》是经典端游《武林外传》的正版怀旧手游，以七侠镇同福客栈为核心场景，完整还原端游十大职业体系和经典副本。游戏以「十年之约」为主题，延续原版世界观与搞笑剧情，支持三端互通，带你重返七侠镇，再续江湖情缘。">
 <meta name="robots" content="index, follow">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="canonical" href="https://fmbly.com/game/21">
 <meta property="og:type" content="article">
-<meta property="og:title" content="武林外传：十年之约 - 官方下载入口与攻略 - 小梦怀旧手游">
+<meta property="og:title" content="武林外传：十年之约官方网站">
 <meta property="og:description" content="《武林外传：十年之约》是经典端游《武林外传》的正版怀旧手游，以七侠镇同福客栈为核心场景，完整还原端游十大职业体系和经典副本。游戏以「十年之约」为主题，延续原版世界观与搞笑剧情，支持三端互通，带你重返七侠镇，再续江湖情缘。">
 <meta property="og:url" content="https://fmbly.com/game/21">
 <meta property="og:site_name" content="小梦怀旧手游">
 <meta property="og:image" content="https://fmbly.com/assets/images/wulin_cover.jpg?v=20260928a">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="武林外传：十年之约 - 官方下载入口与攻略 - 小梦怀旧手游">
+<meta name="twitter:title" content="武林外传：十年之约官方网站">
 <meta name="twitter:description" content="《武林外传：十年之约》是经典端游《武林外传》的正版怀旧手游，以七侠镇同福客栈为核心场景，完整还原端游十大职业体系和经典副本。游戏以「十年之约」为主题，延续原版世界观与搞笑剧情，支持三端互通，带你重返七侠镇，再续江湖情缘。">
 <meta name="twitter:image" content="https://fmbly.com/assets/images/wulin_cover.jpg?v=20260928a">
 
@@ -161,6 +161,24 @@
   .facts th,.facts td{border:1px solid var(--line);padding:11px 14px;text-align:left}
   .facts th{background:#1c2333;width:118px;font-weight:600;color:var(--ink)}
   .facts td{color:var(--ink2)}
+  /* ===== 游戏「官方网站」区块（2026-10-09 由原游戏子域名官网合并而来） =====
+     只有 data/official.js 里配了内容的游戏会渲染这些类名，其余游戏页不受影响。 */
+  .ogkv{position:relative;height:264px;border-radius:14px;overflow:hidden;margin:0 0 22px;
+    background-size:cover;background-position:center;border:1px solid var(--line)}
+  .ogkv::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,10,18,.88),rgba(6,10,18,.22))}
+  .ogkv-in{position:relative;z-index:1;height:100%;max-width:72%;display:flex;flex-direction:column;justify-content:center;gap:10px;padding:0 30px}
+  .ogkv-in p{margin:0;font-size:21px;font-weight:800;line-height:1.42;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.45)}
+  .ogkv-in span{align-self:flex-start;font-size:11px;letter-spacing:2.5px;color:#cfe0ff;
+    border:1px solid rgba(255,255,255,.38);border-radius:999px;padding:3px 11px}
+  .oggrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:30px}
+  .ogcard{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .ogcard .pic img{display:block;width:100%;height:152px;object-fit:cover}
+  .ogcard .bd{padding:13px 15px}
+  .ogcard h3{margin:0 0 6px;font-size:15px;color:var(--ink)}
+  .ogcard p{margin:0;font-size:13px;line-height:1.68;color:var(--ink2)}
+  .ognews{list-style:none;margin:0 0 30px;padding:0}
+  .ognews li{padding:12px 15px;background:var(--card);border:1px solid var(--line);border-radius:10px;
+    margin-bottom:8px;font-size:13.5px;line-height:1.6;color:var(--ink)}
   .prose{font-size:16px;line-height:1.95;color:var(--ink2);margin-bottom:30px}
   .prose p{margin:0 0 16px}
   .hl{margin:0 0 30px;padding:0;list-style:none}
@@ -308,6 +326,13 @@
     .body{font-size:16px}
     .body h2{font-size:19px}
     .nav{gap:14px}
+    /* 官网区块：手机端主视觉压矮、卡片改单列 */
+    .ogkv{height:196px}
+    .ogkv::after{background:linear-gradient(180deg,rgba(6,10,18,.55),rgba(6,10,18,.86))}
+    .ogkv-in{max-width:100%;padding:0 18px}
+    .ogkv-in p{font-size:17px}
+    .oggrid{grid-template-columns:1fr}
+    .ogcard .pic img{height:170px}
   }
 
   /* ===== 资讯中心：原创资讯图文卡片 ===== */
@@ -440,6 +465,13 @@
 </header>
 <main class="wrap">
   <nav class="crumb"><a href="/">首页</a><i>/</i><a href="/games">游戏大厅</a><i>/</i><span>武林外传：十年之约</span></nav>
+
+  <div class="ogkv" style="background-image:url('../assets/images/official/wulin/hero_kv.webp?v=20260928a')">
+    <div class="ogkv-in">
+      <span>官方网站</span>
+      <p>十年客栈 · 再续江湖新篇</p>
+    </div>
+  </div>
   <div class="ghero">
     <div class="pic"><img src="../assets/images/wulin_cover.jpg?v=20260928a" alt="武林外传：十年之约" width="800" height="600" decoding="async" fetchpriority="high"></div>
     <div class="info">
@@ -479,6 +511,29 @@
 <p>职业体系复刻端游设定：玩家初始职业为能力均衡的「菜鸟」，10 级进行一转、30 级二转，最终可选择枪豪、剑客、术士、医师四大核心职业。其中枪豪与剑客属游侠一脉，术士与医师属散人一脉，四大职业定位清晰、适配不同玩法偏好。</p>
 </div>
 
+  <h2 class="sec-h">特色玩法</h2>
+  <div class="oggrid">
+    <div class="ogcard">
+      <div class="pic"><img src="../assets/images/official/wulin/feature-lunjian.webp?v=20260928a" alt="跨服论剑 · 群雄逐鹿" loading="lazy" decoding="async"></div>
+      <div class="bd"><h3>跨服论剑 · 群雄逐鹿</h3><p>全服同屏切磋，无锁定快攻打斗。五行相生相克、招式千变万化，真人在线、公平竞技，谁才是你当年的那个「天下剑宗」？</p></div>
+    </div>
+    <div class="ogcard">
+      <div class="pic"><img src="../assets/images/official/wulin/feature-qingyuan.webp?v=20260928a" alt="江湖情缘 · 结伴同游" loading="lazy" decoding="async"></div>
+      <div class="bd"><h3>江湖情缘 · 结伴同游</h3><p>与好友结拜、与知己携手。同乘马车游尽山河，系统花轿迎亲、结伴闯关，江湖路上不再孤单。</p></div>
+    </div>
+    <div class="ogcard">
+      <div class="pic"><img src="../assets/images/official/wulin/feature-jitan.webp?v=20260928a" alt="探秘奇缘 · 副本寻宝" loading="lazy" decoding="async"></div>
+      <div class="bd"><h3>探秘奇缘 · 副本寻宝</h3><p>古墓机关重重，奇遇接连不断。组队闯荡、押镖护卫、寻宝夺奖，每一次探索都藏着新的江湖传说。</p></div>
+    </div>
+  </div>
+  <h2 class="sec-h">官方公告</h2>
+  <ul class="ognews">
+    <li>《武林外传·十年之约》预创角注册开启公告</li>
+    <li>《武林外传·十年之约》群侠版全平台预约今日开启</li>
+    <li>江湖情报站 Vol.1：同福客栈大焕新装修揭秘</li>
+    <li>新手江湖指南：从七侠镇出发的第一步</li>
+  </ul>
+
 <h2 class="sec-h">《武林外传：十年之约》精彩图集</h2>
 <div class="gallery">
   <img src="../assets/images/art/wulin-1.jpg" alt="武林外传：十年之约 游戏截图 1" loading="lazy" width="800" height="450">
@@ -488,7 +543,7 @@
   <img src="../assets/images/art/wulin-5.jpg" alt="武林外传：十年之约 游戏截图 5" loading="lazy" width="800" height="450">
 </div>
 
-<h2 class="sec-h">游戏特色</h2>
+<h2 class="sec-h">游戏亮点</h2>
 <ul class="hl">
   <li>经典影视 IP《武林外传》正版授权改编，3D 还原七侠镇、同福客栈、西凉河、十八里铺等经典场景</li>
   <li>佟湘玉、白展堂、吕秀才、郭芙蓉、李大嘴全员登场，方言配音与经典台词原汁原味</li>

@@ -91,6 +91,10 @@ const guideExtra = loadJsObjectSafe('data/guide-extra.js', 'GUIDE_EXTRA');
 const guideFaq = loadJsObjectSafe('data/guide-faq.js', 'GUIDE_FAQ');
 // 游戏页补充资料（可选）：{ 游戏id: { facts:[{k,v}], intro:'…', highlights:['…'] } }
 const gameExtra = loadJsObjectSafe('data/game-extra.js', 'GAME_EXTRA');
+/* 各游戏「官方网站」内容（可选，2026-10-09 由原游戏子域名官网合并而来）：
+   { 游戏id: { slug, kv, kvSlogan, features:[…], group:{title,items:[…]}, news:[…] } }
+   只有原官网存在的那几款有数据，其余游戏照常渲染。 */
+const officialData = loadJsObjectSafe('data/official.js', 'OFFICIAL_DATA');
 // 官方动态（由 scripts/fetch-official-news.js 自动同步，来源：三九互娱官方专区）
 // 结构：{ generatedAt, games: { 游戏id: { official, site, newsUrl, items:[{date,category,title,url,key,summary}] } } }
 const officialNews = loadJsObjectSafe('data/official-news.js', 'OFFICIAL_NEWS');
@@ -340,6 +344,24 @@ const BASE_CSS = `
   .facts th,.facts td{border:1px solid var(--line);padding:11px 14px;text-align:left}
   .facts th{background:#1c2333;width:118px;font-weight:600;color:var(--ink)}
   .facts td{color:var(--ink2)}
+  /* ===== 游戏「官方网站」区块（2026-10-09 由原游戏子域名官网合并而来） =====
+     只有 data/official.js 里配了内容的游戏会渲染这些类名，其余游戏页不受影响。 */
+  .ogkv{position:relative;height:264px;border-radius:14px;overflow:hidden;margin:0 0 22px;
+    background-size:cover;background-position:center;border:1px solid var(--line)}
+  .ogkv::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,10,18,.88),rgba(6,10,18,.22))}
+  .ogkv-in{position:relative;z-index:1;height:100%;max-width:72%;display:flex;flex-direction:column;justify-content:center;gap:10px;padding:0 30px}
+  .ogkv-in p{margin:0;font-size:21px;font-weight:800;line-height:1.42;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.45)}
+  .ogkv-in span{align-self:flex-start;font-size:11px;letter-spacing:2.5px;color:#cfe0ff;
+    border:1px solid rgba(255,255,255,.38);border-radius:999px;padding:3px 11px}
+  .oggrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:30px}
+  .ogcard{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .ogcard .pic img{display:block;width:100%;height:152px;object-fit:cover}
+  .ogcard .bd{padding:13px 15px}
+  .ogcard h3{margin:0 0 6px;font-size:15px;color:var(--ink)}
+  .ogcard p{margin:0;font-size:13px;line-height:1.68;color:var(--ink2)}
+  .ognews{list-style:none;margin:0 0 30px;padding:0}
+  .ognews li{padding:12px 15px;background:var(--card);border:1px solid var(--line);border-radius:10px;
+    margin-bottom:8px;font-size:13.5px;line-height:1.6;color:var(--ink)}
   .prose{font-size:16px;line-height:1.95;color:var(--ink2);margin-bottom:30px}
   .prose p{margin:0 0 16px}
   .hl{margin:0 0 30px;padding:0;list-style:none}
@@ -487,6 +509,13 @@ const BASE_CSS = `
     .body{font-size:16px}
     .body h2{font-size:19px}
     .nav{gap:14px}
+    /* 官网区块：手机端主视觉压矮、卡片改单列 */
+    .ogkv{height:196px}
+    .ogkv::after{background:linear-gradient(180deg,rgba(6,10,18,.55),rgba(6,10,18,.86))}
+    .ogkv-in{max-width:100%;padding:0 18px}
+    .ogkv-in p{font-size:17px}
+    .oggrid{grid-template-columns:1fr}
+    .ogcard .pic img{height:170px}
   }
 
   /* ===== 资讯中心：原创资讯图文卡片 ===== */
@@ -945,7 +974,7 @@ games.forEach((g) => {
     .map(f => `    <tr><th>${esc(f[0])}</th><td>${esc(f[1])}</td></tr>`).join('\n');
 
   const hlHtml = Array.isArray(ext.highlights) && ext.highlights.length
-    ? `<h2 class="sec-h">游戏特色</h2>\n<ul class="hl">\n${ext.highlights.map(h => `  <li>${esc(h)}</li>`).join('\n')}\n</ul>`
+    ? `<h2 class="sec-h">游戏亮点</h2>\n<ul class="hl">\n${ext.highlights.map(h => `  <li>${esc(h)}</li>`).join('\n')}\n</ul>`
     : '';
 
   const introParas = [];
@@ -1041,12 +1070,46 @@ ${nzArc.items.slice(0, 8).map(it => `  <li>
     ]
   };
 
-  const html = head(g.name + ' - 官方下载入口与攻略 - 小梦怀旧手游', desc, url, {
+  /* ===== 游戏「官方网站」区块（2026-10-09）
+     原 fmbly.com 下的 7 个游戏子域名官网作废，首页内容并进对应游戏页。
+     内容取自 data/official.js；没有配数据的游戏输出空串，页面与以前完全一致。 */
+  const og = officialData[g.id];
+  const ogCard = (it) => `    <div class="ogcard">
+${it.img ? `      <div class="pic"><img src="../${esc(assetUrl(it.img))}" alt="${esc(it.t)}" loading="lazy" decoding="async"></div>\n` : ''}      <div class="bd"><h3>${esc(it.t)}</h3><p>${esc(it.d)}</p></div>
+    </div>`;
+  const ogGroup = (group) => (group && group.items && group.items.length) ? `
+  <h2 class="sec-h">${esc(group.title || '更多特色')}</h2>
+  <div class="oggrid">
+${group.items.map(ogCard).join('\n')}
+  </div>` : '';
+  const ogHeroHtml = (og && og.kv) ? `
+  <div class="ogkv" style="background-image:url('../${esc(assetUrl(og.kv))}')">
+    <div class="ogkv-in">
+      <span>官方网站</span>
+      ${og.kvSlogan ? `<p>${esc(og.kvSlogan)}</p>` : ''}
+    </div>
+  </div>` : '';
+  const ogBodyHtml = og ? [
+    (og.features && og.features.length) ? `
+  <h2 class="sec-h">游戏特色</h2>
+  <div class="oggrid">
+${og.features.map(ogCard).join('\n')}
+  </div>` : '',
+    ogGroup(og.group),
+    (og.news && og.news.length) ? `
+  <h2 class="sec-h">官方公告</h2>
+  <ul class="ognews">
+${og.news.map(n => `    <li>${esc(n)}</li>`).join('\n')}
+  </ul>` : ''
+  ].join('') : '';
+
+  const html = head(g.name + '官方网站', desc, url, {
     ogType: 'article',
     image: assetUrl(g.cover),
     ld: [ldGame, ldBreadcrumb]
   }) + `<main class="wrap">
   <nav class="crumb"><a href="/">首页</a><i>/</i><a href="/games">游戏大厅</a><i>/</i><span>${esc(g.name)}</span></nav>
+${ogHeroHtml}
   <div class="ghero">
     <div class="pic"><img src="../${esc(assetUrl(g.cover))}" alt="${esc(g.name)}"${sizeAttrs(g.cover)} decoding="async" fetchpriority="high"></div>
     <div class="info">
@@ -1067,6 +1130,7 @@ ${factsHtml}
   </table>
 
 ${introHtml}
+${ogBodyHtml}
 
 ${galleryHtml}
 

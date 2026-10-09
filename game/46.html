@@ -3,19 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=3.0">
-<title>机战：钢铁巨舰 - 官方下载入口与攻略 - 小梦怀旧手游</title>
+<title>机战：钢铁巨舰官方网站</title>
 <meta name="description" content="《机战：钢铁巨舰》是大型科幻机甲题材MMORPG手游，驾驶钢铁巨舰征战浩渺星际。海量机甲自由改装，星际舰队对决，支持iOS/安卓双端下载及PC模拟器游玩。开服首周登录即送SSR机甲碎片，机甲工坊全面升级，开放50+种改装方案，带你开启属于你的宇宙征途。">
 <meta name="robots" content="index, follow">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="canonical" href="https://fmbly.com/game/46">
 <meta property="og:type" content="article">
-<meta property="og:title" content="机战：钢铁巨舰 - 官方下载入口与攻略 - 小梦怀旧手游">
+<meta property="og:title" content="机战：钢铁巨舰官方网站">
 <meta property="og:description" content="《机战：钢铁巨舰》是大型科幻机甲题材MMORPG手游，驾驶钢铁巨舰征战浩渺星际。海量机甲自由改装，星际舰队对决，支持iOS/安卓双端下载及PC模拟器游玩。开服首周登录即送SSR机甲碎片，机甲工坊全面升级，开放50+种改装方案，带你开启属于你的宇宙征途。">
 <meta property="og:url" content="https://fmbly.com/game/46">
 <meta property="og:site_name" content="小梦怀旧手游">
 <meta property="og:image" content="https://fmbly.com/assets/images/jizhan_cover.jpg?v=20260928a">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="机战：钢铁巨舰 - 官方下载入口与攻略 - 小梦怀旧手游">
+<meta name="twitter:title" content="机战：钢铁巨舰官方网站">
 <meta name="twitter:description" content="《机战：钢铁巨舰》是大型科幻机甲题材MMORPG手游，驾驶钢铁巨舰征战浩渺星际。海量机甲自由改装，星际舰队对决，支持iOS/安卓双端下载及PC模拟器游玩。开服首周登录即送SSR机甲碎片，机甲工坊全面升级，开放50+种改装方案，带你开启属于你的宇宙征途。">
 <meta name="twitter:image" content="https://fmbly.com/assets/images/jizhan_cover.jpg?v=20260928a">
 
@@ -161,6 +161,24 @@
   .facts th,.facts td{border:1px solid var(--line);padding:11px 14px;text-align:left}
   .facts th{background:#1c2333;width:118px;font-weight:600;color:var(--ink)}
   .facts td{color:var(--ink2)}
+  /* ===== 游戏「官方网站」区块（2026-10-09 由原游戏子域名官网合并而来） =====
+     只有 data/official.js 里配了内容的游戏会渲染这些类名，其余游戏页不受影响。 */
+  .ogkv{position:relative;height:264px;border-radius:14px;overflow:hidden;margin:0 0 22px;
+    background-size:cover;background-position:center;border:1px solid var(--line)}
+  .ogkv::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,10,18,.88),rgba(6,10,18,.22))}
+  .ogkv-in{position:relative;z-index:1;height:100%;max-width:72%;display:flex;flex-direction:column;justify-content:center;gap:10px;padding:0 30px}
+  .ogkv-in p{margin:0;font-size:21px;font-weight:800;line-height:1.42;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.45)}
+  .ogkv-in span{align-self:flex-start;font-size:11px;letter-spacing:2.5px;color:#cfe0ff;
+    border:1px solid rgba(255,255,255,.38);border-radius:999px;padding:3px 11px}
+  .oggrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:30px}
+  .ogcard{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .ogcard .pic img{display:block;width:100%;height:152px;object-fit:cover}
+  .ogcard .bd{padding:13px 15px}
+  .ogcard h3{margin:0 0 6px;font-size:15px;color:var(--ink)}
+  .ogcard p{margin:0;font-size:13px;line-height:1.68;color:var(--ink2)}
+  .ognews{list-style:none;margin:0 0 30px;padding:0}
+  .ognews li{padding:12px 15px;background:var(--card);border:1px solid var(--line);border-radius:10px;
+    margin-bottom:8px;font-size:13.5px;line-height:1.6;color:var(--ink)}
   .prose{font-size:16px;line-height:1.95;color:var(--ink2);margin-bottom:30px}
   .prose p{margin:0 0 16px}
   .hl{margin:0 0 30px;padding:0;list-style:none}
@@ -308,6 +326,13 @@
     .body{font-size:16px}
     .body h2{font-size:19px}
     .nav{gap:14px}
+    /* 官网区块：手机端主视觉压矮、卡片改单列 */
+    .ogkv{height:196px}
+    .ogkv::after{background:linear-gradient(180deg,rgba(6,10,18,.55),rgba(6,10,18,.86))}
+    .ogkv-in{max-width:100%;padding:0 18px}
+    .ogkv-in p{font-size:17px}
+    .oggrid{grid-template-columns:1fr}
+    .ogcard .pic img{height:170px}
   }
 
   /* ===== 资讯中心：原创资讯图文卡片 ===== */
@@ -440,6 +465,13 @@
 </header>
 <main class="wrap">
   <nav class="crumb"><a href="/">首页</a><i>/</i><a href="/games">游戏大厅</a><i>/</i><span>机战：钢铁巨舰</span></nav>
+
+  <div class="ogkv" style="background-image:url('../assets/images/official/jz/hero-mecha.jpg?v=20260928a')">
+    <div class="ogkv-in">
+      <span>官方网站</span>
+      <p>机甲集结 决战宇宙之巅</p>
+    </div>
+  </div>
   <div class="ghero">
     <div class="pic"><img src="../assets/images/jizhan_cover.jpg?v=20260928a" alt="机战：钢铁巨舰" width="960" height="540" decoding="async" fetchpriority="high"></div>
     <div class="info">
@@ -481,9 +513,29 @@
 <p>社交与团战是本作的核心黏性所在。战盟系统支持组队副本、恶魔广场、飞船任务结伴开荒，星域会战与世界 BOSS 争夺等大型玩法支持千人同屏混战——个人的勇武固然重要，但战盟成员之间的配合协作，才是决胜战场的关键。</p>
 </div>
 
+  <h2 class="sec-h">游戏特色</h2>
+  <div class="oggrid">
+    <div class="ogcard">
+      <div class="pic"><img src="../assets/images/official/jz/hero-mecha.jpg?v=20260928a" alt="机甲重装回归" loading="lazy" decoding="async"></div>
+      <div class="bd"><h3>机甲重装回归</h3><p>对决浩渺星际，钢铁巨兽重返战场</p></div>
+    </div>
+    <div class="ogcard">
+      <div class="pic"><img src="../assets/images/official/jz/feat-1.jpg?v=20260928a" alt="火力全开" loading="lazy" decoding="async"></div>
+      <div class="bd"><h3>火力全开</h3><p>驾驭钢铁巨兽，全维度火力覆盖</p></div>
+    </div>
+    <div class="ogcard">
+      <div class="pic"><img src="../assets/images/official/jz/feat-2.jpg?v=20260928a" alt="舰队出征" loading="lazy" decoding="async"></div>
+      <div class="bd"><h3>舰队出征</h3><p>组建星际舰队，征战星辰大海</p></div>
+    </div>
+    <div class="ogcard">
+      <div class="pic"><img src="../assets/images/official/jz/feat-3.jpg?v=20260928a" alt="自由改装" loading="lazy" decoding="async"></div>
+      <div class="bd"><h3>自由改装</h3><p>打造专属机甲，定制你的战斗风格</p></div>
+    </div>
+  </div>
 
 
-<h2 class="sec-h">游戏特色</h2>
+
+<h2 class="sec-h">游戏亮点</h2>
 <ul class="hl">
   <li>钢铁巨舰主城 + 格纳库陈列各型机体，交易区域人来人往，完整还原机甲星际题材特有的生活气息</li>
   <li>每台机体拥有独立建模与专属技能，武器库覆盖远程压制、近身突击、持续输出多种思路，可自由组合</li>

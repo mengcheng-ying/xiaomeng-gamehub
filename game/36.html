@@ -3,19 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=3.0">
-<title>修仙家族模拟器2 - 官方下载入口与攻略 - 小梦怀旧手游</title>
+<title>修仙家族模拟器2官方网站</title>
 <meta name="description" content="《修仙家族模拟器2》是融合修仙文化与模拟经营元素的MMORPG手游，由安徽游昕网络运营。玩家扮演家族掌门，从凡人小世界起步，带领家族突破金丹、元婴等境界，通过挖矿、采集灵植、炼制丹药、捕捉灵兽等方式积累资源，最终飞升成仙。">
 <meta name="robots" content="index, follow">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="canonical" href="https://fmbly.com/game/36">
 <meta property="og:type" content="article">
-<meta property="og:title" content="修仙家族模拟器2 - 官方下载入口与攻略 - 小梦怀旧手游">
+<meta property="og:title" content="修仙家族模拟器2官方网站">
 <meta property="og:description" content="《修仙家族模拟器2》是融合修仙文化与模拟经营元素的MMORPG手游，由安徽游昕网络运营。玩家扮演家族掌门，从凡人小世界起步，带领家族突破金丹、元婴等境界，通过挖矿、采集灵植、炼制丹药、捕捉灵兽等方式积累资源，最终飞升成仙。">
 <meta property="og:url" content="https://fmbly.com/game/36">
 <meta property="og:site_name" content="小梦怀旧手游">
 <meta property="og:image" content="https://fmbly.com/assets/images/xiuxianjiazu2_cover.jpg?v=20260928a">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="修仙家族模拟器2 - 官方下载入口与攻略 - 小梦怀旧手游">
+<meta name="twitter:title" content="修仙家族模拟器2官方网站">
 <meta name="twitter:description" content="《修仙家族模拟器2》是融合修仙文化与模拟经营元素的MMORPG手游，由安徽游昕网络运营。玩家扮演家族掌门，从凡人小世界起步，带领家族突破金丹、元婴等境界，通过挖矿、采集灵植、炼制丹药、捕捉灵兽等方式积累资源，最终飞升成仙。">
 <meta name="twitter:image" content="https://fmbly.com/assets/images/xiuxianjiazu2_cover.jpg?v=20260928a">
 
@@ -161,6 +161,24 @@
   .facts th,.facts td{border:1px solid var(--line);padding:11px 14px;text-align:left}
   .facts th{background:#1c2333;width:118px;font-weight:600;color:var(--ink)}
   .facts td{color:var(--ink2)}
+  /* ===== 游戏「官方网站」区块（2026-10-09 由原游戏子域名官网合并而来） =====
+     只有 data/official.js 里配了内容的游戏会渲染这些类名，其余游戏页不受影响。 */
+  .ogkv{position:relative;height:264px;border-radius:14px;overflow:hidden;margin:0 0 22px;
+    background-size:cover;background-position:center;border:1px solid var(--line)}
+  .ogkv::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,10,18,.88),rgba(6,10,18,.22))}
+  .ogkv-in{position:relative;z-index:1;height:100%;max-width:72%;display:flex;flex-direction:column;justify-content:center;gap:10px;padding:0 30px}
+  .ogkv-in p{margin:0;font-size:21px;font-weight:800;line-height:1.42;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.45)}
+  .ogkv-in span{align-self:flex-start;font-size:11px;letter-spacing:2.5px;color:#cfe0ff;
+    border:1px solid rgba(255,255,255,.38);border-radius:999px;padding:3px 11px}
+  .oggrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:30px}
+  .ogcard{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .ogcard .pic img{display:block;width:100%;height:152px;object-fit:cover}
+  .ogcard .bd{padding:13px 15px}
+  .ogcard h3{margin:0 0 6px;font-size:15px;color:var(--ink)}
+  .ogcard p{margin:0;font-size:13px;line-height:1.68;color:var(--ink2)}
+  .ognews{list-style:none;margin:0 0 30px;padding:0}
+  .ognews li{padding:12px 15px;background:var(--card);border:1px solid var(--line);border-radius:10px;
+    margin-bottom:8px;font-size:13.5px;line-height:1.6;color:var(--ink)}
   .prose{font-size:16px;line-height:1.95;color:var(--ink2);margin-bottom:30px}
   .prose p{margin:0 0 16px}
   .hl{margin:0 0 30px;padding:0;list-style:none}
@@ -308,6 +326,13 @@
     .body{font-size:16px}
     .body h2{font-size:19px}
     .nav{gap:14px}
+    /* 官网区块：手机端主视觉压矮、卡片改单列 */
+    .ogkv{height:196px}
+    .ogkv::after{background:linear-gradient(180deg,rgba(6,10,18,.55),rgba(6,10,18,.86))}
+    .ogkv-in{max-width:100%;padding:0 18px}
+    .ogkv-in p{font-size:17px}
+    .oggrid{grid-template-columns:1fr}
+    .ogcard .pic img{height:170px}
   }
 
   /* ===== 资讯中心：原创资讯图文卡片 ===== */
@@ -440,6 +465,13 @@
 </header>
 <main class="wrap">
   <nav class="crumb"><a href="/">首页</a><i>/</i><a href="/games">游戏大厅</a><i>/</i><span>修仙家族模拟器2</span></nav>
+
+  <div class="ogkv" style="background-image:url('../assets/images/official/xiuxian/hero_kv.webp?v=20260928a')">
+    <div class="ogkv-in">
+      <span>官方网站</span>
+      <p>从一介凡人，到一族之宗</p>
+    </div>
+  </div>
   <div class="ghero">
     <div class="pic"><img src="../assets/images/xiuxianjiazu2_cover.jpg?v=20260928a" alt="修仙家族模拟器2" width="560" height="315" decoding="async" fetchpriority="high"></div>
     <div class="info">
@@ -468,6 +500,43 @@
 <div class="prose">
 <p>《修仙家族模拟器2》是融合修仙文化与模拟经营元素的MMORPG手游，由安徽游昕网络运营。玩家扮演家族掌门，从凡人小世界起步，带领家族突破金丹、元婴等境界，通过挖矿、采集灵植、炼制丹药、捕捉灵兽等方式积累资源，最终飞升成仙。</p>
 </div>
+
+  <h2 class="sec-h">游戏特色</h2>
+  <div class="oggrid">
+    <div class="ogcard">
+      <div class="bd"><h3>家族经营</h3><p>建设灵田、炼丹炼器、培养弟子，一步步壮大家族根基。</p></div>
+    </div>
+    <div class="ogcard">
+      <div class="bd"><h3>自由修仙</h3><p>功法万千、机缘无数，突破境界，成仙成神皆由你定。</p></div>
+    </div>
+    <div class="ogcard">
+      <div class="bd"><h3>群雄争锋</h3><p>宗门林立、世仇争夺，家族联姻、结盟、征战，谱写仙途大戏。</p></div>
+    </div>
+    <div class="ogcard">
+      <div class="bd"><h3>血脉传承</h3><p>天赋血脉代代相传，子孙延续家族荣光，仙誓不朽。</p></div>
+    </div>
+  </div>
+  <h2 class="sec-h">三途仙路</h2>
+  <div class="oggrid">
+    <div class="ogcard">
+      <div class="pic"><img src="../assets/images/official/xiuxian/feature_family.webp?v=20260928a" alt="兴家立业" loading="lazy" decoding="async"></div>
+      <div class="bd"><h3>兴家立业</h3><p>从一间院落开始，开辟灵田、修筑屋舍、招募灵仆，经营家族的每一寸根基，让家族在乱世仙途立足繁衍。</p></div>
+    </div>
+    <div class="ogcard">
+      <div class="pic"><img src="../assets/images/official/xiuxian/feature_cultivate.webp?v=20260928a" alt="闭关悟道" loading="lazy" decoding="async"></div>
+      <div class="bd"><h3>闭关悟道</h3><p>纳灵气、炼丹药、悟功法，境界层层突破，踏上炼气、筑基、金丹直至化神的漫长仙途。</p></div>
+    </div>
+    <div class="ogcard">
+      <div class="pic"><img src="../assets/images/official/xiuxian/feature_faction.webp?v=20260928a" alt="逐鹿仙途" loading="lazy" decoding="async"></div>
+      <div class="bd"><h3>逐鹿仙途</h3><p>加入或创建宗门，家族间联姻结盟、争夺资源、征战四方，在恩怨与荣耀中登上仙道之巅。</p></div>
+    </div>
+  </div>
+  <h2 class="sec-h">官方公告</h2>
+  <ul class="ognews">
+    <li>《修仙家族模拟器2》全平台预约正式开启</li>
+    <li>家族血脉玩法前瞻：传承与荣光</li>
+    <li>仙途地图揭秘：六大灵域风水各异</li>
+  </ul>
 
 <h2 class="sec-h">《修仙家族模拟器2》精彩图集</h2>
 <div class="gallery">

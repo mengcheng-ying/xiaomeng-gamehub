@@ -3,19 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=3.0">
-<title>热血江湖2.0 - 官方下载入口与攻略 - 小梦怀旧手游</title>
+<title>热血江湖2.0官方网站</title>
 <meta name="description" content="《热血江湖2.0》是经典武侠IP的全新手游大作，Q版萌系画风搭配热血PK玩法，五大职业自由选择，千人同屏激战，神兽坐骑养成，帮派争霸、跨服竞技等丰富内容。全新2.0版本带来更精细的画面表现、更丰富的玩法系统与更平衡的职业体系，带你重返热血沸腾的江湖世界。">
 <meta name="robots" content="index, follow">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="canonical" href="https://fmbly.com/game/45">
 <meta property="og:type" content="article">
-<meta property="og:title" content="热血江湖2.0 - 官方下载入口与攻略 - 小梦怀旧手游">
+<meta property="og:title" content="热血江湖2.0官方网站">
 <meta property="og:description" content="《热血江湖2.0》是经典武侠IP的全新手游大作，Q版萌系画风搭配热血PK玩法，五大职业自由选择，千人同屏激战，神兽坐骑养成，帮派争霸、跨服竞技等丰富内容。全新2.0版本带来更精细的画面表现、更丰富的玩法系统与更平衡的职业体系，带你重返热血沸腾的江湖世界。">
 <meta property="og:url" content="https://fmbly.com/game/45">
 <meta property="og:site_name" content="小梦怀旧手游">
 <meta property="og:image" content="https://fmbly.com/assets/images/rxjianghu2_cover.jpg?v=20260928a">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="热血江湖2.0 - 官方下载入口与攻略 - 小梦怀旧手游">
+<meta name="twitter:title" content="热血江湖2.0官方网站">
 <meta name="twitter:description" content="《热血江湖2.0》是经典武侠IP的全新手游大作，Q版萌系画风搭配热血PK玩法，五大职业自由选择，千人同屏激战，神兽坐骑养成，帮派争霸、跨服竞技等丰富内容。全新2.0版本带来更精细的画面表现、更丰富的玩法系统与更平衡的职业体系，带你重返热血沸腾的江湖世界。">
 <meta name="twitter:image" content="https://fmbly.com/assets/images/rxjianghu2_cover.jpg?v=20260928a">
 
@@ -161,6 +161,24 @@
   .facts th,.facts td{border:1px solid var(--line);padding:11px 14px;text-align:left}
   .facts th{background:#1c2333;width:118px;font-weight:600;color:var(--ink)}
   .facts td{color:var(--ink2)}
+  /* ===== 游戏「官方网站」区块（2026-10-09 由原游戏子域名官网合并而来） =====
+     只有 data/official.js 里配了内容的游戏会渲染这些类名，其余游戏页不受影响。 */
+  .ogkv{position:relative;height:264px;border-radius:14px;overflow:hidden;margin:0 0 22px;
+    background-size:cover;background-position:center;border:1px solid var(--line)}
+  .ogkv::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,10,18,.88),rgba(6,10,18,.22))}
+  .ogkv-in{position:relative;z-index:1;height:100%;max-width:72%;display:flex;flex-direction:column;justify-content:center;gap:10px;padding:0 30px}
+  .ogkv-in p{margin:0;font-size:21px;font-weight:800;line-height:1.42;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.45)}
+  .ogkv-in span{align-self:flex-start;font-size:11px;letter-spacing:2.5px;color:#cfe0ff;
+    border:1px solid rgba(255,255,255,.38);border-radius:999px;padding:3px 11px}
+  .oggrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:30px}
+  .ogcard{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .ogcard .pic img{display:block;width:100%;height:152px;object-fit:cover}
+  .ogcard .bd{padding:13px 15px}
+  .ogcard h3{margin:0 0 6px;font-size:15px;color:var(--ink)}
+  .ogcard p{margin:0;font-size:13px;line-height:1.68;color:var(--ink2)}
+  .ognews{list-style:none;margin:0 0 30px;padding:0}
+  .ognews li{padding:12px 15px;background:var(--card);border:1px solid var(--line);border-radius:10px;
+    margin-bottom:8px;font-size:13.5px;line-height:1.6;color:var(--ink)}
   .prose{font-size:16px;line-height:1.95;color:var(--ink2);margin-bottom:30px}
   .prose p{margin:0 0 16px}
   .hl{margin:0 0 30px;padding:0;list-style:none}
@@ -308,6 +326,13 @@
     .body{font-size:16px}
     .body h2{font-size:19px}
     .nav{gap:14px}
+    /* 官网区块：手机端主视觉压矮、卡片改单列 */
+    .ogkv{height:196px}
+    .ogkv::after{background:linear-gradient(180deg,rgba(6,10,18,.55),rgba(6,10,18,.86))}
+    .ogkv-in{max-width:100%;padding:0 18px}
+    .ogkv-in p{font-size:17px}
+    .oggrid{grid-template-columns:1fr}
+    .ogcard .pic img{height:170px}
   }
 
   /* ===== 资讯中心：原创资讯图文卡片 ===== */
@@ -440,6 +465,13 @@
 </header>
 <main class="wrap">
   <nav class="crumb"><a href="/">首页</a><i>/</i><a href="/games">游戏大厅</a><i>/</i><span>热血江湖2.0</span></nav>
+
+  <div class="ogkv" style="background-image:url('../assets/images/official/jh/hero-cover.webp?v=20260928a')">
+    <div class="ogkv-in">
+      <span>官方网站</span>
+      <p>江湖再启，热血不灭</p>
+    </div>
+  </div>
   <div class="ghero">
     <div class="pic"><img src="../assets/images/rxjianghu2_cover.jpg?v=20260928a" alt="热血江湖2.0" width="560" height="315" decoding="async" fetchpriority="high"></div>
     <div class="info">
@@ -477,6 +509,45 @@
 <p>职业方面完整保留端游五大经典职业——刀客高体力高防御、剑客攻防均衡、枪客爆发顶尖、弓手远程输出、医师团队辅助，各职业定位清晰、互有克制。官方建议新手优先跟随主线任务推进，先解锁拍卖行、战盟、副本等核心系统，再开展刷怪养成与竞技玩法。</p>
 </div>
 
+  <h2 class="sec-h">游戏特色</h2>
+  <div class="oggrid">
+    <div class="ogcard">
+      <div class="pic"><img src="../assets/images/official/jh/feature-pvp.jpg?v=20260928a" alt="千人同屏 · 热血PK" loading="lazy" decoding="async"></div>
+      <div class="bd"><h3>千人同屏 · 热血PK</h3><p>跨服争霸、帮派混战，千人同屏技能特效拉满，体验刀刀见血的热血群战。</p></div>
+    </div>
+    <div class="ogcard">
+      <div class="pic"><img src="../assets/images/official/jh/feature-world.jpg?v=20260928a" alt="开放江湖 · 自由探索" loading="lazy" decoding="async"></div>
+      <div class="bd"><h3>开放江湖 · 自由探索</h3><p>山川湖海、古城秘境尽收眼底，自由探索的广袤武侠世界等你来闯。</p></div>
+    </div>
+    <div class="ogcard">
+      <div class="pic"><img src="../assets/images/official/jh/feature-mount.jpg?v=20260928a" alt="神兽坐骑 · 酷炫外观" loading="lazy" decoding="async"></div>
+      <div class="bd"><h3>神兽坐骑 · 酷炫外观</h3><p>烈焰猛虎、玄冰神龙，收集养成你的专属神兽坐骑，驰骋江湖威风凛凛。</p></div>
+    </div>
+  </div>
+  <h2 class="sec-h">五大职业</h2>
+  <div class="oggrid">
+    <div class="ogcard">
+      <div class="pic"><img src="../assets/images/official/jh/class-daoke.jpg?v=20260928a" alt="刀客" loading="lazy" decoding="async"></div>
+      <div class="bd"><h3>刀客</h3><p>刀光所至，寸草不生</p></div>
+    </div>
+    <div class="ogcard">
+      <div class="pic"><img src="../assets/images/official/jh/class-jianke.jpg?v=20260928a" alt="剑客" loading="lazy" decoding="async"></div>
+      <div class="bd"><h3>剑客</h3><p>一剑光寒十九洲</p></div>
+    </div>
+    <div class="ogcard">
+      <div class="pic"><img src="../assets/images/official/jh/class-gongshou.jpg?v=20260928a" alt="弓手" loading="lazy" decoding="async"></div>
+      <div class="bd"><h3>弓手</h3><p>百步穿杨，箭定乾坤</p></div>
+    </div>
+    <div class="ogcard">
+      <div class="pic"><img src="../assets/images/official/jh/class-qiangke.jpg?v=20260928a" alt="枪客" loading="lazy" decoding="async"></div>
+      <div class="bd"><h3>枪客</h3><p>我自横枪向天笑</p></div>
+    </div>
+    <div class="ogcard">
+      <div class="pic"><img src="../assets/images/official/jh/class-yixian.jpg?v=20260928a" alt="医师" loading="lazy" decoding="async"></div>
+      <div class="bd"><h3>医师</h3><p>医者仁心，妙手回春</p></div>
+    </div>
+  </div>
+
 <h2 class="sec-h">《热血江湖2.0》精彩图集</h2>
 <div class="gallery">
   <img src="../assets/images/art/rxjianghu-1.jpg" alt="热血江湖2.0 游戏截图 1" loading="lazy" width="800" height="450">
@@ -489,7 +560,7 @@
   <img src="../assets/images/art/rxjianghu-8.jpg" alt="热血江湖2.0 游戏截图 8" loading="lazy" width="800" height="450">
 </div>
 
-<h2 class="sec-h">游戏特色</h2>
+<h2 class="sec-h">游戏亮点</h2>
 <ul class="hl">
   <li>完整复刻端游五大职业：刀客（高体力高防御前排）、剑客（攻防均衡）、枪客（爆发顶尖）、弓手（远程输出）、医师（团队治疗辅助），无碾压关系</li>
   <li>正邪两大阵营对立，战盟攻城战每周六开启，设置报名、分级与正式赛事三段赛程，分甲、乙、丙三级梯队</li>
