@@ -141,6 +141,8 @@
   .srch-panel[hidden]{display:none}
   .srch-item{display:block;padding:9px 12px;border-radius:8px;transition:.15s}
   .srch-item:hover{background:rgba(61,123,255,.14)}
+  /* 键盘上下键选中态（见文末搜索脚本） */
+  .srch-item.on{background:rgba(61,123,255,.2)}
   .srch-item .t{display:block;font-size:.86rem;font-weight:600;line-height:1.45}
   .srch-item .m{display:block;font-size:.72rem;color:var(--dim);margin-top:3px}
   .srch-item .m b{color:var(--accent2);font-weight:600}
@@ -148,6 +150,7 @@
   .srch-group-title{padding:8px 12px 6px;font-size:.72rem;color:var(--dim);font-weight:600;letter-spacing:.5px}
   .srch-game-card{display:grid;grid-template-columns:88px 1fr;gap:12px;padding:10px;border-radius:12px;background:linear-gradient(135deg,rgba(61,123,255,.12),rgba(0,212,255,.06));border:1px solid rgba(61,123,255,.25);margin-bottom:4px;transition:.2s}
   .srch-game-card:hover{background:linear-gradient(135deg,rgba(61,123,255,.2),rgba(0,212,255,.1));border-color:rgba(61,123,255,.5);transform:translateY(-1px)}
+  .srch-game-card.on{background:linear-gradient(135deg,rgba(61,123,255,.22),rgba(0,212,255,.12));border-color:rgba(61,123,255,.55)}
   .srch-game-card .cover{width:88px;height:88px;border-radius:10px;overflow:hidden;background:var(--line);position:relative}
   .srch-game-card .cover img{width:100%;height:100%;object-fit:cover;display:block}
   .srch-game-card .info{display:flex;flex-direction:column;justify-content:center;min-width:0}
@@ -792,6 +795,7 @@ buildTabs();renderGames();
   var GAME_COVERS={"龙之谷启程":"assets/images/longzhigu_cover.jpg","热血江湖2.0":"assets/images/rxjianghu2_cover.jpg","武林外传：十年之约":"assets/images/wulin_cover.jpg","墨香情":"assets/images/moxiangqing_cover.jpg","星辰变：归来":"assets/images/xingchenbian_cover.jpg","飞飞：重逢":"assets/images/feifei2_cover.jpg","神泣：纷争":"assets/images/shenqi_cover.jpg","荣耀出征卡点服":"assets/images/rongyao_cover.jpg","千年盛世：千年传奇版":"assets/images/qiannian_cover.jpg","龙城秘境：凤凰沉默":"assets/images/longcheng_cover.jpg","剑与翼—经典复刻":"assets/images/jianyu_cover.jpg","龙城秘境：觉醒合击":"assets/images/juexingheji_cover.jpg","小小屠龙：原始火龙":"assets/images/xiaoxiaotulong_cover.jpg","荣耀出征":"assets/images/rongyao_cover.jpg","龙城秘境：重返冰雪":"assets/images/longcheng_bingxue_cover.jpg","决战破晓":"assets/images/juezhan_cover.jpg","小小屠龙：幻变三职业":"assets/images/xxtl_huanbian_cover.jpg","小小屠龙：灵符自由版":"assets/images/xxtl_lingfu_cover.jpg","小小屠龙：3D合击版":"assets/images/xxtl_3dheji_cover.jpg","风暴远征：英雄年代联动版":"assets/images/fengbao_cover.jpg","永恒岛：高清重制版":"assets/images/yonghengdao_cover.jpg","魔力宝贝回忆十宠版":"assets/images/molibaobei_cover.jpg","热江：武林版":"assets/images/rejiang_cover.jpg","小小屠龙：卡点重置版":"assets/images/xxtl_kadian_cover.jpg","奇迹世界：起源":"assets/images/qijishijie_cover.jpg","天天龙族怀旧服":"assets/images/tiantianlongzu_cover.jpg","寻梦丝路":"assets/images/xunmengsilu_cover.jpg","小小屠龙：冰雪骑战":"assets/images/xxtl_bingxueqizhan_cover.jpg","烈火屠龙：美杜莎卡点服":"assets/images/liehuotulong_cover.jpg","永恒岛：怀旧版":"assets/images/yonghengdao_huaijiu_cover.jpg","修仙家族模拟器2":"assets/images/xiuxianjiazu2_cover.jpg","义战龙城：3D纯净服":"assets/images/yizhanlongcheng_cover.jpg","热江：全新玩法":"assets/images/rejiang_xinwanfa_cover.jpg","巴风特之怒：RO怀旧":"assets/images/bafengte_cover.jpg","千年盛世：原始千年":"assets/images/qiannian_yuanshi_cover.jpg","永恒岛：彩虹回忆":"assets/images/yonghengdao_caihong_cover.jpg","金装裁决":"assets/images/jinzhuangcaijue_cover.jpg","屠龙决战沙城：传奇三光通版":"assets/images/tulongjuezhan_cover.jpg","热血传说：复古传奇":"assets/images/rexuechuanshuo_cover.jpg","机战：钢铁巨舰":"assets/images/jizhan_cover.jpg","屠龙世界：再战沙巴克":"assets/images/tulongshijie_cover.jpg","独步武林2.0江湖":"assets/images/dubuwulin_cover.jpg","精灵永恒":"assets/images/jinglingyongheng_cover.jpg"};
   function data(){return (typeof SEARCH_INDEX!=='undefined'&&SEARCH_INDEX)?SEARCH_INDEX:null;}
   function esc2(s){var d=document.createElement('div');d.textContent=(s==null?'':String(s));return d.innerHTML;}
+  var curIdx=-1; /* 键盘 ↑/↓ 的当前高亮项，面板每次重渲染都会重置 */
   function render(q){
     q=String(q||'').trim().toLowerCase();
     if(!q){panel.hidden=true;panel.innerHTML='';return;}
@@ -843,14 +847,32 @@ buildTabs();renderGames();
     }
     panel.innerHTML=html;
     panel.hidden=false;
+    curIdx=-1;
+  }
+  /* 结果的键盘操作：↑/↓ 移动高亮，回车打开高亮项（未选中时退回第一条）。
+     高亮只用一个 .on 类，不引入 combobox/listbox 那套 ARIA —— 结果本身是原生 <a>，
+     屏幕阅读器与 Tab 顺序走原生语义就够，半套 ARIA 反而更容易出错。 */
+  function hitEls(){return panel.querySelectorAll('a');}
+  function moveHit(d){
+    var a=hitEls();if(!a.length)return;
+    curIdx=(curIdx+d+a.length)%a.length;
+    for(var i=0;i<a.length;i++)a[i].classList.toggle('on',i===curIdx);
+    if(a[curIdx].scrollIntoView)a[curIdx].scrollIntoView({block:'nearest'});
+  }
+  function openHit(){
+    var a=hitEls();if(!a.length)return;
+    var t=a[curIdx>=0&&curIdx<a.length?curIdx:0];
+    if(t)location.href=t.getAttribute('href');
   }
   input.addEventListener('input',function(){render(input.value)});
   input.addEventListener('focus',function(){if(input.value)render(input.value)});
   input.addEventListener('keydown',function(e){
-    if(e.key==='Escape'){input.value='';panel.hidden=true;input.blur();}
-    else if(e.key==='Enter'){var f=panel.querySelector('a');if(f){location.href=f.getAttribute('href');}}
+    if(e.key==='Escape'){input.value='';panel.hidden=true;curIdx=-1;input.blur();}
+    else if(e.key==='ArrowDown'){e.preventDefault();moveHit(1);}
+    else if(e.key==='ArrowUp'){e.preventDefault();moveHit(-1);}
+    else if(e.key==='Enter'){openHit();}
   });
-  document.addEventListener('click',function(e){if(!panel.contains(e.target)&&e.target!==input)panel.hidden=true;});
+  document.addEventListener('click',function(e){if(!panel.contains(e.target)&&e.target!==input){panel.hidden=true;curIdx=-1;}});
 })();
 
 /* ===== 导航高亮 & 移动端菜单 ===== */

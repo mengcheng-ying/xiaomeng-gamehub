@@ -46,3 +46,24 @@
 
 /robots.txt
   Cache-Control: public, max-age=1800
+
+# 内部文件：不该出现在搜索结果里。
+# 2026-10-09：robots.txt 里写的是 /admin.html、/_compare.html，但 Cloudflare Pages 的
+#   「clean URL」会把 /admin.html 308 到 /admin，爬虫抓到的是 /admin —— 规则没拦住；
+#   同理还有 LINKS.md、.baseline-* 构建基线、.github/ 下的工作流状态文件，都能直接被访问到。
+#   robots.txt 已在同批补全，这里再加一层 X-Robots-Tag：Cloudflare 后台若开了「托管 robots.txt」，
+#   本仓库文件前会被插入受管内容，光靠 robots.txt 并不可靠。
+/admin
+  X-Robots-Tag: noindex, nofollow
+/admin.html
+  X-Robots-Tag: noindex, nofollow
+/_compare
+  X-Robots-Tag: noindex, nofollow
+/_compare.html
+  X-Robots-Tag: noindex, nofollow
+/LINKS.md
+  X-Robots-Tag: noindex, nofollow
+/.baseline*
+  X-Robots-Tag: noindex, nofollow
+/.github/*
+  X-Robots-Tag: noindex, nofollow

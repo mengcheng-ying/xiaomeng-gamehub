@@ -1604,7 +1604,11 @@ ${cardsHtml}
           name: `${g.gameName}礼包列表`, numberOfItems: g.count,
           itemListElement: g.gifts.map((gf, i) => ({
             '@type': 'ListItem', position: i + 1, name: gf.name,
-            description: `${gf.code}（${gf.period || ''}）`
+            /* 2026-10-09：原文案是 `${gf.code}（${gf.period || ''}）`，而绝大多数礼包码
+               没有有效期，于是 11 个礼包页的结构化数据全渲染成「JLYH666（）」这种空括号 ——
+               搜索结果里等于什么都没说。改为把兑换码、物品清单写进 description，
+               有有效期时再补上。 */
+            description: `兑换码 ${gf.code}${gf.items ? '：' + gf.items : ''}${gf.period ? '（有效期 ' + gf.period + '）' : ''}`
           }))
         }
       ] }

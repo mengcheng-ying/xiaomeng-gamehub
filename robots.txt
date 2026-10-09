@@ -4,43 +4,83 @@
 # 若发现字节/抖音收录异常，请到 Cloudflare 面板关闭「托管 robots.txt」，
 # 或把 Bytespider 从屏蔽名单里移除。
 
+# 2026-10-09 补：Cloudflare Pages 开了 clean URL，/admin.html 会被 308 到 /admin，
+# 爬虫最终抓到的地址是 /admin，只写 /admin.html 拦不住 —— 故把「干净地址」一并列出；
+# 同时补上 LINKS.md、/.baseline（构建基线）、/.github/（工作流状态）这些内部文件。
+# 每个分组都重复一遍的原因同下：部分实现只取第一个匹配的组。
+
 # ---- 全部爬虫 ----
 User-agent: *
 Allow: /
+Disallow: /admin
 Disallow: /admin.html
+Disallow: /_compare
 Disallow: /_compare.html
+Disallow: /LINKS.md
+Disallow: /.baseline
+Disallow: /.github/
 
 # ---- 搜索引擎爬虫：完全放行 ----
 # 部分实现只取第一个匹配的组，故这里重复声明排除规则，与 * 组保持一致
 User-agent: Baiduspider
 Allow: /
+Disallow: /admin
 Disallow: /admin.html
+Disallow: /_compare
 Disallow: /_compare.html
+Disallow: /LINKS.md
+Disallow: /.baseline
+Disallow: /.github/
 
 User-agent: Baiduspider-render
 Allow: /
+Disallow: /admin
 Disallow: /admin.html
+Disallow: /_compare
 Disallow: /_compare.html
+Disallow: /LINKS.md
+Disallow: /.baseline
+Disallow: /.github/
 
 User-agent: Bytespider
 Allow: /
+Disallow: /admin
 Disallow: /admin.html
+Disallow: /_compare
 Disallow: /_compare.html
+Disallow: /LINKS.md
+Disallow: /.baseline
+Disallow: /.github/
 
 User-agent: Sogou web spider
 Allow: /
+Disallow: /admin
 Disallow: /admin.html
+Disallow: /_compare
 Disallow: /_compare.html
+Disallow: /LINKS.md
+Disallow: /.baseline
+Disallow: /.github/
 
 User-agent: 360Spider
 Allow: /
+Disallow: /admin
 Disallow: /admin.html
+Disallow: /_compare
 Disallow: /_compare.html
+Disallow: /LINKS.md
+Disallow: /.baseline
+Disallow: /.github/
 
 User-agent: Googlebot
 Allow: /
+Disallow: /admin
 Disallow: /admin.html
+Disallow: /_compare
 Disallow: /_compare.html
+Disallow: /LINKS.md
+Disallow: /.baseline
+Disallow: /.github/
 
 # ---- 仅用于训练 AI 模型的爬虫：不参与搜索收录，予以屏蔽 ----
 User-agent: GPTBot
