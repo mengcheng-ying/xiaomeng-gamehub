@@ -176,8 +176,13 @@
     .srch-panel{display:grid;grid-template-columns:42% 58%;gap:8px;align-items:start}
     .srch-game-card{grid-column:1;padding:8px;margin-bottom:0;display:flex;flex-direction:column;gap:6px}
     .srch-game-card .cover{width:100%;height:auto;aspect-ratio:16/10;border-radius:8px}
-    .srch-game-card .info{display:none}
-    .srch-game-card .gn{display:block;font-size:.76rem;font-weight:700;line-height:1.3;margin:0}
+    /* 2026-10-09 修：这里原本是 .info{display:none}，而游戏名 .gn 是 .info 的子元素，
+       父级一隐藏、下面那行「.gn{display:block}」就永远看不到 —— 手机端搜出来的游戏
+       只剩一张没有名字的封面图，等于没法确认自己点的是哪款游戏。
+       原意明显是「只留封面 + 名称，隐藏分类/进入游戏页那两行」，改成让 .info 显示即可，
+       .gm / .enter 在下面两行依旧单独隐藏。 */
+    .srch-game-card .info{display:block;min-width:0}
+    .srch-game-card .gn{font-size:.76rem;font-weight:700;line-height:1.3;margin:0}
     .srch-game-card .gm{display:none}
     .srch-game-card .enter{display:none}
     /* 文章列表在右侧 */
