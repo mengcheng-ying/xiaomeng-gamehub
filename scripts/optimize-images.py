@@ -9,12 +9,14 @@
   - assets/images/hero/*.webp       宽度 > 960 时缩到 960，WebP q78
   - assets/images/**/*.jpg          宽度 > 960 时缩到 960，JPEG q80（渐进式）
   - assets/images/logo_xiaomeng.png 宽度 > 160 时缩到 160，PNG 优化
+  - official/**/*.png               PNG 图标：宽度 > 960 时缩到 960，再试 256 色量化
 
 因为每条规则都以「宽度超过阈值」为前提，重复执行不会有任何变化，
 所以可以安全地挂在每次构建流程里。
 """
 import os
 import sys
+from io import BytesIO
 from pathlib import Path
 
 try:
@@ -31,6 +33,8 @@ COVER_MAX_W = 960
 LOGO_MAX_W = 160
 WEBP_Q = 78
 JPG_Q = 80
+# PNG（logo / 图标）：只有省下这么多 KB 才真的替换，避免为了几百字节来回折腾
+PNG_MIN_SAVE_KB = 30
 
 
 def kb(p):
@@ -64,6 +68,49 @@ def process(path, max_w, fmt, quality=None):
     return before, after
 
 
+def optimize_png(path, max_w):
+    """PNG 图标压缩（logo / app icon / 二维码这类画面简单的图）。
+
+    2026-10-09 起因：并入的官网里，导航栏只显示 40px 高的 logo 竟然是 1172×1172、
+    1.6MB，手机端光一个图标就要多下 1.6MB。站内原来的规则只管 JPG/WebP 和
+    一张 logo_xiaomeng.png，PNG 一直是原样发出去。
+
+    做法：超宽先缩到 max_w；再比较「原样重压」与「256 色量化」两种结果，取小的那个。
+    只有比原文件小出 PNG_MIN_SAVE_KB 才替换 —— 重复执行不会反复改动，保持幂等。
+    """
+    before = kb(path)
+    try:
+        img = Image.open(path)
+    except Exception as e:
+        print('  ! 跳过（无法打开）%s: %s' % (path.name, e))
+        return None
+    w, h = img.size
+    has_alpha = img.mode in ('RGBA', 'LA') or (img.mode == 'P' and 'transparency' in img.info)
+
+    im = img
+    if w > max_w:
+        im = im.resize((max_w, max(1, round(h * max_w / w))), Image.LANCZOS)
+
+    variants = []
+    buf = BytesIO()
+    im.save(buf, 'PNG', optimize=True)
+    variants.append(buf.getvalue())
+
+    base = im.convert('RGBA') if has_alpha else im.convert('RGB')
+    buf2 = BytesIO()
+    base.convert('P', palette=Image.ADAPTIVE, colors=256).save(buf2, 'PNG', optimize=True)
+    variants.append(buf2.getvalue())
+
+    best = min(variants, key=len)
+    after = len(best) / 1024
+    if before - after < PNG_MIN_SAVE_KB:
+        return None
+    path.write_bytes(best)
+    print('  %-32s %7.1f KB -> %6.1f KB  (%dx%d -> %dx%d)'
+          % (path.name, before, after, w, h, im.size[0], im.size[1]))
+    return before, after
+
+
 def main():
     targets = []
     hero = IMG / 'hero'
@@ -94,6 +141,18 @@ def main():
             changed += 1
             total_before += b
             total_after += a
+
+    # 官网里的 PNG 图标（logo / app icon）单独走一套：缩尺寸 + 可选 256 色量化
+    if official.is_dir():
+        pngs = sorted(official.rglob('*.png')) + sorted(official.rglob('*.PNG'))
+        if pngs:
+            print('\n检查 %d 个 PNG 图标' % len(pngs))
+        for p in pngs:
+            r = optimize_png(p, COVER_MAX_W)
+            if r is not None:
+                changed += 1
+                total_before += r[0]
+                total_after += r[1]
 
     if changed:
         print('\n处理了 %d 个文件：%.1f KB -> %.1f KB（省下 %.1f KB）'

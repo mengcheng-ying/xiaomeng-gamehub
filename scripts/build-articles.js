@@ -99,7 +99,7 @@ const OFFICIAL_SITES = {
   46: 'jizhan',           // 机战：钢铁巨舰
   1: 'longzhigu',         // 龙之谷启程
   45: 'rexuejianghu2',    // 热血江湖2.0
-  6: 'rongyao',           // 荣耀出征卡点服
+  6: 'rongyao',           // 荣耀出征·原始点卡服
   2: 'moxiangqing',       // 墨香情
   21: 'wulinwaizhuan',    // 武林外传：十年之约
   36: 'xiuxianjiazu2'     // 修仙家族模拟器2
