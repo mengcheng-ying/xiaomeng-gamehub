@@ -114,5 +114,15 @@ const GIFTS_DATA = [
       { name: "礼包码 5", code: "JLYH8888", items: "3小时双倍经验小精灵*1、初级强化幸运卷轴*1", period: "" },
       { name: "礼包码 6", code: "GQ888", items: "珍稀级装备重铸石*1、3阶宝石随机宝箱*1、3小时初级战神小精灵*1", period: "" }
     ]
+  },
+  {
+    gameId: 49,
+    game: "独步武林",
+    tag: "礼包码",
+    gifts: [
+      { name: "成长礼包", code: "VIP666", items: "强化石*10、大培元丹*3、太极神丹*3、白银宝盒*1", period: "" },
+      { name: "新手礼包", code: "VIP888", items: "金疮药（大）*100、雪原参*100、生死符*20、热血令*1", period: "" },
+      { name: "关注礼包", code: "VIP999", items: "强化石*10、护心丹（30%）*1、长白山参*1、传送符*20", period: "" }
+    ]
   }
 ];
