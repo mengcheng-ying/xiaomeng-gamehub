@@ -57,4 +57,12 @@ jobs:
             exit 0
           fi
           git commit -m "build: 重建攻略静态页与索引页并压缩图片体积"
-          git push
+          # 2026-10-09 补：同一次 push 会同时触发本工作流与「百度链接自动推送」，
+          # 两边都要往 main 推提交，抢在一起时本工作流会被拒
+          #   ! [rejected] main -> main (fetch first)
+          # 而脚本产物随 runner 一起销毁 —— 2026-10-09 合并子域名官网那次，
+          # 压缩好的 23 张图就是这么丢的，线上一直是未压缩的大图。
+          # concurrency 组只是「减弱」并发，仓库里还有别的推送方（定时任务、人工提交），
+          # 所以这里在 push 前再收一次远端改动，失败则重试一次。
+          git pull --rebase --autostash
+          git push || { echo "首次 push 被拒，rebase 后重试"; git pull --rebase --autostash; git push; }
