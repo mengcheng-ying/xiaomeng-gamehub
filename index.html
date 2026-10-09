@@ -173,7 +173,10 @@
     .srch-panel{right:0;left:0;width:auto;top:calc(100% + 8px);max-height:60vh;padding:8px}
     /* 手机端搜索结果：游戏卡片在左，文章列表在右 */
     .srch-group-title{display:none}
-    .srch-panel{display:grid;grid-template-columns:42% 58%;gap:8px;align-items:start}
+    /* 2026-10-09 修：原来写的是 42% / 58%，百分比按内容盒计算、再加上 8px 列间距，
+       两列加起来正好比容器宽 8px —— 手机端下拉面板因此一直挂着一条横向滚动条。
+       换成 fr（先扣掉间距再分比例）即消除溢出，左右比例不变。 */
+    .srch-panel{display:grid;grid-template-columns:4.2fr 5.8fr;gap:8px;align-items:start}
     .srch-game-card{grid-column:1;padding:8px;margin-bottom:0;display:flex;flex-direction:column;gap:6px}
     .srch-game-card .cover{width:100%;height:auto;aspect-ratio:16/10;border-radius:8px}
     /* 2026-10-09 修：这里原本是 .info{display:none}，而游戏名 .gn 是 .info 的子元素，
