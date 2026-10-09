@@ -212,12 +212,12 @@
       ]
     }
   ],
-  "lastRun": "2026-10-09T04:37:54.636Z",
+  "lastRun": "2026-10-09T04:46:05.269Z",
   "lastResult": {
-    "at": "2026-10-09T04:37:54.636Z",
-    "attempted": 10,
-    "success": 10,
-    "outcome": "pushed",
+    "at": "2026-10-09T04:46:05.269Z",
+    "attempted": 1,
+    "success": 0,
+    "outcome": "over_quota",
     "errors": {}
   }
 }
