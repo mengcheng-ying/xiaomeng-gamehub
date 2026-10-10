@@ -86,7 +86,9 @@
     "https://fmbly.com/guides/24": "2026-10-09",
     "https://fmbly.com/guides/25": "2026-10-09",
     "https://fmbly.com/guides/31": "2026-10-09",
-    "https://fmbly.com/guides/32": "2026-10-09"
+    "https://fmbly.com/guides/32": "2026-10-09",
+    "https://fmbly.com/gift/49": "2026-10-10",
+    "https://fmbly.com/game/49": "2026-10-10"
   },
   "history": [
     {
@@ -210,14 +212,21 @@
         "https://fmbly.com/guides/31",
         "https://fmbly.com/guides/32"
       ]
+    },
+    {
+      "at": "2026-10-10T04:04:55.510Z",
+      "urls": [
+        "https://fmbly.com/gift/49",
+        "https://fmbly.com/game/49"
+      ]
     }
   ],
-  "lastRun": "2026-10-09T14:40:18.936Z",
+  "lastRun": "2026-10-10T04:04:55.510Z",
   "lastResult": {
-    "at": "2026-10-09T14:40:18.936Z",
+    "at": "2026-10-10T04:04:55.510Z",
     "attempted": 2,
-    "success": 0,
-    "outcome": "over_quota",
+    "success": 2,
+    "outcome": "pushed",
     "errors": {}
   }
 }
