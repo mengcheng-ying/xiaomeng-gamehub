@@ -1038,15 +1038,12 @@ section{position:relative;scroll-margin-top:64px}
       </a>
       <nav class="footer-links" aria-label="页脚链接">
         <a href="/">小梦怀旧手游主站</a>
-        <a data-link="用户协议">用户协议</a>
-        <a data-link="隐私政策">隐私政策</a>
-        <a data-link="客服中心">客服中心</a>
         <a href="#media">游戏截图</a>
         <a href="#news">新闻资讯</a>
       </nav>
     </div>
     <div class="footer-copy">
-      <span>© 2026 精灵永恒项目组 · 本站为演示站点</span>
+      <span>© 2026 精灵永恒项目组</span>
       <span>抵制不良游戏 · 拒绝盗版游戏 · 注意自我保护 · 谨防受骗上当</span>
     </div>
   </div>
@@ -1061,12 +1058,12 @@ section{position:relative;scroll-margin-top:64px}
 <button id="backtop" aria-label="回到顶部">
   <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
-<a id="backsite" href="/" aria-label="返回小梦怀旧手游主站">
+<a id="backsite" href="/" aria-label="更多 - 小梦怀旧手游主站">
   <span class="bs-portal" aria-hidden="true">
     <span class="ring"></span>
     <svg viewBox="0 0 24 24"><path d="M9 5 4 10l5 5"/><path d="M4 10h9a6 6 0 0 1 0 12h-3"/></svg>
   </span>
-  <span class="bs-text"><b>返回主站</b><span>小梦怀旧手游</span></span>
+  <span class="bs-text"><b>更多</b><span>小梦怀旧手游</span></span>
 </a>
 
 <script>
@@ -1121,11 +1118,6 @@ section{position:relative;scroll-margin-top:64px}
     clearTimeout(toastTimer);
     toastTimer = setTimeout(function(){ toastEl.classList.remove('show'); }, 2400);
   }
-
-  /* ---------- 页脚链接（演示占位） ---------- */
-  document.querySelectorAll('[data-link]').forEach(function(a){
-    a.addEventListener('click', function(){ toast('「' + a.getAttribute('data-link') + '」为演示占位内容'); });
-  });
 
   /* ---------- 新闻资讯（演示占位） ---------- */
   document.querySelectorAll('[data-news]').forEach(function(item){
