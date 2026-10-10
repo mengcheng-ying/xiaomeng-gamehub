@@ -94,7 +94,8 @@ const gameExtra = loadJsObjectSafe('data/game-extra.js', 'GAME_EXTRA');
 /* ===== 游戏「官方网站」（2026-10-09）=====
    原来挂在 fmbly.com 子域名上的 7 个游戏官网已整体并入本站 /official/<slug>/（原文件原样搬运）。
    从此这些游戏的入口一律直接指向官网；/game/<id> 只保留一个跳转页，老链接不失效。
-   另外 37 款没有独立官网的游戏不受影响，仍走 /game/<id>。 */
+   另外 36 款没有独立官网的游戏不受影响，仍走 /game/<id>。
+   2026-10-10 补：精灵永恒官网同样并入 /official/jinglingyongheng/（原样搬运，图片本地化）。 */
 const OFFICIAL_SITES = {
   46: 'jizhan',           // 机战：钢铁巨舰
   1: 'longzhigu',         // 龙之谷启程
@@ -102,7 +103,8 @@ const OFFICIAL_SITES = {
   6: 'rongyao',           // 荣耀出征·原始点卡服
   2: 'moxiangqing',       // 墨香情
   21: 'wulinwaizhuan',    // 武林外传：十年之约
-  36: 'xiuxianjiazu2'     // 修仙家族模拟器2
+  36: 'xiuxianjiazu2',    // 修仙家族模拟器2
+  48: 'jinglingyongheng'  // 精灵永恒
 };
 const officialPath = (id) => (OFFICIAL_SITES[id] ? '/official/' + OFFICIAL_SITES[id] + '/' : '');
 /** 某个游戏的入口地址：有官网就进官网，否则进站内游戏页 */
