@@ -104,7 +104,13 @@ const OFFICIAL_SITES = {
   2: 'moxiangqing',       // 墨香情
   21: 'wulinwaizhuan',    // 武林外传：十年之约
   36: 'xiuxianjiazu2',    // 修仙家族模拟器2
-  48: 'jinglingyongheng'  // 精灵永恒
+  48: 'jinglingyongheng', // 精灵永恒
+  49: 'dubuwulin'         // 独步武林2.0江湖（2026-10-12 官网并入，含职业/公告/攻略子页）
+};
+/* 官网附带的子页面（有独立内容的），一并进 sitemap；{ 游戏id: [相对子路径] }
+   注：空壳页（如攻略占位页）不进 sitemap，与「空 /guides 不提交」的收录策略一致。 */
+const OFFICIAL_EXTRA_PAGES = {
+  49: ['classes.html', 'news.html']
 };
 const officialPath = (id) => (OFFICIAL_SITES[id] ? '/official/' + OFFICIAL_SITES[id] + '/' : '');
 /** 某个游戏的入口地址：有官网就进官网，否则进站内游戏页 */
@@ -2269,6 +2275,14 @@ const HOME_LD_END = '<!-- HOME-LD:END -->';
 }
 
 fs.writeFileSync(path.join(ROOT, indexRel), indexSrc);
+
+// ===== 10e. 官网子页面加入 sitemap（2026-10-12）=====
+/* 并入本站的官网页若有带独立内容的子页（如职业详解、公告礼包码），一并提交收录。 */
+for (const [gid, pages] of Object.entries(OFFICIAL_EXTRA_PAGES)) {
+  const base = officialPath(Number(gid));
+  if (!base) continue;
+  for (const p of pages) sitemapUrls.push({ loc: SITE + base + p, lastmod: TODAY, priority: '0.6' });
+}
 
 // ===== 11. 重建 sitemap.xml =====
 /* 2026-09-28：只提交「有实质内容」的页面。
