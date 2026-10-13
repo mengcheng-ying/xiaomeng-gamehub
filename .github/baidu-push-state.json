@@ -88,7 +88,17 @@
     "https://fmbly.com/guides/31": "2026-10-09",
     "https://fmbly.com/guides/32": "2026-10-09",
     "https://fmbly.com/gift/49": "2026-10-10",
-    "https://fmbly.com/game/49": "2026-10-10"
+    "https://fmbly.com/game/49": "2026-10-10",
+    "https://fmbly.com/official/longzhigu/": "2026-10-13",
+    "https://fmbly.com/official/rexuejianghu2/": "2026-10-13",
+    "https://fmbly.com/official/wulinwaizhuan/": "2026-10-13",
+    "https://fmbly.com/official/moxiangqing/": "2026-10-13",
+    "https://fmbly.com/official/rongyao/": "2026-10-13",
+    "https://fmbly.com/official/xiuxianjiazu2/": "2026-10-13",
+    "https://fmbly.com/official/jizhan/": "2026-10-13",
+    "https://fmbly.com/official/jinglingyongheng/": "2026-10-13",
+    "https://fmbly.com/official/dubuwulin/": "2026-10-13",
+    "https://fmbly.com/official/dubuwulin/classes.html": "2026-10-13"
   },
   "history": [
     {
@@ -219,14 +229,31 @@
         "https://fmbly.com/gift/49",
         "https://fmbly.com/game/49"
       ]
+    },
+    {
+      "at": "2026-10-13T11:45:05.781Z",
+      "urls": [
+        "https://fmbly.com/official/longzhigu/",
+        "https://fmbly.com/official/rexuejianghu2/",
+        "https://fmbly.com/official/wulinwaizhuan/",
+        "https://fmbly.com/official/moxiangqing/",
+        "https://fmbly.com/official/rongyao/",
+        "https://fmbly.com/official/xiuxianjiazu2/",
+        "https://fmbly.com/official/jizhan/",
+        "https://fmbly.com/official/jinglingyongheng/",
+        "https://fmbly.com/official/dubuwulin/",
+        "https://fmbly.com/official/dubuwulin/classes.html"
+      ]
     }
   ],
-  "lastRun": "2026-10-10T04:04:55.510Z",
+  "lastRun": "2026-10-13T11:45:05.781Z",
   "lastResult": {
-    "at": "2026-10-10T04:04:55.510Z",
-    "attempted": 2,
-    "success": 2,
-    "outcome": "pushed",
+    "at": "2026-10-13T11:45:05.781Z",
+    "attempted": 11,
+    "success": 10,
+    "remainAfter": 0,
+    "dupSuspect": 0,
+    "outcome": "over_quota",
     "errors": {}
   }
 }

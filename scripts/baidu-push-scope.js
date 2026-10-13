@@ -14,6 +14,8 @@ const SITE = 'https://fmbly.com';
 
 const PUSH_SCOPE = [
   /^\/$/,                 // 首页
+  /^\/official\/[a-z0-9-]+\/$/,        // 官网首页（2026-10-13 加：此前从未被推送过）
+  /^\/official\/[a-z0-9-]+\/[\w-]+\.html$/, // 官网页的子页（职业/公告等，有实质内容）
   /^\/games$/,            // 游戏大厅
   /^\/guides(?:\/\d+|\/misc)?$/, // 攻略中心 + 游戏攻略页
   /^\/gift(?:\/\d+)?$/,   // 礼包中心 + 游戏礼包页
@@ -45,11 +47,12 @@ function idOf(u) {
 function priority(u) {
   const p = pathOf(u);
   if (p === '/') return 0;                    // 首页：品牌词入口最先推
-  if (/^\/article\/\d+$/.test(p)) return 1;   // 新攻略：搜索引擎最需要及时发现的正文
-  if (/^\/guides(?:\/\d+|\/misc)?$/.test(p)) return 2; // 攻略中心与游戏攻略页
-  if (/^\/gift(?:\/\d+)?$/.test(p)) return 3; // 礼包中心与游戏礼包页
-  if (p === '/games') return 4;               // 游戏大厅
-  if (/^\/game\/\d+$/.test(p)) return 5;      // 游戏独立页
+  if (/^\/official\//.test(p)) return 1;      // 官网页（2026-10-13 起，优先级仅次于首页）
+  if (/^\/article\/\d+$/.test(p)) return 2;   // 新攻略：搜索引擎最需要及时发现的正文
+  if (/^\/guides(?:\/\d+|\/misc)?$/.test(p)) return 3; // 攻略中心与游戏攻略页
+  if (/^\/gift(?:\/\d+)?$/.test(p)) return 4; // 礼包中心与游戏礼包页
+  if (p === '/games') return 5;               // 游戏大厅
+  if (/^\/game\/\d+$/.test(p)) return 6;      // 游戏独立页
   return 9;
 }
 
