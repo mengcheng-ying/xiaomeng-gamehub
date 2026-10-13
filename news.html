@@ -555,6 +555,7 @@
   <div class="chips">
     <a href="#s-dn">龙之谷启程<b>2</b></a>
     <a href="#s-yxnd">风暴远征：英雄年代联动版<b>1</b></a>
+    <a href="#s-wlwz">武林外传：十年之约<b>1</b></a>
   </div>
 
   <h2 class="sec-h">各游戏最新公告</h2>
@@ -580,6 +581,15 @@
     </li>
   </ul>
   </section>
+  <section class="nsec">
+  <h3 class="cathd" id="s-wlwz">武林外传：十年之约<span class="cn">共 1 条 · <a href="/news/wlwz">查看全部</a></span></h3>
+  <ul class="news">
+    <li>
+      <div class="nh"><span class="nd">2026-10-13</span><span class="nc">开服公告</span><a href="/news/wlwz/manual-20261013-wlwz-g10">G10.一醉江湖-预创角已开启</a></div>
+      <p class="ns">武林外传绿色版【G10.一醉江湖】预创角已开启，正式开服时间：10月13日 10:00。预约方式：手机号登录预约抢码。</p>
+    </li>
+  </ul>
+  </section>
   </div>
 
   <div class="cta">
@@ -594,7 +604,7 @@
     var box=document.getElementById('newsSearch'),res=document.getElementById('newsRes'),
         browse=document.getElementById('newsBrowse'),hint=document.getElementById('newsHint');
     if(!box||!res||!browse)return;
-    var TOTAL=3;
+    var TOTAL=4;
     function render(){
       var q=String(box.value||'').trim().toLowerCase();
       if(!q){res.hidden=true;res.innerHTML='';browse.hidden=false;hint.textContent='输入即搜';return;}

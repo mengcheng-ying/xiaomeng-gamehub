@@ -1,8 +1,8 @@
 // 资讯/公告数据
 // 本次开区通知由用户提供，按游戏归档。
 const OFFICIAL_NEWS = {
-  "generatedAt": "2026-09-28T18:30:00.000Z",
-  "sourceNote": "用户提供的开区通知",
+  "generatedAt": "2026-10-13T02:07:14.077Z",
+  "sourceNote": "用户提供的开区通知与官方专区公告",
   "archives": {
     "yxnd": {
       "slug": "yxnd",
@@ -49,9 +49,37 @@ const OFFICIAL_NEWS = {
           "summary": "《龙之谷启程》“S54.青铜残月”将于2026年10月7日10:10开启。"
         }
       ]
+    },
+    "wlwz": {
+      "slug": "wlwz",
+      "official": "《武林外传》",
+      "site": "",
+      "newsUrl": "",
+      "gameIds": [
+        21
+      ],
+      "items": [
+        {
+          "date": "2026-10-13",
+          "category": "开服公告",
+          "title": "G10.一醉江湖-预创角已开启",
+          "key": "manual-20261013-wlwz-g10",
+          "url": "",
+          "summary": "武林外传绿色版【G10.一醉江湖】预创角已开启，正式开服时间：10月13日 10:00。预约方式：手机号登录预约抢码。"
+        }
+      ]
     }
   },
   "games": {
+    "1": {
+      "slug": "dn",
+      "official": "《龙之谷：启程》",
+      "site": "",
+      "newsUrl": "",
+      "gameIds": [
+        1
+      ]
+    },
     "18": {
       "slug": "yxnd",
       "official": "《风暴远征：英雄年代联动版》",
@@ -61,13 +89,13 @@ const OFFICIAL_NEWS = {
         18
       ]
     },
-    "1": {
-      "slug": "dn",
-      "official": "《龙之谷：启程》",
+    "21": {
+      "slug": "wlwz",
+      "official": "《武林外传》",
       "site": "",
       "newsUrl": "",
       "gameIds": [
-        1
+        21
       ]
     }
   }
