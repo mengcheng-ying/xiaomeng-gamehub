@@ -17,6 +17,7 @@ Disallow: /admin.html
 Disallow: /_compare
 Disallow: /_compare.html
 Disallow: /LINKS.md
+Disallow: /README.md
 Disallow: /.baseline
 Disallow: /.github/
 
@@ -29,6 +30,7 @@ Disallow: /admin.html
 Disallow: /_compare
 Disallow: /_compare.html
 Disallow: /LINKS.md
+Disallow: /README.md
 Disallow: /.baseline
 Disallow: /.github/
 
@@ -39,6 +41,7 @@ Disallow: /admin.html
 Disallow: /_compare
 Disallow: /_compare.html
 Disallow: /LINKS.md
+Disallow: /README.md
 Disallow: /.baseline
 Disallow: /.github/
 
@@ -49,6 +52,7 @@ Disallow: /admin.html
 Disallow: /_compare
 Disallow: /_compare.html
 Disallow: /LINKS.md
+Disallow: /README.md
 Disallow: /.baseline
 Disallow: /.github/
 
@@ -59,6 +63,7 @@ Disallow: /admin.html
 Disallow: /_compare
 Disallow: /_compare.html
 Disallow: /LINKS.md
+Disallow: /README.md
 Disallow: /.baseline
 Disallow: /.github/
 
@@ -69,6 +74,7 @@ Disallow: /admin.html
 Disallow: /_compare
 Disallow: /_compare.html
 Disallow: /LINKS.md
+Disallow: /README.md
 Disallow: /.baseline
 Disallow: /.github/
 
@@ -79,6 +85,7 @@ Disallow: /admin.html
 Disallow: /_compare
 Disallow: /_compare.html
 Disallow: /LINKS.md
+Disallow: /README.md
 Disallow: /.baseline
 Disallow: /.github/
 
