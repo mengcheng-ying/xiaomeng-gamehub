@@ -754,6 +754,19 @@ const INDEX_EXTRA_CSS = `
   }
 `;
 
+// 头条搜索「自动收录」JS（2026-10-14 梦尘从字节站长平台获取）
+// 作用：用户浏览页面时，自动把当前页 URL 推给头条爬虫，提高被收录的概率。
+// 站长平台原文：建议放在 <head> 里；与 sitemap / 普通链接提交互不影响，可重复提交。
+const TTZZ_PUSH = `<script>
+(function(){
+var el = document.createElement("script");
+el.src = "https://lf1-cdn-tos.bytegoofy.com/goofy/ttzz/push.js?fd9a2b9b4dc3d1d11eeddb7803e84800666dba9b870cab6c286b98cb684b76c44a4d40de0dd5fa9b5c2c10f69a3b501dc430e831103b45ce33654fb9f95b006c";
+el.id = "ttzz";
+var s = document.getElementsByTagName("script")[0];
+s.parentNode.insertBefore(el, s);
+})(window)
+</script>`;
+
 function head(title, desc, canonical, opts) {
   const o = opts || {};
   const prefix = o.prefix == null ? '../' : o.prefix;
@@ -788,6 +801,7 @@ ${o.published ? `<meta property="article:published_time" content="${esc(o.publis
 <link rel="manifest" href="${prefix}site.webmanifest">
 ${lds}
 ${o.extraHead || ''}
+${TTZZ_PUSH}
 <style>${BASE_CSS}</style>
 </head>
 <body>
