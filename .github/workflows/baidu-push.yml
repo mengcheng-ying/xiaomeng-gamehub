@@ -33,12 +33,15 @@ on:
     branches: [main]
     paths:
       - 'data/articles.js'
+      - 'data/official-news.js'
+      - 'data/news-bodies.js'
       - 'sitemap.xml'
       - 'index.html'
       - 'article/**'
       - 'guides/**'
       - 'gift/**'
       - 'game/**'
+      - 'news/**'
   workflow_dispatch:
     inputs:
       max:
