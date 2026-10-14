@@ -98,7 +98,8 @@
     "https://fmbly.com/official/jizhan/": "2026-10-13",
     "https://fmbly.com/official/jinglingyongheng/": "2026-10-13",
     "https://fmbly.com/official/dubuwulin/": "2026-10-13",
-    "https://fmbly.com/official/dubuwulin/classes.html": "2026-10-13"
+    "https://fmbly.com/official/dubuwulin/classes.html": "2026-10-13",
+    "https://fmbly.com/official/dubuwulin/news.html": "2026-10-14"
   },
   "history": [
     {
@@ -244,16 +245,22 @@
         "https://fmbly.com/official/dubuwulin/",
         "https://fmbly.com/official/dubuwulin/classes.html"
       ]
+    },
+    {
+      "at": "2026-10-14T06:31:37.229Z",
+      "urls": [
+        "https://fmbly.com/official/dubuwulin/news.html"
+      ]
     }
   ],
-  "lastRun": "2026-10-13T11:45:05.781Z",
+  "lastRun": "2026-10-14T06:31:37.229Z",
   "lastResult": {
-    "at": "2026-10-13T11:45:05.781Z",
-    "attempted": 11,
-    "success": 10,
-    "remainAfter": 0,
+    "at": "2026-10-14T06:31:37.229Z",
+    "attempted": 1,
+    "success": 1,
+    "remainAfter": 9,
     "dupSuspect": 0,
-    "outcome": "over_quota",
+    "outcome": "pushed",
     "errors": {}
   }
 }
