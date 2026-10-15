@@ -9,14 +9,12 @@
   - assets/images/hero/*.webp       宽度 > 960 时缩到 960，WebP q78
   - assets/images/**/*.jpg          宽度 > 960 时缩到 960，JPEG q80（渐进式）
   - assets/images/logo_xiaomeng.png 宽度 > 160 时缩到 160，PNG 优化
-  - official/**/*.png               PNG 图标：宽度 > 960 时缩到 960，再试 256 色量化
 
 因为每条规则都以「宽度超过阈值」为前提，重复执行不会有任何变化，
 所以可以安全地挂在每次构建流程里。
 """
 import os
 import sys
-from io import BytesIO
 from pathlib import Path
 
 try:
@@ -33,8 +31,6 @@ COVER_MAX_W = 960
 LOGO_MAX_W = 160
 WEBP_Q = 78
 JPG_Q = 80
-# PNG（logo / 图标）：只有省下这么多 KB 才真的替换，避免为了几百字节来回折腾
-PNG_MIN_SAVE_KB = 30
 
 
 def kb(p):
@@ -68,49 +64,6 @@ def process(path, max_w, fmt, quality=None):
     return before, after
 
 
-def optimize_png(path, max_w):
-    """PNG 图标压缩（logo / app icon / 二维码这类画面简单的图）。
-
-    2026-10-09 起因：并入的官网里，导航栏只显示 40px 高的 logo 竟然是 1172×1172、
-    1.6MB，手机端光一个图标就要多下 1.6MB。站内原来的规则只管 JPG/WebP 和
-    一张 logo_xiaomeng.png，PNG 一直是原样发出去。
-
-    做法：超宽先缩到 max_w；再比较「原样重压」与「256 色量化」两种结果，取小的那个。
-    只有比原文件小出 PNG_MIN_SAVE_KB 才替换 —— 重复执行不会反复改动，保持幂等。
-    """
-    before = kb(path)
-    try:
-        img = Image.open(path)
-    except Exception as e:
-        print('  ! 跳过（无法打开）%s: %s' % (path.name, e))
-        return None
-    w, h = img.size
-    has_alpha = img.mode in ('RGBA', 'LA') or (img.mode == 'P' and 'transparency' in img.info)
-
-    im = img
-    if w > max_w:
-        im = im.resize((max_w, max(1, round(h * max_w / w))), Image.LANCZOS)
-
-    variants = []
-    buf = BytesIO()
-    im.save(buf, 'PNG', optimize=True)
-    variants.append(buf.getvalue())
-
-    base = im.convert('RGBA') if has_alpha else im.convert('RGB')
-    buf2 = BytesIO()
-    base.convert('P', palette=Image.ADAPTIVE, colors=256).save(buf2, 'PNG', optimize=True)
-    variants.append(buf2.getvalue())
-
-    best = min(variants, key=len)
-    after = len(best) / 1024
-    if before - after < PNG_MIN_SAVE_KB:
-        return None
-    path.write_bytes(best)
-    print('  %-32s %7.1f KB -> %6.1f KB  (%dx%d -> %dx%d)'
-          % (path.name, before, after, w, h, im.size[0], im.size[1]))
-    return before, after
-
-
 def main():
     targets = []
     hero = IMG / 'hero'
@@ -122,16 +75,6 @@ def main():
     if logo.is_file():
         targets.append((logo, LOGO_MAX_W, 'PNG', None))
 
-    # 2026-10-09：原 7 个游戏子域名官网整体并入本站 /official/<slug>/**，
-    # 里面的主视觉/立绘/特色图原始宽度 960~1896、单张最大 840KB，
-    # 不压的话一个官网页要多下 4MB。上面的 glob 只扫 assets/images 顶层与 hero/，
-    # 这里对 official/ 递归一遍，规则口径与站内保持一致（宽 ≤960）。
-    official = ROOT / 'official'
-    if official.is_dir():
-        targets += [(p, COVER_MAX_W, 'JPEG', JPG_Q) for p in sorted(official.rglob('*.jpg'))]
-        targets += [(p, COVER_MAX_W, 'JPEG', JPG_Q) for p in sorted(official.rglob('*.jpeg'))]
-        targets += [(p, HERO_MAX_W, 'WEBP', WEBP_Q) for p in sorted(official.rglob('*.webp'))]
-
     print('检查 %d 个图片文件（只有宽度超阈值才会被处理）' % len(targets))
     total_before = total_after = 0.0
     changed = 0
@@ -142,18 +85,6 @@ def main():
             total_before += b
             total_after += a
 
-    # 官网里的 PNG 图标（logo / app icon）单独走一套：缩尺寸 + 可选 256 色量化
-    if official.is_dir():
-        pngs = sorted(official.rglob('*.png')) + sorted(official.rglob('*.PNG'))
-        if pngs:
-            print('\n检查 %d 个 PNG 图标' % len(pngs))
-        for p in pngs:
-            r = optimize_png(p, COVER_MAX_W)
-            if r is not None:
-                changed += 1
-                total_before += r[0]
-                total_after += r[1]
-
     if changed:
         print('\n处理了 %d 个文件：%.1f KB -> %.1f KB（省下 %.1f KB）'
               % (changed, total_before, total_after, total_before - total_after))
@@ -161,11 +92,10 @@ def main():
         print('\n所有图片都已在目标尺寸内，无需处理。')
 
     # 轮播首屏相关图片的合计体积（用于人工核对）
-    # ⚠️ 这份清单要跟 index.html 里的 SLIDES 保持一致（顺序无所谓，漏一个就不准）
-    carousel = ['hero/hero_jingling.webp', 'jizhan_cover.jpg', 'rxjianghu2_cover.jpg',
+    carousel = ['jizhan_cover.jpg', 'rxjianghu2_cover.jpg',
                 'hero/hero_longzhigu_hd.webp', 'hero/hero_wulin.webp',
                 'hero/hero_moxiangqing.webp', 'hero/hero_rongyao.webp',
-                'hero/hero_xingchenbian.webp']
+                'hero/hero_xingchenbian.webp', 'hero/hero_qiannian.webp']
     total = sum(kb(IMG / c) for c in carousel if (IMG / c).is_file())
     print('轮播 8 张图当前合计：%.1f KB' % total)
 
