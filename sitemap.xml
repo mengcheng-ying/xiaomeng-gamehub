@@ -505,13 +505,13 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fmbly.com/news/yxnd</loc>
+    <loc>https://fmbly.com/news/wlwz</loc>
     <lastmod>2026-10-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://fmbly.com/news/wlwz</loc>
+    <loc>https://fmbly.com/news/yxnd</loc>
     <lastmod>2026-10-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -593,6 +593,12 @@
     <lastmod>2026-10-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fmbly.com/news/wlwz/manual-20261015-wlwz-g11</loc>
+    <lastmod>2026-10-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://fmbly.com/news/dn/manual-20261014-dn-s56</loc>

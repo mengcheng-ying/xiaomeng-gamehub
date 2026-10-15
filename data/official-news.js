@@ -1,7 +1,7 @@
 // 资讯/公告数据
 // 本次开区通知由用户提供，按游戏归档。
 const OFFICIAL_NEWS = {
-  "generatedAt": "2026-10-14T10:28:20.385Z",
+  "generatedAt": "2026-10-15T06:25:53.017Z",
   "sourceNote": "用户提供的开区通知与官方专区公告",
   "archives": {
     "yxnd": {
@@ -115,6 +115,14 @@ const OFFICIAL_NEWS = {
         21
       ],
       "items": [
+        {
+          "date": "2026-10-15",
+          "category": "开服公告",
+          "title": "G11.红尘侠影-预约即将开启",
+          "key": "manual-20261015-wlwz-g11",
+          "url": "",
+          "summary": "武林外传绿色版【G11.红尘侠影】预约即将开启，抢码时间：10月15日 16:00。预约方式：手机号登录预约抢码。"
+        },
         {
           "date": "2026-10-13",
           "category": "开服公告",
