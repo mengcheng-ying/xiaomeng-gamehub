@@ -1,0 +1,20 @@
+{
+  "name": "热血江湖2.0",
+  "short_name": "热江2.0",
+  "description": "热血江湖2.0 正版手游官网",
+  "icons": [
+    {
+      "src": "assets/images/android-chrome-192x192.png?v=20260906f",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/images/android-chrome-512x512.png?v=20260906f",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#0a0806",
+  "background_color": "#0a0806",
+  "display": "standalone"
+}

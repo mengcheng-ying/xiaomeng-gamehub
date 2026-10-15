@@ -46,7 +46,10 @@ process.argv.slice(2).forEach((a) => {
   if (m) argv[m[1]] = m[2] === undefined ? true : m[2];
 });
 const DRY = !!argv.dry;
-const MAX = argv.max ? Math.max(1, parseInt(argv.max, 10) || 10) : 10;
+// ⚠️ 默认 999 = 「逐条推到当天配额耗尽为止」（梦尘 2026-10-13 明确要求：
+//    逐条推送、看 remain 归 0 才停；他曾在上一个 AI 那里吃过「批量显示成功、实际没提交」的亏）。
+//    真正的刹车是百度返回的 over quota —— 不会超推。要限量用 --max=N。
+const MAX = argv.max ? Math.max(1, parseInt(argv.max, 10) || 10) : 999;
 
 if (!TOKEN && !DRY) {
   console.log('⏭ 未配置 BAIDU_TOKEN / BAIDU_PUSH_TOKEN，跳过本次推送。');
@@ -81,7 +84,7 @@ const done = targets.filter((u) => state.pushed[u]).length;
 console.log('站点：' + SITE);
 console.log('');
 console.log('推送范围（2026-09-14 起，规则见 scripts/baidu-push-scope.js）：');
-console.log('  首页 + 游戏独立页 + 以后新发的攻略文章');
+console.log('  首页 + 游戏/攻略/礼包内容页 + 新发攻略文章');
 console.log('  sitemap 内本站 URL 合计：' + all.length + ' 条');
 console.log('  ├─ 在推送范围内：' + targets.length + ' 条');
 console.log('  ├─ 排除 · 官方公告页（/news 系列，不提交收录）：' + excludedNews.length + ' 条');
@@ -91,8 +94,9 @@ if (excludedOther.length) {
   excludedOther.slice(0, 8).forEach((u) => console.log('        ' + SCOPE.pathOf(u)));
 }
 console.log('');
-const counts = { 游戏页: 0, 首页: 0, 攻略: 0 };
-targets.forEach((u) => { const p = SCOPE.priority(u); counts[p === 0 ? '游戏页' : p === 1 ? '首页' : '攻略']++; });
+const counts = { 首页: 0, 官网页: 0, 攻略: 0, 礼包: 0, 游戏大厅: 0, 游戏页: 0 };
+const countLabel = { 0: '首页', 1: '官网页', 2: '攻略', 3: '攻略', 4: '礼包', 5: '游戏大厅', 6: '游戏页' };
+targets.forEach((u) => { counts[countLabel[SCOPE.priority(u)] || '攻略']++; });
 console.log('范围内构成：' + Object.entries(counts).map(([k, v]) => k + ' ' + v).join(' / '));
 console.log('');
 console.log('进度：已推送 ' + done + ' / ' + targets.length + ' 条，剩余 ' + todo.length + ' 条'
@@ -140,6 +144,8 @@ function pushOne(url) {
 
 (async () => {
   let ok = 0, quotaHit = false;
+  let lastRemain = null;      // 上一次成功响应里的 remain（用于判断配额有没有真的被扣）
+  let dupSuspect = 0;         // 「success>0 但 remain 没减少」的条数 —— 等于没真正计入
   const failReasons = {};
   const newlyPushed = [];
 
@@ -165,7 +171,14 @@ function pushOne(url) {
       ok += j.success;
       state.pushed[url] = new Date().toISOString().slice(0, 10);
       newlyPushed.push(url);
-      console.log(`✔ [${i + 1}/${batch.length}] ${url} -> success=${j.success}` + (typeof j.remain === 'number' ? ' remain=' + j.remain : ''));
+      // remain 校验：配额真的被扣了才算「计入」；没扣 = 这条属于重复提交（百度去重，不计数）
+      let flag = '';
+      if (typeof j.remain === 'number') {
+        if (lastRemain !== null && j.remain >= lastRemain) { flag = '  ⚠️ remain 未减少 → 百度未计入（疑似重复提交）'; dupSuspect++; }
+        lastRemain = j.remain;
+      }
+      console.log(`✔ [${i + 1}/${batch.length}] ${url}`);
+      console.log(`    百度返回原文：${r.text.trim()}` + flag);
     } else if (j && j.error) {
       console.log(`✖ [${i + 1}/${batch.length}] ${url} -> ${j.error}: ${j.message || ''}（继续下一条）`);
       failReasons[j.error] = (failReasons[j.error] || 0) + 1;
@@ -186,6 +199,8 @@ function pushOne(url) {
     at: state.lastRun,
     attempted: batch.length,                                   // 本次尝试推几条
     success: ok,                                               // 其中成功几条
+    remainAfter: lastRemain,                                   // 结束后百度侧的剩余配额
+    dupSuspect: dupSuspect,                                    // success>0 但 remain 未减少的条数
     outcome: quotaHit ? 'over_quota'                          // 撞到当日配额上限
       : ok > 0 ? 'pushed'                                      // 正常推成功
         : 'no_success',                                        // 一条没成功（看 errors）

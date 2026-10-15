@@ -1,0 +1,123 @@
+/* ==========================================================
+   武林外传 · 十年之约 — 公告详情页样式
+   暖色怀旧客栈 × 现代手游质感（与官网风格统一）
+   ========================================================== */
+
+/* ---------- 文章主体容器 ---------- */
+.article-page{
+  padding:120px 0 80px;
+  position:relative;
+  min-height:70vh;
+}
+.article-page::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(60% 45% at 50% 0%, rgba(217,164,65,.06), transparent 60%);
+}
+.article-page .wrap{max-width:820px}
+
+/* ---------- 面包屑 ---------- */
+.crumb{
+  font-size:13px;color:var(--dim);letter-spacing:.05em;
+  margin-bottom:34px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;
+}
+.crumb a{color:var(--muted);transition:.2s}
+.crumb a:hover{color:var(--gold-2)}
+.crumb span{color:var(--gold-2)}
+
+/* ---------- 文章头部 ---------- */
+.article-head{
+  padding-bottom:34px;
+  border-bottom:1px solid var(--line);
+  margin-bottom:40px;
+}
+.article-title{
+  font-family:var(--font-serif);
+  font-size:clamp(26px,4.2vw,40px);
+  font-weight:800;
+  line-height:1.35;
+  color:var(--paper);
+  letter-spacing:.03em;
+  margin-bottom:20px;
+}
+.article-meta{
+  display:flex;align-items:center;gap:16px;
+  color:var(--dim);font-size:13.5px;
+}
+.meta-tag{
+  font-size:12px;padding:4px 14px;border-radius:100px;
+  border:1px solid var(--gold);color:var(--gold-2);
+}
+.meta-tag.hot{color:#fff;border-color:var(--red);background:var(--red)}
+
+/* ---------- 正文 ---------- */
+.article-body{
+  color:var(--paper);
+  font-size:16.5px;
+  line-height:2;
+}
+.article-lead{font-weight:600;color:var(--gold-2);margin-bottom:18px}
+.article-body h2{
+  font-family:var(--font-serif);
+  font-size:21px;
+  font-weight:800;
+  color:var(--gold-2);
+  margin:40px 0 16px;
+  padding-left:14px;
+  border-left:3px solid var(--gold);
+  letter-spacing:.05em;
+}
+.article-body ul{
+  list-style:none;
+  display:flex;flex-direction:column;gap:12px;
+  margin-bottom:8px;
+}
+.article-body li{
+  padding-left:22px;
+  position:relative;
+  color:var(--muted);
+}
+.article-body li::before{
+  content:"◆";position:absolute;left:0;top:0;
+  font-size:11px;color:var(--gold);
+}
+.article-body li strong{color:var(--gold-2);font-weight:700}
+.article-body>p{color:var(--muted);margin-bottom:18px}
+
+/* 结尾与落款 */
+.article-closing{
+  margin-top:44px;
+  font-family:var(--font-serif);
+  font-size:17px;
+  color:var(--gold-2) !important;
+  font-weight:600;
+  text-align:center;
+}
+.article-sign{
+  text-align:right;
+  color:var(--paper) !important;
+  margin-top:24px;
+  font-size:15px;
+  line-height:1.9;
+}
+
+/* 返回按钮 */
+.btn-article-back{
+  display:inline-block;
+  margin-top:52px;
+  padding:12px 28px;
+  border:1px solid var(--line);
+  border-radius:100px;
+  color:var(--gold-2);
+  font-size:14px;
+  letter-spacing:.06em;
+  transition:.25s;
+}
+.btn-article-back:hover{border-color:var(--gold);background:rgba(217,164,65,.08)}
+
+/* ---------- 响应式 ---------- */
+@media (max-width:640px){
+  .article-page{padding:104px 0 56px}
+  .article-body{font-size:15.5px;line-height:1.95}
+  .article-body h2{font-size:19px;margin:32px 0 14px}
+}
