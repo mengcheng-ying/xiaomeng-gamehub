@@ -118,7 +118,11 @@
     "https://fmbly.com/guides/49": "2026-10-16",
     "https://fmbly.com/news/wlwz/manual-20261015-wlwz-g11": "2026-10-16",
     "https://fmbly.com/news/dn/manual-20261014-dn-s61": "2026-10-16",
-    "https://fmbly.com/news/dn/manual-20261014-dn-s62": "2026-10-16"
+    "https://fmbly.com/news/dn/manual-20261014-dn-s62": "2026-10-16",
+    "https://fmbly.com/news/wlwz/manual-20261013-wlwz-g10": "2026-10-17",
+    "https://fmbly.com/news/dn/manual-20260928-dn-s53": "2026-10-17",
+    "https://fmbly.com/news/dn/manual-20260928-dn-s54": "2026-10-17",
+    "https://fmbly.com/news/yxnd/manual-20260928-yxnd-s30": "2026-10-17"
   },
   "history": [
     {
@@ -299,16 +303,25 @@
         "https://fmbly.com/news/dn/manual-20261014-dn-s61",
         "https://fmbly.com/news/dn/manual-20261014-dn-s62"
       ]
+    },
+    {
+      "at": "2026-10-17T10:31:59.268Z",
+      "urls": [
+        "https://fmbly.com/news/wlwz/manual-20261013-wlwz-g10",
+        "https://fmbly.com/news/dn/manual-20260928-dn-s53",
+        "https://fmbly.com/news/dn/manual-20260928-dn-s54",
+        "https://fmbly.com/news/yxnd/manual-20260928-yxnd-s30"
+      ]
     }
   ],
-  "lastRun": "2026-10-16T12:43:32.283Z",
+  "lastRun": "2026-10-17T10:31:59.268Z",
   "lastResult": {
-    "at": "2026-10-16T12:43:32.283Z",
+    "at": "2026-10-17T10:31:59.268Z",
     "attempted": 4,
-    "success": 0,
-    "remainAfter": null,
+    "success": 4,
+    "remainAfter": 6,
     "dupSuspect": 0,
-    "outcome": "over_quota",
+    "outcome": "pushed",
     "errors": {}
   }
 }
