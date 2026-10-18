@@ -276,12 +276,12 @@
       ]
     }
   ],
-  "lastRun": "2026-10-14T10:40:29.630Z",
+  "lastRun": "2026-10-18T11:12:48.703Z",
   "lastResult": {
-    "at": "2026-10-14T10:40:29.630Z",
-    "attempted": 15,
-    "success": 9,
-    "remainAfter": 0,
+    "at": "2026-10-18T11:12:48.703Z",
+    "attempted": 10,
+    "success": 0,
+    "remainAfter": null,
     "dupSuspect": 0,
     "outcome": "over_quota",
     "errors": {}
