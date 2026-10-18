@@ -1,7 +1,7 @@
 // 资讯/公告数据
 // 本次开区通知由用户提供，按游戏归档。
 const OFFICIAL_NEWS = {
-  "generatedAt": "2026-10-15T06:25:53.017Z",
+  "generatedAt": "2026-10-18T03:37:46.033Z",
   "sourceNote": "用户提供的开区通知与官方专区公告",
   "archives": {
     "yxnd": {
@@ -132,6 +132,25 @@ const OFFICIAL_NEWS = {
           "summary": "武林外传绿色版【G10.一醉江湖】预创角已开启，正式开服时间：10月13日 10:00。预约方式：手机号登录预约抢码。"
         }
       ]
+    },
+    "dbwl": {
+      "slug": "dbwl",
+      "official": "《独步武林2.0江湖》",
+      "site": "",
+      "newsUrl": "",
+      "gameIds": [
+        49
+      ],
+      "items": [
+        {
+          "date": "2026-10-18",
+          "category": "开服公告",
+          "title": "【开服通知】：“重归2区”10月23日10:00开启！",
+          "key": "manual-20261018-dbwl-zg2",
+          "url": "",
+          "summary": "独步武林-天卡服“重归2区”将于10月23日10:00开启。"
+        }
+      ]
     }
   },
   "games": {
@@ -160,6 +179,15 @@ const OFFICIAL_NEWS = {
       "newsUrl": "",
       "gameIds": [
         21
+      ]
+    },
+    "49": {
+      "slug": "dbwl",
+      "official": "《独步武林2.0江湖》",
+      "site": "",
+      "newsUrl": "",
+      "gameIds": [
+        49
       ]
     }
   }
