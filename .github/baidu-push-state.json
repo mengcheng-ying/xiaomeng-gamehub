@@ -301,14 +301,14 @@
       ]
     }
   ],
-  "lastRun": "2026-10-18T03:40:57.120Z",
+  "lastRun": "2026-10-18T10:53:01.750Z",
   "lastResult": {
-    "at": "2026-10-18T03:40:57.120Z",
-    "attempted": 10,
-    "success": 10,
-    "remainAfter": 0,
+    "at": "2026-10-18T10:53:01.750Z",
+    "attempted": 6,
+    "success": 0,
+    "remainAfter": null,
     "dupSuspect": 0,
-    "outcome": "pushed",
+    "outcome": "over_quota",
     "errors": {}
   }
 }
