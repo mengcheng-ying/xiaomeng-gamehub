@@ -112,9 +112,14 @@ const OFFICIAL_SITES = {
 const OFFICIAL_EXTRA_PAGES = {
   49: ['classes.html', 'news.html']
 };
+/* 外部官网：独立部署在其他域名的站（2026-10-19 加）
+   { 游戏id: 官网绝对地址 } —— 卡片直接跳过去，/game/<id> 只留跳转页，且不进本站 sitemap */
+const EXTERNAL_SITES = {
+  50: 'https://xxtl.fmbly.com/'   // 小小屠龙-冰雪复古
+};
 const officialPath = (id) => (OFFICIAL_SITES[id] ? '/official/' + OFFICIAL_SITES[id] + '/' : '');
 /** 某个游戏的入口地址：有官网就进官网，否则进站内游戏页 */
-const gameUrl = (id) => officialPath(id) || '/game/' + id;
+const gameUrl = (id) => EXTERNAL_SITES[id] || officialPath(id) || '/game/' + id;
 /** /game/<id> 的跳转页（有官网时用）；保持极简，只负责把人和爬虫送到官网 */
 function redirectPage(name, target) {
   return `<!DOCTYPE html>
@@ -123,7 +128,7 @@ function redirectPage(name, target) {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>正在进入《${name}》官方网站</title>
-<link rel="canonical" href="${SITE}${target}">
+<link rel="canonical" href="${/^https?:\/\//.test(target) ? target : SITE + target}">
 <meta http-equiv="refresh" content="0; url=${target}">
 <style>body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
 background:#0b101a;color:#eef2f7;font:15px/1.7 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;text-align:center}
@@ -1106,6 +1111,12 @@ ${nzArc.items.slice(0, 8).map(it => `  <li>
   /* ===== 官网已并入本站的游戏：/game/<id> 只留跳转页（2026-10-09）=====
      玩家点游戏应当直接进官网，而不是先落到整合站的详情页。
      老链接（百度已收录的 /game/46 等）用跳转页接管，不产生死链。 */
+  /* 外部官网（独立域名）：只写 /game/<id> 跳转页，不进本站 sitemap */
+  if (EXTERNAL_SITES[g.id]) {
+    writeFile('game/' + g.id + '.html', redirectPage(g.name, EXTERNAL_SITES[g.id]));
+    return;
+  }
+
   const offPath = officialPath(g.id);
   if (offPath) {
     writeFile('game/' + g.id + '.html', redirectPage(g.name, offPath));
