@@ -1,316 +1,315 @@
 {
- "pushed": {
-  "https://fmbly.com/game/1": "2026-09-20",
-  "https://fmbly.com/game/2": "2026-09-20",
-  "https://fmbly.com/game/3": "2026-09-20",
-  "https://fmbly.com/game/4": "2026-09-20",
-  "https://fmbly.com/game/5": "2026-09-20",
-  "https://fmbly.com/game/6": "2026-09-20",
-  "https://fmbly.com/game/7": "2026-09-20",
-  "https://fmbly.com/game/8": "2026-09-20",
-  "https://fmbly.com/game/9": "2026-09-20",
-  "https://fmbly.com/game/10": "2026-09-20",
-  "https://fmbly.com/game/11": "2026-09-28",
-  "https://fmbly.com/game/12": "2026-09-28",
-  "https://fmbly.com/game/13": "2026-09-28",
-  "https://fmbly.com/game/14": "2026-09-28",
-  "https://fmbly.com/game/15": "2026-09-28",
-  "https://fmbly.com/game/16": "2026-09-28",
-  "https://fmbly.com/game/17": "2026-09-28",
-  "https://fmbly.com/game/18": "2026-09-28",
-  "https://fmbly.com/game/19": "2026-09-28",
-  "https://fmbly.com/game/20": "2026-09-28",
-  "https://fmbly.com/": "2026-09-29",
-  "https://fmbly.com/article/1": "2026-09-29",
-  "https://fmbly.com/article/2": "2026-09-29",
-  "https://fmbly.com/article/3": "2026-09-29",
-  "https://fmbly.com/article/4": "2026-09-29",
-  "https://fmbly.com/guides/1": "2026-09-29",
-  "https://fmbly.com/guides/2": "2026-09-29",
-  "https://fmbly.com/guides/6": "2026-09-29",
-  "https://fmbly.com/guides/21": "2026-09-29",
-  "https://fmbly.com/guides": "2026-09-29",
-  "https://fmbly.com/gift/1": "2026-09-30",
-  "https://fmbly.com/gift/2": "2026-09-30",
-  "https://fmbly.com/gift/3": "2026-09-30",
-  "https://fmbly.com/gift/8": "2026-09-30",
-  "https://fmbly.com/gift/19": "2026-09-30",
-  "https://fmbly.com/gift/41": "2026-09-30",
-  "https://fmbly.com/gift/45": "2026-09-30",
-  "https://fmbly.com/gift/46": "2026-09-30",
-  "https://fmbly.com/gift/47": "2026-09-30",
-  "https://fmbly.com/gift": "2026-09-30",
-  "https://fmbly.com/games": "2026-10-01",
-  "https://fmbly.com/game/21": "2026-10-01",
-  "https://fmbly.com/game/22": "2026-10-01",
-  "https://fmbly.com/game/23": "2026-10-01",
-  "https://fmbly.com/game/24": "2026-10-01",
-  "https://fmbly.com/game/25": "2026-10-01",
-  "https://fmbly.com/game/31": "2026-10-01",
-  "https://fmbly.com/game/32": "2026-10-01",
-  "https://fmbly.com/game/33": "2026-10-01",
-  "https://fmbly.com/game/34": "2026-10-01",
-  "https://fmbly.com/gift/48": "2026-10-02",
-  "https://fmbly.com/game/35": "2026-10-02",
-  "https://fmbly.com/game/36": "2026-10-02",
-  "https://fmbly.com/game/37": "2026-10-02",
-  "https://fmbly.com/game/38": "2026-10-02",
-  "https://fmbly.com/game/39": "2026-10-02",
-  "https://fmbly.com/game/40": "2026-10-02",
-  "https://fmbly.com/game/41": "2026-10-02",
-  "https://fmbly.com/game/42": "2026-10-02",
-  "https://fmbly.com/game/43": "2026-10-02",
-  "https://fmbly.com/game/44": "2026-10-03",
-  "https://fmbly.com/game/45": "2026-10-03",
-  "https://fmbly.com/game/46": "2026-10-03",
-  "https://fmbly.com/game/47": "2026-10-03",
-  "https://fmbly.com/game/48": "2026-10-03",
-  "https://fmbly.com/article/5": "2026-10-06",
-  "https://fmbly.com/guides/46": "2026-10-06",
-  "https://fmbly.com/article/6": "2026-10-08",
-  "https://fmbly.com/article/7": "2026-10-08",
-  "https://fmbly.com/article/8": "2026-10-08",
-  "https://fmbly.com/article/9": "2026-10-08",
-  "https://fmbly.com/article/10": "2026-10-08",
-  "https://fmbly.com/article/11": "2026-10-08",
-  "https://fmbly.com/article/12": "2026-10-08",
-  "https://fmbly.com/article/13": "2026-10-08",
-  "https://fmbly.com/article/14": "2026-10-08",
-  "https://fmbly.com/article/15": "2026-10-08",
-  "https://fmbly.com/article/16": "2026-10-09",
-  "https://fmbly.com/guides/4": "2026-10-09",
-  "https://fmbly.com/guides/5": "2026-10-09",
-  "https://fmbly.com/guides/14": "2026-10-09",
-  "https://fmbly.com/guides/22": "2026-10-09",
-  "https://fmbly.com/guides/23": "2026-10-09",
-  "https://fmbly.com/guides/24": "2026-10-09",
-  "https://fmbly.com/guides/25": "2026-10-09",
-  "https://fmbly.com/guides/31": "2026-10-09",
-  "https://fmbly.com/guides/32": "2026-10-09",
-  "https://fmbly.com/gift/49": "2026-10-10",
-  "https://fmbly.com/game/49": "2026-10-10",
-  "https://fmbly.com/official/longzhigu/": "2026-10-13",
-  "https://fmbly.com/official/rexuejianghu2/": "2026-10-13",
-  "https://fmbly.com/official/wulinwaizhuan/": "2026-10-13",
-  "https://fmbly.com/official/moxiangqing/": "2026-10-13",
-  "https://fmbly.com/official/rongyao/": "2026-10-13",
-  "https://fmbly.com/official/xiuxianjiazu2/": "2026-10-13",
-  "https://fmbly.com/official/jizhan/": "2026-10-13",
-  "https://fmbly.com/official/jinglingyongheng/": "2026-10-13",
-  "https://fmbly.com/official/dubuwulin/": "2026-10-13",
-  "https://fmbly.com/official/dubuwulin/classes.html": "2026-10-13",
-  "https://fmbly.com/official/dubuwulin/news.html": "2026-10-14",
-  "https://fmbly.com/news": "2026-10-14",
-  "https://fmbly.com/news/dn": "2026-10-14",
-  "https://fmbly.com/news/yxnd": "2026-10-14",
-  "https://fmbly.com/news/wlwz": "2026-10-14",
-  "https://fmbly.com/news/dn/manual-20261014-dn-s56": "2026-10-14",
-  "https://fmbly.com/news/dn/manual-20261014-dn-s57": "2026-10-14",
-  "https://fmbly.com/news/dn/manual-20261014-dn-s58": "2026-10-14",
-  "https://fmbly.com/news/dn/manual-20261014-dn-s59": "2026-10-14",
-  "https://fmbly.com/news/dn/manual-20261014-dn-s60": "2026-10-14",
-  "https://fmbly.com/article/17": "2026-10-20",
-  "https://fmbly.com/article/18": "2026-10-20",
-  "https://fmbly.com/article/19": "2026-10-20",
-  "https://fmbly.com/article/20": "2026-10-20",
-  "https://fmbly.com/article/21": "2026-10-20",
-  "https://fmbly.com/article/22": "2026-10-20",
-  "https://fmbly.com/article/23": "2026-10-20",
-  "https://fmbly.com/article/24": "2026-10-20",
-  "https://fmbly.com/article/25": "2026-10-20",
-  "https://fmbly.com/guides/18": "2026-10-20",
-  "https://fmbly.com/guides/45": "2026-10-19"
- },
- "history": [
-  {
-   "at": "2026-09-20T05:15:49.984Z",
-   "urls": [
-    "https://fmbly.com/game/1",
-    "https://fmbly.com/game/2",
-    "https://fmbly.com/game/3",
-    "https://fmbly.com/game/4",
-    "https://fmbly.com/game/5",
-    "https://fmbly.com/game/6",
-    "https://fmbly.com/game/7",
-    "https://fmbly.com/game/8",
-    "https://fmbly.com/game/9",
-    "https://fmbly.com/game/10"
-   ]
+  "pushed": {
+    "https://fmbly.com/game/1": "2026-09-20",
+    "https://fmbly.com/game/2": "2026-09-20",
+    "https://fmbly.com/game/3": "2026-09-20",
+    "https://fmbly.com/game/4": "2026-09-20",
+    "https://fmbly.com/game/5": "2026-09-20",
+    "https://fmbly.com/game/6": "2026-09-20",
+    "https://fmbly.com/game/7": "2026-09-20",
+    "https://fmbly.com/game/8": "2026-09-20",
+    "https://fmbly.com/game/9": "2026-09-20",
+    "https://fmbly.com/game/10": "2026-09-20",
+    "https://fmbly.com/game/11": "2026-09-28",
+    "https://fmbly.com/game/12": "2026-09-28",
+    "https://fmbly.com/game/13": "2026-09-28",
+    "https://fmbly.com/game/14": "2026-09-28",
+    "https://fmbly.com/game/15": "2026-09-28",
+    "https://fmbly.com/game/16": "2026-09-28",
+    "https://fmbly.com/game/17": "2026-09-28",
+    "https://fmbly.com/game/18": "2026-09-28",
+    "https://fmbly.com/game/19": "2026-09-28",
+    "https://fmbly.com/game/20": "2026-09-28",
+    "https://fmbly.com/": "2026-09-29",
+    "https://fmbly.com/article/1": "2026-09-29",
+    "https://fmbly.com/article/2": "2026-09-29",
+    "https://fmbly.com/article/3": "2026-09-29",
+    "https://fmbly.com/article/4": "2026-09-29",
+    "https://fmbly.com/guides/1": "2026-09-29",
+    "https://fmbly.com/guides/2": "2026-09-29",
+    "https://fmbly.com/guides/6": "2026-09-29",
+    "https://fmbly.com/guides/21": "2026-09-29",
+    "https://fmbly.com/guides": "2026-09-29",
+    "https://fmbly.com/gift/1": "2026-09-30",
+    "https://fmbly.com/gift/2": "2026-09-30",
+    "https://fmbly.com/gift/3": "2026-09-30",
+    "https://fmbly.com/gift/8": "2026-09-30",
+    "https://fmbly.com/gift/19": "2026-09-30",
+    "https://fmbly.com/gift/41": "2026-09-30",
+    "https://fmbly.com/gift/45": "2026-09-30",
+    "https://fmbly.com/gift/46": "2026-09-30",
+    "https://fmbly.com/gift/47": "2026-09-30",
+    "https://fmbly.com/gift": "2026-09-30",
+    "https://fmbly.com/games": "2026-10-01",
+    "https://fmbly.com/game/21": "2026-10-01",
+    "https://fmbly.com/game/22": "2026-10-01",
+    "https://fmbly.com/game/23": "2026-10-01",
+    "https://fmbly.com/game/24": "2026-10-01",
+    "https://fmbly.com/game/25": "2026-10-01",
+    "https://fmbly.com/game/31": "2026-10-01",
+    "https://fmbly.com/game/32": "2026-10-01",
+    "https://fmbly.com/game/33": "2026-10-01",
+    "https://fmbly.com/game/34": "2026-10-01",
+    "https://fmbly.com/gift/48": "2026-10-02",
+    "https://fmbly.com/game/35": "2026-10-02",
+    "https://fmbly.com/game/36": "2026-10-02",
+    "https://fmbly.com/game/37": "2026-10-02",
+    "https://fmbly.com/game/38": "2026-10-02",
+    "https://fmbly.com/game/39": "2026-10-02",
+    "https://fmbly.com/game/40": "2026-10-02",
+    "https://fmbly.com/game/41": "2026-10-02",
+    "https://fmbly.com/game/42": "2026-10-02",
+    "https://fmbly.com/game/43": "2026-10-02",
+    "https://fmbly.com/game/44": "2026-10-03",
+    "https://fmbly.com/game/45": "2026-10-03",
+    "https://fmbly.com/game/46": "2026-10-03",
+    "https://fmbly.com/game/47": "2026-10-03",
+    "https://fmbly.com/game/48": "2026-10-03",
+    "https://fmbly.com/article/5": "2026-10-06",
+    "https://fmbly.com/guides/46": "2026-10-06",
+    "https://fmbly.com/article/6": "2026-10-08",
+    "https://fmbly.com/article/7": "2026-10-08",
+    "https://fmbly.com/article/8": "2026-10-08",
+    "https://fmbly.com/article/9": "2026-10-08",
+    "https://fmbly.com/article/10": "2026-10-08",
+    "https://fmbly.com/article/11": "2026-10-08",
+    "https://fmbly.com/article/12": "2026-10-08",
+    "https://fmbly.com/article/13": "2026-10-08",
+    "https://fmbly.com/article/14": "2026-10-08",
+    "https://fmbly.com/article/15": "2026-10-08",
+    "https://fmbly.com/article/16": "2026-10-09",
+    "https://fmbly.com/guides/4": "2026-10-09",
+    "https://fmbly.com/guides/5": "2026-10-09",
+    "https://fmbly.com/guides/14": "2026-10-09",
+    "https://fmbly.com/guides/22": "2026-10-09",
+    "https://fmbly.com/guides/23": "2026-10-09",
+    "https://fmbly.com/guides/24": "2026-10-09",
+    "https://fmbly.com/guides/25": "2026-10-09",
+    "https://fmbly.com/guides/31": "2026-10-09",
+    "https://fmbly.com/guides/32": "2026-10-09",
+    "https://fmbly.com/gift/49": "2026-10-10",
+    "https://fmbly.com/game/49": "2026-10-10",
+    "https://fmbly.com/official/longzhigu/": "2026-10-13",
+    "https://fmbly.com/official/rexuejianghu2/": "2026-10-13",
+    "https://fmbly.com/official/wulinwaizhuan/": "2026-10-13",
+    "https://fmbly.com/official/moxiangqing/": "2026-10-13",
+    "https://fmbly.com/official/rongyao/": "2026-10-13",
+    "https://fmbly.com/official/xiuxianjiazu2/": "2026-10-13",
+    "https://fmbly.com/official/jizhan/": "2026-10-13",
+    "https://fmbly.com/official/jinglingyongheng/": "2026-10-13",
+    "https://fmbly.com/official/dubuwulin/": "2026-10-13",
+    "https://fmbly.com/official/dubuwulin/classes.html": "2026-10-13",
+    "https://fmbly.com/official/dubuwulin/news.html": "2026-10-14",
+    "https://fmbly.com/news": "2026-10-14",
+    "https://fmbly.com/news/dn": "2026-10-14",
+    "https://fmbly.com/news/yxnd": "2026-10-14",
+    "https://fmbly.com/news/wlwz": "2026-10-14",
+    "https://fmbly.com/news/dn/manual-20261014-dn-s56": "2026-10-14",
+    "https://fmbly.com/news/dn/manual-20261014-dn-s57": "2026-10-14",
+    "https://fmbly.com/news/dn/manual-20261014-dn-s58": "2026-10-14",
+    "https://fmbly.com/news/dn/manual-20261014-dn-s59": "2026-10-14",
+    "https://fmbly.com/news/dn/manual-20261014-dn-s60": "2026-10-14",
+    "https://fmbly.com/article/17": "2026-10-20",
+    "https://fmbly.com/article/18": "2026-10-20",
+    "https://fmbly.com/article/19": "2026-10-20",
+    "https://fmbly.com/article/20": "2026-10-20",
+    "https://fmbly.com/article/21": "2026-10-20",
+    "https://fmbly.com/article/22": "2026-10-20",
+    "https://fmbly.com/article/23": "2026-10-20",
+    "https://fmbly.com/article/24": "2026-10-20",
+    "https://fmbly.com/article/25": "2026-10-20",
+    "https://fmbly.com/guides/18": "2026-10-20",
+    "https://fmbly.com/guides/45": "2026-10-19"
   },
-  {
-   "at": "2026-09-28T07:09:33.986Z",
-   "urls": [
-    "https://fmbly.com/game/11",
-    "https://fmbly.com/game/12",
-    "https://fmbly.com/game/13",
-    "https://fmbly.com/game/14",
-    "https://fmbly.com/game/15",
-    "https://fmbly.com/game/16",
-    "https://fmbly.com/game/17",
-    "https://fmbly.com/game/18",
-    "https://fmbly.com/game/19",
-    "https://fmbly.com/game/20"
-   ]
-  },
-  {
-   "at": "2026-09-29T06:16:54.505Z",
-   "urls": [
-    "https://fmbly.com/",
-    "https://fmbly.com/article/1",
-    "https://fmbly.com/article/2",
-    "https://fmbly.com/article/3",
-    "https://fmbly.com/article/4",
-    "https://fmbly.com/guides/1",
-    "https://fmbly.com/guides/2",
-    "https://fmbly.com/guides/6",
-    "https://fmbly.com/guides/21",
-    "https://fmbly.com/guides"
-   ]
-  },
-  {
-   "at": "2026-09-30T02:14:39.398Z",
-   "urls": [
-    "https://fmbly.com/gift/1",
-    "https://fmbly.com/gift/2",
-    "https://fmbly.com/gift/3",
-    "https://fmbly.com/gift/8",
-    "https://fmbly.com/gift/19",
-    "https://fmbly.com/gift/41",
-    "https://fmbly.com/gift/45",
-    "https://fmbly.com/gift/46",
-    "https://fmbly.com/gift/47",
-    "https://fmbly.com/gift"
-   ]
-  },
-  {
-   "at": "2026-10-02T11:09:29.179Z",
-   "urls": [
-    "https://fmbly.com/gift/48",
-    "https://fmbly.com/game/35",
-    "https://fmbly.com/game/36",
-    "https://fmbly.com/game/37",
-    "https://fmbly.com/game/38",
-    "https://fmbly.com/game/39",
-    "https://fmbly.com/game/40",
-    "https://fmbly.com/game/41",
-    "https://fmbly.com/game/42",
-    "https://fmbly.com/game/43"
-   ]
-  },
-  {
-   "at": "2026-10-03T10:27:47.347Z",
-   "urls": [
-    "https://fmbly.com/game/44",
-    "https://fmbly.com/game/45",
-    "https://fmbly.com/game/46",
-    "https://fmbly.com/game/47",
-    "https://fmbly.com/game/48"
-   ]
-  },
-  {
-   "at": "2026-10-06T08:42:49.690Z",
-   "urls": [
-    "https://fmbly.com/article/5",
-    "https://fmbly.com/guides/46"
-   ]
-  },
-  {
-   "at": "2026-10-08T07:09:35.911Z",
-   "urls": [
-    "https://fmbly.com/article/6",
-    "https://fmbly.com/article/7",
-    "https://fmbly.com/article/8",
-    "https://fmbly.com/article/9",
-    "https://fmbly.com/article/10",
-    "https://fmbly.com/article/11",
-    "https://fmbly.com/article/12",
-    "https://fmbly.com/article/13",
-    "https://fmbly.com/article/14",
-    "https://fmbly.com/article/15"
-   ]
-  },
-  {
-   "at": "2026-10-09T04:37:54.636Z",
-   "urls": [
-    "https://fmbly.com/article/16",
-    "https://fmbly.com/guides/4",
-    "https://fmbly.com/guides/5",
-    "https://fmbly.com/guides/14",
-    "https://fmbly.com/guides/22",
-    "https://fmbly.com/guides/23",
-    "https://fmbly.com/guides/24",
-    "https://fmbly.com/guides/25",
-    "https://fmbly.com/guides/31",
-    "https://fmbly.com/guides/32"
-   ]
-  },
-  {
-   "at": "2026-10-10T04:04:55.510Z",
-   "urls": [
-    "https://fmbly.com/gift/49",
-    "https://fmbly.com/game/49"
-   ]
-  },
-  {
-   "at": "2026-10-13T11:45:05.781Z",
-   "urls": [
-    "https://fmbly.com/official/longzhigu/",
-    "https://fmbly.com/official/rexuejianghu2/",
-    "https://fmbly.com/official/wulinwaizhuan/",
-    "https://fmbly.com/official/moxiangqing/",
-    "https://fmbly.com/official/rongyao/",
-    "https://fmbly.com/official/xiuxianjiazu2/",
-    "https://fmbly.com/official/jizhan/",
-    "https://fmbly.com/official/jinglingyongheng/",
-    "https://fmbly.com/official/dubuwulin/",
-    "https://fmbly.com/official/dubuwulin/classes.html"
-   ]
-  },
-  {
-   "at": "2026-10-14T06:31:37.229Z",
-   "urls": [
-    "https://fmbly.com/official/dubuwulin/news.html"
-   ]
-  },
-  {
-   "at": "2026-10-14T10:40:29.630Z",
-   "urls": [
-    "https://fmbly.com/news",
-    "https://fmbly.com/news/dn",
-    "https://fmbly.com/news/yxnd",
-    "https://fmbly.com/news/wlwz",
-    "https://fmbly.com/news/dn/manual-20261014-dn-s56",
-    "https://fmbly.com/news/dn/manual-20261014-dn-s57",
-    "https://fmbly.com/news/dn/manual-20261014-dn-s58",
-    "https://fmbly.com/news/dn/manual-20261014-dn-s59",
-    "https://fmbly.com/news/dn/manual-20261014-dn-s60"
-   ]
-  },
-  {
-   "at": "2026-10-20T06:25:25.583Z",
-   "urls": [
-    "https://fmbly.com/article/17",
-    "https://fmbly.com/article/18",
-    "https://fmbly.com/article/19",
-    "https://fmbly.com/article/20",
-    "https://fmbly.com/article/21",
-    "https://fmbly.com/article/22",
-    "https://fmbly.com/article/23",
-    "https://fmbly.com/article/24",
-    "https://fmbly.com/article/25",
-    "https://fmbly.com/guides/18"
-   ]
+  "history": [
+    {
+      "at": "2026-09-20T05:15:49.984Z",
+      "urls": [
+        "https://fmbly.com/game/1",
+        "https://fmbly.com/game/2",
+        "https://fmbly.com/game/3",
+        "https://fmbly.com/game/4",
+        "https://fmbly.com/game/5",
+        "https://fmbly.com/game/6",
+        "https://fmbly.com/game/7",
+        "https://fmbly.com/game/8",
+        "https://fmbly.com/game/9",
+        "https://fmbly.com/game/10"
+      ]
+    },
+    {
+      "at": "2026-09-28T07:09:33.986Z",
+      "urls": [
+        "https://fmbly.com/game/11",
+        "https://fmbly.com/game/12",
+        "https://fmbly.com/game/13",
+        "https://fmbly.com/game/14",
+        "https://fmbly.com/game/15",
+        "https://fmbly.com/game/16",
+        "https://fmbly.com/game/17",
+        "https://fmbly.com/game/18",
+        "https://fmbly.com/game/19",
+        "https://fmbly.com/game/20"
+      ]
+    },
+    {
+      "at": "2026-09-29T06:16:54.505Z",
+      "urls": [
+        "https://fmbly.com/",
+        "https://fmbly.com/article/1",
+        "https://fmbly.com/article/2",
+        "https://fmbly.com/article/3",
+        "https://fmbly.com/article/4",
+        "https://fmbly.com/guides/1",
+        "https://fmbly.com/guides/2",
+        "https://fmbly.com/guides/6",
+        "https://fmbly.com/guides/21",
+        "https://fmbly.com/guides"
+      ]
+    },
+    {
+      "at": "2026-09-30T02:14:39.398Z",
+      "urls": [
+        "https://fmbly.com/gift/1",
+        "https://fmbly.com/gift/2",
+        "https://fmbly.com/gift/3",
+        "https://fmbly.com/gift/8",
+        "https://fmbly.com/gift/19",
+        "https://fmbly.com/gift/41",
+        "https://fmbly.com/gift/45",
+        "https://fmbly.com/gift/46",
+        "https://fmbly.com/gift/47",
+        "https://fmbly.com/gift"
+      ]
+    },
+    {
+      "at": "2026-10-02T11:09:29.179Z",
+      "urls": [
+        "https://fmbly.com/gift/48",
+        "https://fmbly.com/game/35",
+        "https://fmbly.com/game/36",
+        "https://fmbly.com/game/37",
+        "https://fmbly.com/game/38",
+        "https://fmbly.com/game/39",
+        "https://fmbly.com/game/40",
+        "https://fmbly.com/game/41",
+        "https://fmbly.com/game/42",
+        "https://fmbly.com/game/43"
+      ]
+    },
+    {
+      "at": "2026-10-03T10:27:47.347Z",
+      "urls": [
+        "https://fmbly.com/game/44",
+        "https://fmbly.com/game/45",
+        "https://fmbly.com/game/46",
+        "https://fmbly.com/game/47",
+        "https://fmbly.com/game/48"
+      ]
+    },
+    {
+      "at": "2026-10-06T08:42:49.690Z",
+      "urls": [
+        "https://fmbly.com/article/5",
+        "https://fmbly.com/guides/46"
+      ]
+    },
+    {
+      "at": "2026-10-08T07:09:35.911Z",
+      "urls": [
+        "https://fmbly.com/article/6",
+        "https://fmbly.com/article/7",
+        "https://fmbly.com/article/8",
+        "https://fmbly.com/article/9",
+        "https://fmbly.com/article/10",
+        "https://fmbly.com/article/11",
+        "https://fmbly.com/article/12",
+        "https://fmbly.com/article/13",
+        "https://fmbly.com/article/14",
+        "https://fmbly.com/article/15"
+      ]
+    },
+    {
+      "at": "2026-10-09T04:37:54.636Z",
+      "urls": [
+        "https://fmbly.com/article/16",
+        "https://fmbly.com/guides/4",
+        "https://fmbly.com/guides/5",
+        "https://fmbly.com/guides/14",
+        "https://fmbly.com/guides/22",
+        "https://fmbly.com/guides/23",
+        "https://fmbly.com/guides/24",
+        "https://fmbly.com/guides/25",
+        "https://fmbly.com/guides/31",
+        "https://fmbly.com/guides/32"
+      ]
+    },
+    {
+      "at": "2026-10-10T04:04:55.510Z",
+      "urls": [
+        "https://fmbly.com/gift/49",
+        "https://fmbly.com/game/49"
+      ]
+    },
+    {
+      "at": "2026-10-13T11:45:05.781Z",
+      "urls": [
+        "https://fmbly.com/official/longzhigu/",
+        "https://fmbly.com/official/rexuejianghu2/",
+        "https://fmbly.com/official/wulinwaizhuan/",
+        "https://fmbly.com/official/moxiangqing/",
+        "https://fmbly.com/official/rongyao/",
+        "https://fmbly.com/official/xiuxianjiazu2/",
+        "https://fmbly.com/official/jizhan/",
+        "https://fmbly.com/official/jinglingyongheng/",
+        "https://fmbly.com/official/dubuwulin/",
+        "https://fmbly.com/official/dubuwulin/classes.html"
+      ]
+    },
+    {
+      "at": "2026-10-14T06:31:37.229Z",
+      "urls": [
+        "https://fmbly.com/official/dubuwulin/news.html"
+      ]
+    },
+    {
+      "at": "2026-10-14T10:40:29.630Z",
+      "urls": [
+        "https://fmbly.com/news",
+        "https://fmbly.com/news/dn",
+        "https://fmbly.com/news/yxnd",
+        "https://fmbly.com/news/wlwz",
+        "https://fmbly.com/news/dn/manual-20261014-dn-s56",
+        "https://fmbly.com/news/dn/manual-20261014-dn-s57",
+        "https://fmbly.com/news/dn/manual-20261014-dn-s58",
+        "https://fmbly.com/news/dn/manual-20261014-dn-s59",
+        "https://fmbly.com/news/dn/manual-20261014-dn-s60"
+      ]
+    },
+    {
+      "at": "2026-10-20T06:25:25.583Z",
+      "urls": [
+        "https://fmbly.com/article/17",
+        "https://fmbly.com/article/18",
+        "https://fmbly.com/article/19",
+        "https://fmbly.com/article/20",
+        "https://fmbly.com/article/21",
+        "https://fmbly.com/article/22",
+        "https://fmbly.com/article/23",
+        "https://fmbly.com/article/24",
+        "https://fmbly.com/article/25",
+        "https://fmbly.com/guides/18"
+      ]
+    }
+  ],
+  "lastRun": "2026-10-20T11:23:15.352Z",
+  "lastResult": {
+    "at": "2026-10-20T11:23:15.352Z",
+    "attempted": 10,
+    "success": 0,
+    "remainAfter": null,
+    "dupSuspect": 0,
+    "outcome": "over_quota",
+    "errors": {}
   }
- ],
- "lastRun": "2026-10-20T06:25:25.583Z",
- "lastResult": {
-  "at": "2026-10-20T06:25:25.583Z",
-  "attempted": 10,
-  "success": 10,
-  "remainAfter": 0,
-  "dupSuspect": 0,
-  "outcome": "pushed",
-  "errors": {},
-  "note": "2026-10-20 手动补录：本地旧状态覆盖导致 guides/45 记录丢失，此处还原，避免明日重复推送"
- }
 }
