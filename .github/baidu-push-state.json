@@ -327,14 +327,16 @@
       ]
     }
   ],
-  "lastRun": "2026-10-21T11:38:31.571Z",
+  "lastRun": "2026-10-21T13:12:54.956Z",
   "lastResult": {
-    "at": "2026-10-21T11:38:31.571Z",
+    "at": "2026-10-21T13:12:54.956Z",
     "attempted": 4,
     "success": 0,
     "remainAfter": null,
     "dupSuspect": 0,
     "outcome": "over_quota",
-    "errors": {}
+    "errors": {
+      "network_error": 1
+    }
   }
 }
