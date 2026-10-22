@@ -129,7 +129,17 @@
     "https://fmbly.com/news/dbwl/manual-20261018-dbwl-zg2": "2026-10-21",
     "https://fmbly.com/news/wlwz/manual-20261015-wlwz-g11": "2026-10-21",
     "https://fmbly.com/news/dn/manual-20261014-dn-s61": "2026-10-21",
-    "https://fmbly.com/news/dn/manual-20261014-dn-s62": "2026-10-21"
+    "https://fmbly.com/news/dn/manual-20261014-dn-s62": "2026-10-21",
+    "https://fmbly.com/news/dn/manual-20261022-dn-s56": "2026-10-22",
+    "https://fmbly.com/news/dn/manual-20261023-dn-s57": "2026-10-22",
+    "https://fmbly.com/news/dn/manual-20261024-dn-s58": "2026-10-22",
+    "https://fmbly.com/news/dn/manual-20261025-dn-s59": "2026-10-22",
+    "https://fmbly.com/news/dn/manual-20261026-dn-s60": "2026-10-22",
+    "https://fmbly.com/news/dn/manual-20261027-dn-s61": "2026-10-22",
+    "https://fmbly.com/news/dn/manual-20261028-dn-s62": "2026-10-22",
+    "https://fmbly.com/news/dn/manual-20261029-dn-s62b": "2026-10-22",
+    "https://fmbly.com/news/wlwz/manual-20261013-wlwz-g10": "2026-10-22",
+    "https://fmbly.com/news/dn/manual-20260928-dn-s53": "2026-10-22"
   },
   "history": [
     {
@@ -325,18 +335,31 @@
         "https://fmbly.com/news/dn/manual-20261014-dn-s61",
         "https://fmbly.com/news/dn/manual-20261014-dn-s62"
       ]
+    },
+    {
+      "at": "2026-10-22T02:04:22.348Z",
+      "urls": [
+        "https://fmbly.com/news/dn/manual-20261022-dn-s56",
+        "https://fmbly.com/news/dn/manual-20261023-dn-s57",
+        "https://fmbly.com/news/dn/manual-20261024-dn-s58",
+        "https://fmbly.com/news/dn/manual-20261025-dn-s59",
+        "https://fmbly.com/news/dn/manual-20261026-dn-s60",
+        "https://fmbly.com/news/dn/manual-20261027-dn-s61",
+        "https://fmbly.com/news/dn/manual-20261028-dn-s62",
+        "https://fmbly.com/news/dn/manual-20261029-dn-s62b",
+        "https://fmbly.com/news/wlwz/manual-20261013-wlwz-g10",
+        "https://fmbly.com/news/dn/manual-20260928-dn-s53"
+      ]
     }
   ],
-  "lastRun": "2026-10-21T13:12:54.956Z",
+  "lastRun": "2026-10-22T02:04:22.348Z",
   "lastResult": {
-    "at": "2026-10-21T13:12:54.956Z",
-    "attempted": 4,
-    "success": 0,
-    "remainAfter": null,
+    "at": "2026-10-22T02:04:22.348Z",
+    "attempted": 10,
+    "success": 10,
+    "remainAfter": 0,
     "dupSuspect": 0,
-    "outcome": "over_quota",
-    "errors": {
-      "network_error": 1
-    }
+    "outcome": "pushed",
+    "errors": {}
   }
 }
