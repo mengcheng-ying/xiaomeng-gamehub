@@ -143,7 +143,9 @@
     "https://fmbly.com/news/dn/manual-20260928-dn-s54": "2026-10-23",
     "https://fmbly.com/news/yxnd/manual-20260928-yxnd-s30": "2026-10-23",
     "https://fmbly.com/article/26": "2026-10-25",
-    "https://fmbly.com/article/27": "2026-10-25"
+    "https://fmbly.com/article/27": "2026-10-25",
+    "https://fmbly.com/article/28": "2026-10-25",
+    "https://fmbly.com/article/29": "2026-10-25"
   },
   "history": [
     {
@@ -373,14 +375,21 @@
       "urls": [
         "https://fmbly.com/article/27"
       ]
+    },
+    {
+      "at": "2026-10-25T11:57:12.830Z",
+      "urls": [
+        "https://fmbly.com/article/28",
+        "https://fmbly.com/article/29"
+      ]
     }
   ],
-  "lastRun": "2026-10-25T10:13:32.604Z",
+  "lastRun": "2026-10-25T11:57:12.830Z",
   "lastResult": {
-    "at": "2026-10-25T10:13:32.604Z",
-    "attempted": 1,
-    "success": 1,
-    "remainAfter": 8,
+    "at": "2026-10-25T11:57:12.830Z",
+    "attempted": 2,
+    "success": 2,
+    "remainAfter": 6,
     "dupSuspect": 0,
     "outcome": "pushed",
     "errors": {}
