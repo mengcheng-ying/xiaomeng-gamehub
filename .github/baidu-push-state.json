@@ -146,7 +146,10 @@
     "https://fmbly.com/article/27": "2026-10-25",
     "https://fmbly.com/article/28": "2026-10-25",
     "https://fmbly.com/article/29": "2026-10-25",
-    "https://fmbly.com/article/30": "2026-10-26"
+    "https://fmbly.com/article/30": "2026-10-26",
+    "https://fmbly.com/article/31": "2026-10-26",
+    "https://fmbly.com/guides/51": "2026-10-26",
+    "https://fmbly.com/game/51": "2026-10-26"
   },
   "history": [
     {
@@ -389,14 +392,22 @@
       "urls": [
         "https://fmbly.com/article/30"
       ]
+    },
+    {
+      "at": "2026-10-26T05:56:59.325Z",
+      "urls": [
+        "https://fmbly.com/article/31",
+        "https://fmbly.com/guides/51",
+        "https://fmbly.com/game/51"
+      ]
     }
   ],
-  "lastRun": "2026-10-26T05:50:34.228Z",
+  "lastRun": "2026-10-26T05:56:59.325Z",
   "lastResult": {
-    "at": "2026-10-26T05:50:34.228Z",
-    "attempted": 1,
-    "success": 1,
-    "remainAfter": 9,
+    "at": "2026-10-26T05:56:59.325Z",
+    "attempted": 3,
+    "success": 3,
+    "remainAfter": 6,
     "dupSuspect": 0,
     "outcome": "pushed",
     "errors": {}
