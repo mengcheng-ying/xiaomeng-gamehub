@@ -145,7 +145,8 @@
     "https://fmbly.com/article/26": "2026-10-25",
     "https://fmbly.com/article/27": "2026-10-25",
     "https://fmbly.com/article/28": "2026-10-25",
-    "https://fmbly.com/article/29": "2026-10-25"
+    "https://fmbly.com/article/29": "2026-10-25",
+    "https://fmbly.com/article/30": "2026-10-26"
   },
   "history": [
     {
@@ -382,14 +383,20 @@
         "https://fmbly.com/article/28",
         "https://fmbly.com/article/29"
       ]
+    },
+    {
+      "at": "2026-10-26T05:50:34.228Z",
+      "urls": [
+        "https://fmbly.com/article/30"
+      ]
     }
   ],
-  "lastRun": "2026-10-25T11:57:12.830Z",
+  "lastRun": "2026-10-26T05:50:34.228Z",
   "lastResult": {
-    "at": "2026-10-25T11:57:12.830Z",
-    "attempted": 2,
-    "success": 2,
-    "remainAfter": 6,
+    "at": "2026-10-26T05:50:34.228Z",
+    "attempted": 1,
+    "success": 1,
+    "remainAfter": 9,
     "dupSuspect": 0,
     "outcome": "pushed",
     "errors": {}
